@@ -2048,51 +2048,98 @@
 
                 const data = await response.json();
 
-                // API yanıtını kontrol et
+                // HATA: data yanıtını kontrol et
+                console.log('API Yanıtı:', data);
+
                 if (data.errors && Object.keys(data.errors).length > 0) {
                     throw new Error(JSON.stringify(data.errors));
                 }
 
-                // Verileri dönüştür - API yanıt yapısına göre uyarlanacak
-                const matches = data.response || data.matches || data.data || [];
+                // Verileri dönüştür - Farklı olası veri yapılarını kontrol et
+                let matches = [];
 
-                allLiveMatches = matches.map(m => {
-                    // Takım isimlerini bul
-                    const homeName = m.home?.name || m.homeTeam?.name || m.team1?.name || 'Bilinmiyor';
-                    const awayName = m.away?.name || m.awayTeam?.name || m.team2?.name || 'Bilinmiyor';
-                    const leagueName = m.league?.name || m.competition?.name || m.tournament?.name || 'Bilinmiyor';
-
-                    // Türk takımları için logo eşleştirmesi
-                    let homeLogo = 'https://www.futbollogo.com/logo/default.png';
-                    let awayLogo = 'https://www.futbollogo.com/logo/default.png';
-
-                    const homeMatch = teams.find(t => t.name === homeName);
-                    const awayMatch = teams.find(t => t.name === awayName);
-                    if (homeMatch) homeLogo = homeMatch.logo;
-                    if (awayMatch) awayLogo = awayMatch.logo;
-
-                    const homeScore = m.home?.score || m.score?.home || m.goals?.home || 0;
-                    const awayScore = m.away?.score || m.score?.away || m.goals?.away || 0;
-                    const minute = m.time?.elapsed || m.minute || m.fixture?.status?.elapsed || 0;
-                    const status = m.status || m.fixture?.status?.short || 'LIVE';
-
-                    // Sadece canlı maçları filtrele
-                    if (minute > 0 && minute < 90 && (status === 'LIVE' || status === '1H' || status === '2H')) {
-                        return {
-                            home: homeName,
-                            away: awayName,
-                            homeScore: homeScore,
-                            awayScore: awayScore,
-                            minute: minute,
-                            status: 'live',
-                            league: leagueName,
-                            homeLogo: homeLogo,
-                            awayLogo: awayLogo,
-                            fixtureId: m.fixture?.id || m.id || Math.random().toString(36).substr(2, 9)
-                        };
+                // 1. data.response kontrolü
+                if (data.response && Array.isArray(data.response)) {
+                    matches = data.response;
+                }
+                // 2. data.matches kontrolü
+                else if (data.matches && Array.isArray(data.matches)) {
+                    matches = data.matches;
+                }
+                // 3. data.data kontrolü
+                else if (data.data && Array.isArray(data.data)) {
+                    matches = data.data;
+                }
+                // 4. Doğrudan dizi kontrolü
+                else if (Array.isArray(data)) {
+                    matches = data;
+                }
+                // 5. data içinde başka bir anahtar varsa
+                else if (typeof data === 'object') {
+                    // Tüm anahtarları kontrol et, dizi olan ilkini bul
+                    for (const key in data) {
+                        if (Array.isArray(data[key]) && data[key].length > 0) {
+                            matches = data[key];
+                            break;
+                        }
                     }
-                    return null;
-                }).filter(m => m !== null);
+                }
+
+                // Canlı maçları filtrele ve dönüştür
+                allLiveMatches = matches
+                    .map(m => {
+                        // Takım isimlerini bul
+                        const homeName = m.home?.name || m.homeTeam?.name || m.team1?.name || m.home_team?.name ||
+                            m.team_home?.name || 'Bilinmiyor';
+                        const awayName = m.away?.name || m.awayTeam?.name || m.team2?.name || m.away_team?.name ||
+                            m.team_away?.name || 'Bilinmiyor';
+                        const leagueName = m.league?.name || m.competition?.name || m.tournament?.name || m.league_name ||
+                            'Bilinmiyor';
+
+                        // Skor bilgileri
+                        const homeScore = m.home?.score !== undefined ? m.home.score :
+                            m.score?.home !== undefined ? m.score.home :
+                            m.goals?.home !== undefined ? m.goals.home :
+                            m.home_score !== undefined ? m.home_score : 0;
+                        const awayScore = m.away?.score !== undefined ? m.away.score :
+                            m.score?.away !== undefined ? m.score.away :
+                            m.goals?.away !== undefined ? m.goals.away :
+                            m.away_score !== undefined ? m.away_score : 0;
+
+                        // Dakika
+                        const minute = m.time?.elapsed || m.minute || m.elapsed || m.fixture?.status?.elapsed || 0;
+
+                        // Durum
+                        const status = m.status || m.fixture?.status?.short || m.state || 'LIVE';
+
+                        // Sadece canlı maçları filtrele (dakika 0-90 arası ve durum LIVE)
+                        if (minute > 0 && minute < 90 && (status === 'LIVE' || status === '1H' || status === '2H' || status ===
+                                'HT')) {
+                            // Türk takımları için logo eşleştirmesi
+                            let homeLogo = 'https://www.futbollogo.com/logo/default.png';
+                            let awayLogo = 'https://www.futbollogo.com/logo/default.png';
+
+                            const homeMatch = teams.find(t => t.name === homeName);
+                            const awayMatch = teams.find(t => t.name === awayName);
+                            if (homeMatch) homeLogo = homeMatch.logo;
+                            if (awayMatch) awayLogo = awayMatch.logo;
+
+                            return {
+                                home: homeName,
+                                away: awayName,
+                                homeScore: homeScore,
+                                awayScore: awayScore,
+                                minute: minute,
+                                status: 'live',
+                                league: leagueName,
+                                homeLogo: homeLogo,
+                                awayLogo: awayLogo,
+                                fixtureId: m.fixture?.id || m.id || Math.random().toString(36).substr(2, 9)
+                            };
+                        }
+                        return null;
+                    })
+                    .filter(m => m !== null);
 
                 // Benzersiz maçları filtrele
                 const seenIds = new Set();
