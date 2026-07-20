@@ -617,314 +617,220 @@
             font-size: 0.85em;
         }
 
-        /* Live Score Cards */
-        .live-score-card {
-            background: white;
+        /* Live Score Cards - livescore.com tarzı */
+        .livescore-container {
+            background: #0d1117;
             border-radius: 20px;
             padding: 25px;
-            margin-bottom: 18px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-            border: 1px solid rgba(0, 0, 0, 0.04);
-            border-left: 5px solid #ff4757;
+            color: #e6edf3;
+            min-height: 500px;
+        }
+        .livescore-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #21262d;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .livescore-header h2 {
+            font-size: 1.4em;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .livescore-header h2 i {
+            color: #ff4757;
+            animation: pulse 1.5s infinite;
+        }
+        .livescore-header .live-count {
+            background: #ff4757;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+            color: white;
+        }
+        .livescore-header .refresh-info {
+            color: #8b949e;
+            font-size: 0.8em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .livescore-header .refresh-info .api-status {
+            color: #2ecc71;
+            font-weight: 500;
+        }
+        .livescore-filters {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .livescore-filters button {
+            padding: 6px 16px;
+            border-radius: 20px;
+            border: 1px solid #30363d;
+            background: transparent;
+            color: #8b949e;
+            cursor: pointer;
+            font-weight: 500;
             transition: 0.3s;
+            font-size: 0.8em;
         }
-        .live-score-card:hover {
-            transform: translateX(5px);
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+        .livescore-filters button:hover,
+        .livescore-filters button.active {
+            background: #21262d;
+            color: #e6edf3;
+            border-color: #ffd700;
         }
-        .live-score-card .teams-row {
+        .live-match-card {
+            background: #161b22;
+            border-radius: 12px;
+            padding: 14px 18px;
             margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: 0.3s;
+            border-left: 4px solid #ff4757;
+            gap: 10px;
         }
-        .live-score-card .match-status {
+        .live-match-card:hover {
+            background: #1c2333;
+        }
+        .live-match-card .match-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+            min-width: 0;
+        }
+        .live-match-card .match-info .league-badge {
+            background: #21262d;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 0.65em;
+            color: #8b949e;
+            font-weight: 600;
+            white-space: nowrap;
+            border: 1px solid #30363d;
+        }
+        .live-match-card .match-teams {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+            flex-wrap: wrap;
+        }
+        .live-match-card .match-teams .team {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 600;
+            font-size: 0.9em;
+            color: #e6edf3;
+        }
+        .live-match-card .match-teams .team img {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            object-fit: contain;
+            background: white;
+            padding: 2px;
+        }
+        .live-match-card .match-teams .vs {
+            color: #8b949e;
+            font-size: 0.7em;
+            font-weight: 400;
+        }
+        .live-match-card .match-score {
+            font-size: 1.4em;
+            font-weight: 700;
+            min-width: 60px;
+            text-align: center;
+            color: #e6edf3;
+        }
+        .live-match-card .match-score .score-home {
+            color: #58a6ff;
+        }
+        .live-match-card .match-score .score-away {
+            color: #f0883e;
+        }
+        .live-match-card .match-status {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 2px;
+            min-width: 65px;
+        }
+        .live-match-card .match-status .time {
+            font-size: 0.8em;
             font-weight: 700;
             color: #ff4757;
         }
-        .live-score-card .league-name {
-            font-size: 0.8em;
-            color: #888;
-            margin-bottom: 8px;
-        }
-
-        /* Leaderboard */
-        .leaderboard-table {
-            background: white;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-            border: 1px solid rgba(0, 0, 0, 0.04);
-        }
-        .lb-row {
-            display: grid;
-            grid-template-columns: 60px 1fr 120px 120px;
-            padding: 16px 25px;
-            align-items: center;
-            border-bottom: 1px solid #f0f2f5;
-        }
-        .lb-row:hover {
-            background: #fafafa;
-        }
-        .lb-row.header {
-            background: #1a1a2e;
-            color: white;
-            font-weight: 600;
-            border-radius: 20px 20px 0 0;
-        }
-        .lb-row.me {
-            background: #fff9e6;
-            font-weight: 600;
-            border-left: 4px solid #ffd700;
-        }
-        .lb-rank {
-            font-size: 1.3em;
-            font-weight: 700;
-        }
-        .lb-user {
+        .live-match-card .match-status .status-text {
+            font-size: 0.6em;
+            color: #8b949e;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 4px;
         }
-        .lb-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-        }
-        .lb-points {
-            text-align: right;
-            font-weight: 700;
-            color: #2ecc71;
-            font-size: 1.1em;
-        }
-
-        /* Profile */
-        .profile-card {
-            background: white;
-            border-radius: 20px;
-            padding: 35px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-            border: 1px solid rgba(0, 0, 0, 0.04);
-            margin-bottom: 25px;
-        }
-        .profile-header {
-            display: flex;
-            align-items: center;
-            gap: 30px;
-            padding-bottom: 25px;
-            border-bottom: 2px solid #f0f2f5;
-            margin-bottom: 25px;
-        }
-        .profile-avatar-big {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #ffd700, #f5a623);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3em;
-            font-weight: 800;
-            color: #1a1a2e;
-            flex-shrink: 0;
-        }
-        .profile-details h2 {
-            font-size: 1.8em;
-            font-weight: 800;
-            color: #1a1a2e;
-        }
-        .profile-details p {
-            color: #888;
-        }
-        .profile-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 15px;
-        }
-        .profile-stat {
-            text-align: center;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 16px;
-        }
-        .profile-stat-value {
-            font-size: 1.8em;
-            font-weight: 800;
-            color: #1a1a2e;
-        }
-        .profile-stat-label {
-            color: #888;
-            font-size: 0.8em;
-            margin-top: 4px;
-            font-weight: 500;
-        }
-
-        /* My Predictions */
-        .my-predictions-list {
-            background: white;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-            border: 1px solid rgba(0, 0, 0, 0.04);
-        }
-        .prediction-row {
-            display: grid;
-            grid-template-columns: 1fr auto auto auto;
-            padding: 16px 25px;
-            align-items: center;
-            border-bottom: 1px solid #f0f2f5;
-            gap: 15px;
-        }
-        .prediction-row.header {
-            background: #1a1a2e;
-            color: white;
-            font-weight: 600;
-        }
-        .prediction-score {
-            background: #e8f0fe;
-            color: #1a73e8;
-            padding: 6px 14px;
-            border-radius: 10px;
-            font-weight: 700;
-            text-align: center;
-        }
-        .actual-score {
-            background: #f0f2f5;
-            color: #333;
-            padding: 6px 14px;
-            border-radius: 10px;
-            font-weight: 700;
-            text-align: center;
-        }
-        .prediction-points {
-            font-weight: 700;
-            color: #2ecc71;
-        }
-
-        /* Admin */
-        .admin-card {
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-            border: 1px solid rgba(0, 0, 0, 0.04);
-            margin-bottom: 25px;
-        }
-        .admin-card h3 {
-            color: #1a1a2e;
-            margin-bottom: 20px;
-            font-weight: 700;
-            font-size: 1.2em;
-            padding-bottom: 12px;
-            border-bottom: 2px solid #f0f2f5;
-        }
-        .admin-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        .admin-table th {
-            background: #f8f9fa;
-            padding: 12px 16px;
-            text-align: left;
-            font-weight: 600;
-            color: #1a1a2e;
-            border-bottom: 2px solid #e8ecf1;
-        }
-        .admin-table td {
-            padding: 12px 16px;
-            border-bottom: 1px solid #f0f2f5;
-        }
-        .admin-table tr:hover {
-            background: #fafafa;
-        }
-        .admin-actions {
-            display: flex;
-            gap: 8px;
-        }
-        .admin-match-row {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr auto;
-            gap: 12px;
-            align-items: center;
-            padding: 12px;
-            border-bottom: 1px solid #f0f2f5;
-        }
-        .score-input-small {
-            width: 60px;
-            padding: 8px;
-            border: 2px solid #e8ecf1;
-            border-radius: 10px;
-            text-align: center;
-            font-weight: 600;
-        }
-        .score-input-small:focus {
-            outline: none;
-            border-color: #ffd700;
-        }
-
-        /* Toast */
-        .toast {
-            position: fixed;
-            top: 30px;
-            right: 30px;
-            background: #2ecc71;
-            color: white;
-            padding: 16px 28px;
-            border-radius: 16px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-            z-index: 1000;
-            transform: translateX(400px);
-            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            font-weight: 600;
-        }
-        .toast.show {
-            transform: translateX(0);
-        }
-        .toast.error {
-            background: #ff4757;
-        }
-
-        /* Info Banner */
-        .info-banner {
-            background: #e8f0fe;
-            padding: 16px 22px;
-            border-radius: 16px;
-            margin-bottom: 25px;
-            border-left: 4px solid #1a73e8;
-            font-size: 0.9em;
-            color: #1a1a2e;
-        }
-        .info-banner strong {
-            color: #1a73e8;
-        }
-
-        /* Refresh Button */
-        .refresh-btn {
-            margin-bottom: 20px;
-            padding: 12px 30px !important;
-            width: auto !important;
-            border-radius: 14px !important;
-        }
-
-        /* Scrollbar */
-        ::-webkit-scrollbar {
+        .live-match-card .match-status .status-dot {
             width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #ff4757;
+            animation: pulse 1.5s infinite;
+            display: inline-block;
         }
-        ::-webkit-scrollbar-track {
-            background: #f0f2f5;
+        .no-live-matches {
+            text-align: center;
+            padding: 60px 20px;
+            color: #8b949e;
         }
-        ::-webkit-scrollbar-thumb {
-            background: #ccc;
-            border-radius: 10px;
+        .no-live-matches i {
+            font-size: 3em;
+            margin-bottom: 15px;
+            opacity: 0.3;
         }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #aaa;
+        .api-key-warning {
+            background: #1a1a2e;
+            color: #ffd700;
+            padding: 12px 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            font-size: 0.85em;
+            border: 1px solid #ffd70033;
         }
-
-        /* Responsive */
+        .api-key-warning a {
+            color: #ffd700;
+            text-decoration: underline;
+        }
+        .api-key-warning input {
+            background: #2d2d44;
+            border: 1px solid #ffd70055;
+            color: #fff;
+            padding: 8px 14px;
+            border-radius: 8px;
+            width: 300px;
+            max-width: 100%;
+            font-family: monospace;
+        }
+        .api-key-warning .btn-small {
+            padding: 8px 20px;
+            background: #ffd700;
+            color: #1a1a2e;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-left: 10px;
+        }
         @media (max-width: 768px) {
             .sidebar {
                 width: 100%;
@@ -970,6 +876,27 @@
             }
             .match-card {
                 padding: 18px;
+            }
+            .live-match-card {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            .live-match-card .match-info {
+                flex-wrap: wrap;
+                width: 100%;
+            }
+            .live-match-card .match-teams {
+                flex-wrap: wrap;
+            }
+            .live-match-card .match-score {
+                font-size: 1.2em;
+                min-width: 50px;
+            }
+            .live-match-card .match-status {
+                flex-direction: row;
+                align-items: center;
+                width: 100%;
+                justify-content: space-between;
             }
         }
     </style>
@@ -1096,15 +1023,50 @@
                     <h1 class="page-title"><i class="fas fa-broadcast-tower"></i> Canlı Sonuçlar</h1>
                     <p class="page-subtitle">Dünya genelinde tüm liglerde anlık maç sonuçları</p>
                 </div>
-                <div class="info-banner">
-                    <strong>⚡ Canlı Veri Kaynağı:</strong> LiveScore MCP (Ücretsiz, 1000+ lig) <br>
-                    <small>Veriler her 30 saniyede bir otomatik yenilenir. Son yenileme: <span id="lastRefresh">-</span></small>
-                </div>
-                <button class="btn btn-primary refresh-btn" onclick="fetchLiveScores()">
-                    🔄 Skorları Yenile
-                </button>
-                <div id="liveScoresContainer">
-                    <div style="text-align:center; padding:40px; color:#888;">Canlı sonuçlar yükleniyor...</div>
+
+                <div class="livescore-container">
+                    <div class="livescore-header">
+                        <h2>
+                            <i class="fas fa-circle"></i>
+                            CANLI MAÇLAR
+                            <span class="live-count" id="liveCount">0</span>
+                        </h2>
+                        <div class="refresh-info">
+                            <i class="fas fa-sync-alt"></i> Son yenileme: <span id="lastRefresh">-</span>
+                            <span class="api-status" id="apiStatus">✅ API Bağlı</span>
+                        </div>
+                    </div>
+
+                    <!-- API Key giriş alanı -->
+                    <div class="api-key-warning" id="apiKeyWarning">
+                        <strong>🔑 API-Football (RapidAPI) Bağlantısı</strong><br>
+                        <small style="color:#8b949e;">Ücretsiz plan için RapidAPI'den API anahtarı alın:</small>
+                        <div style="margin-top:8px; display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
+                            <input type="text" id="apiKeyInput" placeholder="RapidAPI Anahtarınızı girin..." style="flex:1; min-width:200px;">
+                            <button class="btn-small" onclick="saveApiKey()">💾 Kaydet</button>
+                            <a href="https://rapidapi.com/auth/sign-up" target="_blank" style="color:#ffd700; font-size:0.8em;">📝 Ücretsiz Kayıt</a>
+                        </div>
+                        <div style="font-size:0.7em; color:#8b949e; margin-top:5px;">
+                            <span id="apiKeyStatus">⚠️ API anahtarı girilmedi</span>
+                        </div>
+                    </div>
+
+                    <div class="livescore-filters">
+                        <button class="active" onclick="filterLiveScores('all')">Tümü</button>
+                        <button onclick="filterLiveScores('Süper Lig')">Süper Lig</button>
+                        <button onclick="filterLiveScores('Premier Lig')">Premier Lig</button>
+                        <button onclick="filterLiveScores('La Liga')">La Liga</button>
+                        <button onclick="filterLiveScores('Bundesliga')">Bundesliga</button>
+                        <button onclick="filterLiveScores('Serie A')">Serie A</button>
+                        <button onclick="filterLiveScores('Ligue 1')">Ligue 1</button>
+                    </div>
+
+                    <div id="liveScoresContainer">
+                        <div style="text-align:center; padding:40px; color:#8b949e;">
+                            <i class="fas fa-spinner fa-spin fa-2x"></i>
+                            <div style="margin-top:15px;">Canlı sonuçlar yükleniyor...</div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -1367,6 +1329,9 @@
         let isAdmin = false;
         let currentWeek = 1;
         let liveScoreInterval = null;
+        let allLiveMatches = [];
+        let currentFilter = 'all';
+        let apiKey = '';
 
         // ========== YARDIMCI FONKSİYONLAR ==========
         function getUsers() { return JSON.parse(localStorage.getItem('sl_users') || '{}'); }
@@ -1409,6 +1374,37 @@
             const [year, month, day] = dateStr.split('-').map(Number);
             const [hour, minute] = timeStr.split(':').map(Number);
             return new Date(year, month - 1, day, hour, minute);
+        }
+
+        // ========== API KEY YÖNETİMİ ==========
+        function saveApiKey() {
+            const input = document.getElementById('apiKeyInput');
+            const key = input.value.trim();
+            if (key) {
+                apiKey = key;
+                localStorage.setItem('rapidapi_key', key);
+                document.getElementById('apiKeyStatus').textContent = '✅ API anahtarı kaydedildi';
+                document.getElementById('apiKeyStatus').style.color = '#2ecc71';
+                showToast('✅ API anahtarı kaydedildi!');
+                fetchLiveScores();
+            } else {
+                showToast('⚠️ Lütfen geçerli bir API anahtarı girin!', true);
+            }
+        }
+
+        function loadApiKey() {
+            const saved = localStorage.getItem('rapidapi_key');
+            if (saved) {
+                apiKey = saved;
+                document.getElementById('apiKeyInput').value = saved;
+                document.getElementById('apiKeyStatus').textContent = '✅ API anahtarı yüklendi';
+                document.getElementById('apiKeyStatus').style.color = '#2ecc71';
+                return true;
+            } else {
+                document.getElementById('apiKeyStatus').textContent = '⚠️ API anahtarı girilmedi';
+                document.getElementById('apiKeyStatus').style.color = '#ffd700';
+                return false;
+            }
         }
 
         // ========== LOGIN FONKSİYONLARI ==========
@@ -1516,6 +1512,7 @@
             populateWeekSelector();
             renderFixtures();
             updateDashboard();
+            loadApiKey();
             startLiveScorePolling();
         }
 
@@ -1778,7 +1775,7 @@
             return points;
         }
 
-        // ========== CANLI SONUÇLAR - LIVESCORE MCP ENTEGRASYONU ==========
+        // ========== CANLI SONUÇLAR - API-Football (RapidAPI) ==========
         function startLiveScorePolling() {
             fetchLiveScores();
             if (liveScoreInterval) clearInterval(liveScoreInterval);
@@ -1792,120 +1789,223 @@
             }
         }
 
-        // Örnek canlı maç verileri (gerçek API entegrasyonu için demo)
-        // Gerçek kullanımda https://livescoremcp.com/sse veya SportMonks API kullanılabilir
-        const sampleLiveMatches = [
-            { home: 'Galatasaray', away: 'Fenerbahçe', homeScore: 2, awayScore: 1, minute: 67, status: 'live',
-            league: 'Süper Lig' },
-            { home: 'Beşiktaş', away: 'Trabzonspor', homeScore: 0, awayScore: 0, minute: 34, status: 'live',
-            league: 'Süper Lig' },
-            { home: 'Barcelona', away: 'Real Madrid', homeScore: 1, awayScore: 1, minute: 78, status: 'live',
-            league: 'La Liga' },
-            { home: 'Manchester City', away: 'Liverpool', homeScore: 2, awayScore: 2, minute: 55, status: 'live',
-            league: 'Premier Lig' },
-            { home: 'Bayern Münih', away: 'Borussia Dortmund', homeScore: 3, awayScore: 1, minute: 42, status: 'live',
-            league: 'Bundesliga' },
-            { home: 'Milan', away: 'Inter', homeScore: 0, awayScore: 1, minute: 23, status: 'live', league: 'Serie A' },
-            { home: 'PSG', away: 'Marseille', homeScore: 2, awayScore: 0, minute: 88, status: 'live', league: 'Ligue 1' },
-            { home: 'Ajax', away: 'PSV', homeScore: 1, awayScore: 1, minute: 15, status: 'live', league: 'Eredivisie' },
-            { home: 'Porto', away: 'Benfica', homeScore: 0, awayScore: 0, minute: 12, status: 'live', league: 'Primeira Liga' },
-            { home: 'Celtic', away: 'Rangers', homeScore: 2, awayScore: 2, minute: 90, status: 'live', league: 'Scottish Premiership' },
-            { home: 'Olympiacos', away: 'Panathinaikos', homeScore: 1, awayScore: 0, minute: 30, status: 'live',
-            league: 'Super League Greece' },
-            { home: 'Fenerbahçe', away: 'Başakşehir', homeScore: 3, awayScore: 1, minute: 62, status: 'live',
-            league: 'Süper Lig' }
-        ];
+        function filterLiveScores(league) {
+            currentFilter = league;
+            document.querySelectorAll('.livescore-filters button').forEach(btn => {
+                btn.classList.toggle('active', btn.textContent === league || (league === 'all' && btn.textContent === 'Tümü'));
+            });
+            renderLiveScores(allLiveMatches);
+        }
 
         async function fetchLiveScores() {
             const container = document.getElementById('liveScoresContainer');
             const refreshSpan = document.getElementById('lastRefresh');
+            const statusSpan = document.getElementById('apiStatus');
+
+            // API anahtarı kontrolü
+            if (!apiKey) {
+                const hasKey = loadApiKey();
+                if (!hasKey) {
+                    container.innerHTML = `
+                        <div class="no-live-matches">
+                            <i class="fas fa-key"></i>
+                            <div>🔑 API anahtarı gerekli</div>
+                            <div style="font-size:0.9em; margin-top:10px; color:#8b949e;">
+                                Lütfen yukarıdaki alana RapidAPI anahtarınızı girin.
+                            </div>
+                            <div style="font-size:0.8em; margin-top:8px; color:#8b949e;">
+                                <a href="https://rapidapi.com/auth/sign-up" target="_blank" style="color:#ffd700;">📝 Ücretsiz RapidAPI hesabı oluşturun</a>
+                                <span style="margin:0 8px;">|</span>
+                                <a href="https://rapidapi.com/api-sports/api/api-football/" target="_blank" style="color:#ffd700;">⚽ API-Football'u abone olun</a>
+                            </div>
+                        </div>
+                    `;
+                    refreshSpan.textContent = new Date().toLocaleTimeString('tr-TR');
+                    statusSpan.textContent = '⛔ API Anahtarı Gerekli';
+                    statusSpan.style.color = '#ff4757';
+                    return;
+                }
+            }
 
             try {
-                // Gerçek API entegrasyonu için aşağıdaki kod kullanılabilir:
-                // LiveScore MCP - https://livescoremcp.com/sse (API anahtarı gerekmez)
-                // const response = await fetch('https://livescoremcp.com/sse');
-                // Örnek verilerle çalışıyoruz
-                
-                // Canlı maçları simüle et
-                const matches = getLiveMatches();
-                renderLiveScores(matches);
+                statusSpan.textContent = '🔄 Bağlanıyor...';
+                statusSpan.style.color = '#ffd700';
+
+                // API-Football (RapidAPI) canlı maçları çek
+                // Endpoint: https://api-football-v1.p.rapidapi.com/v3/fixtures?live=all
+                const response = await fetch('https://api-football-v1.p.rapidapi.com/v3/fixtures?live=all', {
+                    method: 'GET',
+                    headers: {
+                        'X-RapidAPI-Key': apiKey,
+                        'X-RapidAPI-Host': 'api-football-v1.p.rapidapi.com'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API Hatası: ${response.status} - ${response.statusText}`);
+                }
+
+                const data = await response.json();
+
+                if (data.errors && Object.keys(data.errors).length > 0) {
+                    throw new Error(JSON.stringify(data.errors));
+                }
+
+                // Verileri dönüştür
+                const matches = data.response || [];
+                allLiveMatches = matches.map(m => {
+                    const homeTeam = m.teams.home;
+                    const awayTeam = m.teams.away;
+                    const league = m.league.name;
+                    const status = m.fixture.status.short;
+
+                    // Süper Lig için logo eşleştirmesi
+                    let homeLogo = 'https://www.futbollogo.com/logo/default.png';
+                    let awayLogo = 'https://www.futbollogo.com/logo/default.png';
+
+                    // Türkiye ligleri için logo eşleştirmesi
+                    const turkishTeams = teams;
+                    const homeMatch = turkishTeams.find(t => t.name === homeTeam.name);
+                    const awayMatch = turkishTeams.find(t => t.name === awayTeam.name);
+                    if (homeMatch) homeLogo = homeMatch.logo;
+                    if (awayMatch) awayLogo = awayMatch.logo;
+
+                    // Skor bilgileri
+                    const homeScore = m.goals.home !== null ? m.goals.home : 0;
+                    const awayScore = m.goals.away !== null ? m.goals.away : 0;
+                    const minute = m.fixture.status.elapsed || 0;
+
+                    return {
+                        home: homeTeam.name,
+                        away: awayTeam.name,
+                        homeScore: homeScore,
+                        awayScore: awayScore,
+                        minute: minute,
+                        status: 'live',
+                        league: league,
+                        homeLogo: homeLogo,
+                        awayLogo: awayLogo,
+                        fixtureId: m.fixture.id
+                    };
+                });
+
+                // Canlı maçları filtrele (status 'LIVE' veya '1H', '2H', 'HT' vb.)
+                allLiveMatches = allLiveMatches.filter(m =>
+                    m.minute > 0 && m.minute < 90
+                );
+
+                renderLiveScores(allLiveMatches);
                 refreshSpan.textContent = new Date().toLocaleTimeString('tr-TR');
+                document.getElementById('liveCount').textContent = allLiveMatches.length;
+
+                if (allLiveMatches.length > 0) {
+                    statusSpan.textContent = `✅ ${allLiveMatches.length} canlı maç`;
+                    statusSpan.style.color = '#2ecc71';
+                } else {
+                    statusSpan.textContent = '✅ API Bağlı (canlı maç yok)';
+                    statusSpan.style.color = '#8b949e';
+                }
 
             } catch (error) {
                 console.error('Canlı skorlar alınamadı:', error);
-                container.innerHTML = `
-                    <div style="text-align:center; padding:40px; color:#888;">
-                        ⚠️ Canlı skorlar yüklenirken hata oluştu. <br>
-                        <small>API bağlantısı kontrol ediliyor...</small>
-                        <br><br>
-                        <button class="btn btn-primary" onclick="fetchLiveScores()" style="width:auto; padding:10px 30px;">🔄 Tekrar Dene</button>
-                    </div>
-                `;
+
+                // Hata durumunda demo verilerle devam et
+                const demoMatches = getDemoMatches();
+                allLiveMatches = demoMatches;
+                renderLiveScores(demoMatches);
+                refreshSpan.textContent = new Date().toLocaleTimeString('tr-TR');
+                document.getElementById('liveCount').textContent = demoMatches.length;
+
+                statusSpan.textContent = '⚠️ Demo Modu (API hatası)';
+                statusSpan.style.color = '#ffd700';
+
+                showToast('⚠️ API bağlantısı başarısız, demo veriler gösteriliyor', true);
             }
         }
 
-        // Gerçek zamanlı canlı maç verileri (simülasyon)
-        function getLiveMatches() {
-            // Rastgele skor güncellemeleri ile canlı maçları simüle et
-            return sampleLiveMatches.map(m => {
-                // Rastgele skor değişiklikleri (sadece demo)
-                if (Math.random() > 0.7) {
-                    const changeHome = Math.random() > 0.6 ? 1 : 0;
-                    const changeAway = Math.random() > 0.6 ? 1 : 0;
-                    return {
-                        ...m,
-                        homeScore: m.homeScore + changeHome,
-                        awayScore: m.awayScore + changeAway,
-                        minute: Math.min(m.minute + Math.floor(Math.random() * 3), 90)
-                    };
-                }
-                return m;
-            });
+        // Demo veriler (API çalışmadığında yedek)
+        function getDemoMatches() {
+            const demoData = [
+                { home: 'Galatasaray', away: 'Fenerbahçe', homeScore: 2, awayScore: 1, minute: 67, league: 'Süper Lig',
+                    homeLogo: 'https://www.futbollogo.com/logo/galatasaray.png',
+                    awayLogo: 'https://www.futbollogo.com/logo/fenerbahce.png' },
+                { home: 'Beşiktaş', away: 'Trabzonspor', homeScore: 0, awayScore: 0, minute: 34, league: 'Süper Lig',
+                    homeLogo: 'https://www.futbollogo.com/logo/besiktas.png',
+                    awayLogo: 'https://www.futbollogo.com/logo/trabzonspor.png' },
+                { home: 'Barcelona', away: 'Real Madrid', homeScore: 1, awayScore: 1, minute: 78, league: 'La Liga',
+                    homeLogo: 'https://www.futbollogo.com/logo/default.png',
+                    awayLogo: 'https://www.futbollogo.com/logo/default.png' },
+                { home: 'Manchester City', away: 'Liverpool', homeScore: 2, awayScore: 2, minute: 55, league: 'Premier Lig',
+                    homeLogo: 'https://www.futbollogo.com/logo/default.png',
+                    awayLogo: 'https://www.futbollogo.com/logo/default.png' },
+                { home: 'Bayern Münih', away: 'Borussia Dortmund', homeScore: 3, awayScore: 1, minute: 42,
+                    league: 'Bundesliga',
+                    homeLogo: 'https://www.futbollogo.com/logo/default.png',
+                    awayLogo: 'https://www.futbollogo.com/logo/default.png' },
+            ];
+            // Rastgele skor güncellemeleri
+            return demoData.map(m => ({
+                ...m,
+                homeScore: m.homeScore + (Math.random() > 0.6 ? 1 : 0),
+                awayScore: m.awayScore + (Math.random() > 0.6 ? 1 : 0),
+                minute: Math.min(m.minute + Math.floor(Math.random() * 3), 90)
+            }));
         }
 
         function renderLiveScores(matches) {
             const container = document.getElementById('liveScoresContainer');
 
-            if (!matches || matches.length === 0) {
+            let filteredMatches = matches;
+            if (currentFilter !== 'all') {
+                filteredMatches = matches.filter(m => m.league === currentFilter);
+            }
+
+            if (!filteredMatches || filteredMatches.length === 0) {
                 container.innerHTML = `
-                    <div style="text-align:center; padding:40px; color:#888;">
-                        🏟️ Şu anda canlı maç bulunmuyor.
-                        <br><small>Maç başladığında burada görünecektir.</small>
+                    <div class="no-live-matches">
+                        <i class="fas fa-futbol"></i>
+                        <div>🏟️ Şu anda canlı maç bulunmuyor</div>
+                        <div style="font-size:0.9em; margin-top:10px; color:#8b949e;">Maç başladığında burada görünecektir.</div>
+                        ${!apiKey ? `
+                        <div style="font-size:0.8em; margin-top:15px; color:#ffd700;">
+                            🔑 Lütfen RapidAPI anahtarınızı girin
+                        </div>` : ''}
                     </div>
                 `;
                 return;
             }
 
             let html = '';
-            matches.forEach(match => {
-                const homeTeam = teams.find(t => t.name === match.home);
-                const awayTeam = teams.find(t => t.name === match.away);
-
-                // Süper Lig takımları için logo göster, diğer ligler için isim göster
-                const homeLogo = homeTeam ? homeTeam.logo :
-                    'https://www.futbollogo.com/logo/default.png';
-                const awayLogo = awayTeam ? awayTeam.logo :
-                    'https://www.futbollogo.com/logo/default.png';
+            filteredMatches.forEach(match => {
+                const homeLogo = match.homeLogo || 'https://www.futbollogo.com/logo/default.png';
+                const awayLogo = match.awayLogo || 'https://www.futbollogo.com/logo/default.png';
 
                 html += `
-                    <div class="live-score-card">
-                        <div class="match-date-bar">
-                            <span class="match-status">⚽ ${match.minute}'</span>
-                            <span class="match-badge badge-live">CANLI</span>
+                    <div class="live-match-card">
+                        <div class="match-info">
+                            <span class="league-badge">${match.league}</span>
+                            <div class="match-teams">
+                                <div class="team">
+                                    <img src="${homeLogo}" alt="${match.home}" onerror="this.style.display='none'">
+                                    ${match.home}
+                                </div>
+                                <span class="vs">vs</span>
+                                <div class="team">
+                                    <img src="${awayLogo}" alt="${match.away}" onerror="this.style.display='none'">
+                                    ${match.away}
+                                </div>
+                            </div>
                         </div>
-                        <div class="league-name">${match.league || 'Futbol'}</div>
-                        <div class="teams-row">
-                            <div class="team-block">
-                                <img src="${homeLogo}" alt="${match.home}" class="team-logo" onerror="this.style.display='none'">
-                                <div class="team-name">${match.home}</div>
-                            </div>
-                            <div class="score-display" style="font-size:2em;">
-                                ${match.homeScore} - ${match.awayScore}
-                            </div>
-                            <div class="team-block">
-                                <img src="${awayLogo}" alt="${match.away}" class="team-logo" onerror="this.style.display='none'">
-                                <div class="team-name">${match.away}</div>
-                            </div>
+                        <div class="match-score">
+                            <span class="score-home">${match.homeScore}</span>
+                            <span style="color:#8b949e; margin:0 4px;">-</span>
+                            <span class="score-away">${match.awayScore}</span>
+                        </div>
+                        <div class="match-status">
+                            <span class="time">${match.minute}'</span>
+                            <span class="status-text">
+                                <span class="status-dot"></span> CANLI
+                            </span>
                         </div>
                     </div>
                 `;
@@ -2297,6 +2397,7 @@
             localStorage.removeItem('sl_scoring');
             localStorage.removeItem('sl_currentUser');
             localStorage.removeItem('sl_isAdmin');
+            localStorage.removeItem('rapidapi_key');
 
             alert('Sistem sıfırlandı. Sayfa yenilenecek.');
             location.reload();
@@ -2358,6 +2459,9 @@
                 scoringSettings = { exact: 10, correct: 3, result: 2, diff: 1 };
                 localStorage.setItem('sl_scoring', JSON.stringify(scoringSettings));
             }
+
+            // API Key'i yükle
+            loadApiKey();
 
             const isAdminSession = localStorage.getItem('sl_isAdmin') === 'true';
             const savedUser = localStorage.getItem('sl_currentUser');
