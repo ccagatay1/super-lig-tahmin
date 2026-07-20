@@ -7,1154 +7,176 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Inter', sans-serif;
-            background: #f0f2f5;
-            min-height: 100vh;
-            color: #1a1a2e;
-        }
-
-        .login-screen {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-            padding: 20px;
-            position: relative;
-            overflow: hidden;
-        }
-        .login-screen::before {
-            content: '';
-            position: absolute;
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, transparent 70%);
-            top: -200px;
-            right: -200px;
-            border-radius: 50%;
-        }
-        .login-screen::after {
-            content: '';
-            position: absolute;
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(255, 215, 0, 0.05) 0%, transparent 70%);
-            bottom: -100px;
-            left: -100px;
-            border-radius: 50%;
-        }
-        .login-box {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 30px;
-            padding: 50px 40px;
-            width: 100%;
-            max-width: 440px;
-            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
-            position: relative;
-            z-index: 1;
-        }
-        .login-logo {
-            text-align: center;
-            font-size: 4em;
-            margin-bottom: 10px;
-            filter: drop-shadow(0 4px 20px rgba(255, 215, 0, 0.3));
-        }
-        .login-title {
-            text-align: center;
-            color: #fff;
-            font-size: 2em;
-            font-weight: 800;
-            margin-bottom: 5px;
-            letter-spacing: -0.5px;
-        }
-        .login-title span {
-            color: #ffd700;
-        }
-        .login-subtitle {
-            text-align: center;
-            color: rgba(255, 255, 255, 0.6);
-            margin-bottom: 30px;
-            font-weight: 400;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: rgba(255, 255, 255, 0.7);
-            font-weight: 500;
-            font-size: 0.85em;
-            letter-spacing: 0.5px;
-        }
-        .form-group input,
-        .form-group select {
-            width: 100%;
-            padding: 14px 18px;
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 14px;
-            font-size: 1em;
-            color: #fff;
-            transition: all 0.3s;
-        }
-        .form-group input:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: #ffd700;
-            background: rgba(255, 255, 255, 0.12);
-            box-shadow: 0 0 30px rgba(255, 215, 0, 0.1);
-        }
-        .form-group input::placeholder {
-            color: rgba(255, 255, 255, 0.3);
-        }
-        .form-group select option {
-            background: #1a1a2e;
-            color: #fff;
-        }
-        .btn {
-            width: 100%;
-            padding: 16px;
-            border: none;
-            border-radius: 14px;
-            font-size: 1em;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
-            letter-spacing: 0.5px;
-        }
-        .btn-primary {
-            background: linear-gradient(135deg, #ffd700, #f5a623);
-            color: #1a1a2e;
-        }
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 40px rgba(255, 215, 0, 0.3);
-        }
-        .btn-danger {
-            background: linear-gradient(135deg, #ff4757, #c0392b);
-            color: white;
-        }
-        .btn-success {
-            background: linear-gradient(135deg, #2ecc71, #27ae60);
-            color: white;
-        }
-        .btn-warning {
-            background: linear-gradient(135deg, #f39c12, #e67e22);
-            color: white;
-        }
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        .btn-small {
-            padding: 8px 16px;
-            font-size: 0.8em;
-            width: auto;
-            border-radius: 10px;
-        }
-        .login-toggle {
-            text-align: center;
-            margin-top: 20px;
-            color: rgba(255, 255, 255, 0.6);
-        }
-        .login-toggle a {
-            color: #ffd700;
-            text-decoration: none;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .login-toggle a:hover {
-            color: #fff;
-        }
-        .admin-badge {
-            display: inline-block;
-            background: #ffd700;
-            color: #1a1a2e;
-            padding: 3px 12px;
-            border-radius: 20px;
-            font-size: 0.7em;
-            font-weight: 700;
-            margin-left: 8px;
-        }
-
-        .app-container {
-            display: none;
-            min-height: 100vh;
-        }
-        .app-container.active {
-            display: flex;
-        }
-
-        .sidebar {
-            width: 280px;
-            background: linear-gradient(180deg, #1a1a2e, #16213e);
-            color: white;
-            padding: 25px 0;
-            min-height: 100vh;
-            position: fixed;
-            left: 0;
-            top: 0;
-            overflow-y: auto;
-            z-index: 100;
-            border-right: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        .sidebar.admin-sidebar {
-            background: linear-gradient(180deg, #2d0a0a, #1a0505);
-        }
-        .sidebar-header {
-            padding: 0 25px 25px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            text-align: center;
-        }
-        .sidebar-header h2 {
-            font-size: 1.4em;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-        }
-        .sidebar-header h2 span {
-            color: #ffd700;
-        }
-        .sidebar-header p {
-            font-size: 0.8em;
-            opacity: 0.5;
-            margin-top: 4px;
-        }
-        .user-card {
-            padding: 18px;
-            margin: 20px 18px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        .user-avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #ffd700, #f5a623);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            font-size: 1.2em;
-            color: #1a1a2e;
-            flex-shrink: 0;
-        }
-        .user-info {
-            flex: 1;
-            min-width: 0;
-        }
-        .user-name {
-            font-weight: 600;
-            font-size: 0.95em;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .user-points {
-            font-size: 0.8em;
-            opacity: 0.6;
-            margin-top: 2px;
-        }
-        .nav-menu {
-            list-style: none;
-            padding: 10px 12px;
-        }
-        .nav-item {
-            padding: 12px 18px;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            border-radius: 12px;
-            margin-bottom: 4px;
-            font-weight: 500;
-            font-size: 0.9em;
-            color: rgba(255, 255, 255, 0.6);
-        }
-        .nav-item:hover {
-            background: rgba(255, 255, 255, 0.05);
-            color: #fff;
-        }
-        .nav-item.active {
-            background: rgba(255, 215, 0, 0.1);
-            color: #ffd700;
-            border: 1px solid rgba(255, 215, 0, 0.15);
-        }
-        .nav-icon {
-            font-size: 1.2em;
-            width: 24px;
-            text-align: center;
-        }
-
-        .main-content {
-            margin-left: 280px;
-            flex: 1;
-            padding: 35px 40px;
-            width: calc(100% - 280px);
-            min-height: 100vh;
-            background: #f0f2f5;
-        }
-        .page-header {
-            margin-bottom: 30px;
-        }
-        .page-title {
-            font-size: 2.2em;
-            font-weight: 800;
-            color: #1a1a2e;
-            letter-spacing: -0.5px;
-        }
-        .page-title i {
-            color: #ffd700;
-            margin-right: 10px;
-        }
-        .page-subtitle {
-            color: #666;
-            font-weight: 400;
-            margin-top: 4px;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        .stat-card {
-            background: white;
-            padding: 25px;
-            border-radius: 20px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-            border: 1px solid rgba(0, 0, 0, 0.04);
-            transition: 0.3s;
-        }
-        .stat-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
-        }
-        .stat-icon {
-            font-size: 2em;
-            margin-bottom: 10px;
-        }
-        .stat-value {
-            font-size: 2.2em;
-            font-weight: 800;
-            color: #1a1a2e;
-            letter-spacing: -1px;
-        }
-        .stat-label {
-            color: #888;
-            font-size: 0.85em;
-            margin-top: 4px;
-            font-weight: 500;
-        }
-
-        .week-selector {
-            background: white;
-            padding: 20px 25px;
-            border-radius: 20px;
-            margin-bottom: 25px;
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            flex-wrap: wrap;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-            border: 1px solid rgba(0, 0, 0, 0.04);
-        }
-        .week-selector label {
-            font-weight: 600;
-            color: #1a1a2e;
-            font-size: 0.95em;
-        }
-        .week-selector select {
-            padding: 10px 20px;
-            border: 2px solid #e8ecf1;
-            border-radius: 12px;
-            font-size: 0.95em;
-            font-weight: 500;
-            cursor: pointer;
-            background: white;
-            color: #1a1a2e;
-            transition: 0.3s;
-        }
-        .week-selector select:focus {
-            outline: none;
-            border-color: #ffd700;
-        }
-
-        .matches-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-            gap: 25px;
-        }
-        .match-card {
-            background: white;
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-            border: 1px solid rgba(0, 0, 0, 0.04);
-            transition: all 0.3s;
-        }
-        .match-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
-        }
-        .match-card.derby {
-            border: 2px solid #ffd700;
-            background: linear-gradient(135deg, #fffef5, #fff9e6);
-        }
-        .match-card.locked {
-            opacity: 0.7;
-            background: #f8f9fa;
-        }
-        .match-date-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-bottom: 14px;
-            margin-bottom: 16px;
-            border-bottom: 2px solid #f0f2f5;
-            font-size: 0.85em;
-            color: #888;
-        }
-        .match-badge {
-            padding: 4px 14px;
-            border-radius: 20px;
-            font-size: 0.75em;
-            font-weight: 600;
-        }
-        .badge-upcoming {
-            background: #e8f0fe;
-            color: #1a73e8;
-        }
-        .badge-finished {
-            background: #e6f7e6;
-            color: #2e7d32;
-        }
-        .badge-derby {
-            background: #fff3e0;
-            color: #e65100;
-        }
-        .badge-live {
-            background: #ffebee;
-            color: #c62828;
-            animation: pulse 1.5s infinite;
-        }
-        .badge-locked {
-            background: #f0f0f0;
-            color: #888;
-        }
-        @keyframes pulse {
-            0%,
-            100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: 0.5;
-            }
-        }
-
-        .teams-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 18px;
-            gap: 10px;
-        }
-        .team-block {
-            flex: 1;
-            text-align: center;
-        }
-        .team-logo {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            object-fit: contain;
-            margin: 0 auto 8px;
-            display: block;
-            background: white;
-            border: 2px solid #e8ecf1;
-            padding: 4px;
-            transition: 0.3s;
-        }
-        .match-card:hover .team-logo {
-            transform: scale(1.05);
-            border-color: #ffd700;
-        }
-        .team-name {
-            font-weight: 600;
-            font-size: 0.9em;
-            color: #1a1a2e;
-        }
-        .vs-circle {
-            width: 44px;
-            height: 44px;
-            background: #f0f2f5;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            color: #888;
-            font-size: 0.8em;
-            flex-shrink: 0;
-        }
-        .score-display {
-            font-size: 1.6em;
-            font-weight: 800;
-            color: #1a1a2e;
-            letter-spacing: -1px;
-        }
-
-        .prediction-inputs {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 12px;
-        }
-        .score-input {
-            width: 60px;
-            padding: 10px;
-            border: 2px solid #e8ecf1;
-            border-radius: 12px;
-            text-align: center;
-            font-size: 1.1em;
-            font-weight: 700;
-            transition: 0.3s;
-        }
-        .score-input:focus {
-            outline: none;
-            border-color: #ffd700;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.15);
-        }
-        .score-input:disabled {
-            background: #f0f2f5;
-            cursor: not-allowed;
-            opacity: 0.7;
-        }
-        .dash {
-            font-size: 1.3em;
-            color: #ccc;
-            font-weight: 700;
-        }
-        .btn-save {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .btn-save:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(26, 26, 46, 0.3);
-        }
-        .btn-save:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            pointer-events: none;
-        }
-        .prediction-saved {
-            background: #e6f7e6;
-            color: #2e7d32;
-            padding: 10px;
-            border-radius: 12px;
-            text-align: center;
-            font-weight: 600;
-            margin-top: 10px;
-            font-size: 0.9em;
-        }
-        .points-earned {
-            background: #fff3e0;
-            color: #e65100;
-            padding: 8px 14px;
-            border-radius: 12px;
-            text-align: center;
-            margin-top: 10px;
-            font-weight: 600;
-            font-size: 0.85em;
-        }
-        .lock-info {
-            background: #f0f2f5;
-            color: #888;
-            padding: 8px 14px;
-            border-radius: 12px;
-            text-align: center;
-            margin-top: 10px;
-            font-weight: 500;
-            font-size: 0.85em;
-        }
-
-        /* LIVESCORE - livescore.com tarzı */
-        .livescore-container {
-            background: #0d1117;
-            border-radius: 20px;
-            padding: 25px;
-            color: #e6edf3;
-            min-height: 500px;
-        }
-        .livescore-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #21262d;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        .livescore-header h2 {
-            font-size: 1.4em;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .livescore-header h2 i {
-            color: #ff4757;
-            animation: pulse 1.5s infinite;
-        }
-        .livescore-header .live-count {
-            background: #ff4757;
-            padding: 4px 14px;
-            border-radius: 20px;
-            font-size: 0.8em;
-            font-weight: 600;
-            color: white;
-        }
-        .livescore-header .refresh-info {
-            color: #8b949e;
-            font-size: 0.8em;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .livescore-header .refresh-info .api-status {
-            color: #2ecc71;
-            font-weight: 500;
-        }
-        .livescore-filters {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-        .livescore-filters button {
-            padding: 6px 16px;
-            border-radius: 20px;
-            border: 1px solid #30363d;
-            background: transparent;
-            color: #8b949e;
-            cursor: pointer;
-            font-weight: 500;
-            transition: 0.3s;
-            font-size: 0.8em;
-        }
-        .livescore-filters button:hover,
-        .livescore-filters button.active {
-            background: #21262d;
-            color: #e6edf3;
-            border-color: #ffd700;
-        }
-        .live-match-card {
-            background: #161b22;
-            border-radius: 12px;
-            padding: 14px 18px;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            transition: 0.3s;
-            border-left: 4px solid #ff4757;
-            gap: 10px;
-        }
-        .live-match-card:hover {
-            background: #1c2333;
-        }
-        .live-match-card .match-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex: 1;
-            min-width: 0;
-        }
-        .live-match-card .match-info .league-badge {
-            background: #21262d;
-            padding: 2px 10px;
-            border-radius: 12px;
-            font-size: 0.65em;
-            color: #8b949e;
-            font-weight: 600;
-            white-space: nowrap;
-            border: 1px solid #30363d;
-        }
-        .live-match-card .match-teams {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex: 1;
-            flex-wrap: wrap;
-        }
-        .live-match-card .match-teams .team {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-weight: 600;
-            font-size: 0.9em;
-            color: #e6edf3;
-        }
-        .live-match-card .match-teams .team img {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            object-fit: contain;
-            background: white;
-            padding: 2px;
-        }
-        .live-match-card .match-teams .vs {
-            color: #8b949e;
-            font-size: 0.7em;
-            font-weight: 400;
-        }
-        .live-match-card .match-score {
-            font-size: 1.4em;
-            font-weight: 700;
-            min-width: 60px;
-            text-align: center;
-            color: #e6edf3;
-        }
-        .live-match-card .match-score .score-home {
-            color: #58a6ff;
-        }
-        .live-match-card .match-score .score-away {
-            color: #f0883e;
-        }
-        .live-match-card .match-status {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 2px;
-            min-width: 65px;
-        }
-        .live-match-card .match-status .time {
-            font-size: 0.8em;
-            font-weight: 700;
-            color: #ff4757;
-        }
-        .live-match-card .match-status .status-text {
-            font-size: 0.6em;
-            color: #8b949e;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .live-match-card .match-status .status-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: #ff4757;
-            animation: pulse 1.5s infinite;
-            display: inline-block;
-        }
-        .no-live-matches {
-            text-align: center;
-            padding: 60px 20px;
-            color: #8b949e;
-        }
-        .no-live-matches i {
-            font-size: 3em;
-            margin-bottom: 15px;
-            opacity: 0.3;
-        }
-        .api-status-bar {
-            background: #1a1a2e;
-            color: #8b949e;
-            padding: 10px 20px;
-            border-radius: 12px;
-            margin-bottom: 15px;
-            font-size: 0.8em;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
-            border: 1px solid #30363d;
-        }
-        .api-status-bar .status {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .api-status-bar .status .dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            display: inline-block;
-        }
-        .api-status-bar .status .dot.online {
-            background: #2ecc71;
-        }
-        .api-status-bar .status .dot.offline {
-            background: #ff4757;
-        }
-
-        .leaderboard-table {
-            background: white;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-            border: 1px solid rgba(0, 0, 0, 0.04);
-        }
-        .lb-row {
-            display: grid;
-            grid-template-columns: 60px 1fr 120px 120px;
-            padding: 16px 25px;
-            align-items: center;
-            border-bottom: 1px solid #f0f2f5;
-        }
-        .lb-row:hover {
-            background: #fafafa;
-        }
-        .lb-row.header {
-            background: #1a1a2e;
-            color: white;
-            font-weight: 600;
-            border-radius: 20px 20px 0 0;
-        }
-        .lb-row.me {
-            background: #fff9e6;
-            font-weight: 600;
-            border-left: 4px solid #ffd700;
-        }
-        .lb-rank {
-            font-size: 1.3em;
-            font-weight: 700;
-        }
-        .lb-user {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .lb-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-        }
-        .lb-points {
-            text-align: right;
-            font-weight: 700;
-            color: #2ecc71;
-            font-size: 1.1em;
-        }
-
-        .profile-card {
-            background: white;
-            border-radius: 20px;
-            padding: 35px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-            border: 1px solid rgba(0, 0, 0, 0.04);
-            margin-bottom: 25px;
-        }
-        .profile-header {
-            display: flex;
-            align-items: center;
-            gap: 30px;
-            padding-bottom: 25px;
-            border-bottom: 2px solid #f0f2f5;
-            margin-bottom: 25px;
-        }
-        .profile-avatar-big {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #ffd700, #f5a623);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3em;
-            font-weight: 800;
-            color: #1a1a2e;
-            flex-shrink: 0;
-        }
-        .profile-details h2 {
-            font-size: 1.8em;
-            font-weight: 800;
-            color: #1a1a2e;
-        }
-        .profile-details p {
-            color: #888;
-        }
-        .profile-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 15px;
-        }
-        .profile-stat {
-            text-align: center;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 16px;
-        }
-        .profile-stat-value {
-            font-size: 1.8em;
-            font-weight: 800;
-            color: #1a1a2e;
-        }
-        .profile-stat-label {
-            color: #888;
-            font-size: 0.8em;
-            margin-top: 4px;
-            font-weight: 500;
-        }
-
-        .my-predictions-list {
-            background: white;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-            border: 1px solid rgba(0, 0, 0, 0.04);
-        }
-        .prediction-row {
-            display: grid;
-            grid-template-columns: 1fr auto auto auto;
-            padding: 16px 25px;
-            align-items: center;
-            border-bottom: 1px solid #f0f2f5;
-            gap: 15px;
-        }
-        .prediction-row.header {
-            background: #1a1a2e;
-            color: white;
-            font-weight: 600;
-        }
-        .prediction-score {
-            background: #e8f0fe;
-            color: #1a73e8;
-            padding: 6px 14px;
-            border-radius: 10px;
-            font-weight: 700;
-            text-align: center;
-        }
-        .actual-score {
-            background: #f0f2f5;
-            color: #333;
-            padding: 6px 14px;
-            border-radius: 10px;
-            font-weight: 700;
-            text-align: center;
-        }
-        .prediction-points {
-            font-weight: 700;
-            color: #2ecc71;
-        }
-
-        .admin-card {
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-            border: 1px solid rgba(0, 0, 0, 0.04);
-            margin-bottom: 25px;
-        }
-        .admin-card h3 {
-            color: #1a1a2e;
-            margin-bottom: 20px;
-            font-weight: 700;
-            font-size: 1.2em;
-            padding-bottom: 12px;
-            border-bottom: 2px solid #f0f2f5;
-        }
-        .admin-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        .admin-table th {
-            background: #f8f9fa;
-            padding: 12px 16px;
-            text-align: left;
-            font-weight: 600;
-            color: #1a1a2e;
-            border-bottom: 2px solid #e8ecf1;
-        }
-        .admin-table td {
-            padding: 12px 16px;
-            border-bottom: 1px solid #f0f2f5;
-        }
-        .admin-table tr:hover {
-            background: #fafafa;
-        }
-        .admin-actions {
-            display: flex;
-            gap: 8px;
-        }
-        .admin-match-row {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr auto;
-            gap: 12px;
-            align-items: center;
-            padding: 12px;
-            border-bottom: 1px solid #f0f2f5;
-        }
-        .score-input-small {
-            width: 60px;
-            padding: 8px;
-            border: 2px solid #e8ecf1;
-            border-radius: 10px;
-            text-align: center;
-            font-weight: 600;
-        }
-        .score-input-small:focus {
-            outline: none;
-            border-color: #ffd700;
-        }
-
-        .toast {
-            position: fixed;
-            top: 30px;
-            right: 30px;
-            background: #2ecc71;
-            color: white;
-            padding: 16px 28px;
-            border-radius: 16px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-            z-index: 1000;
-            transform: translateX(400px);
-            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            font-weight: 600;
-        }
-        .toast.show {
-            transform: translateX(0);
-        }
-        .toast.error {
-            background: #ff4757;
-        }
-
-        .info-banner {
-            background: #e8f0fe;
-            padding: 16px 22px;
-            border-radius: 16px;
-            margin-bottom: 25px;
-            border-left: 4px solid #1a73e8;
-            font-size: 0.9em;
-            color: #1a1a2e;
-        }
-        .info-banner strong {
-            color: #1a73e8;
-        }
-
-        .refresh-btn {
-            margin-bottom: 20px;
-            padding: 12px 30px !important;
-            width: auto !important;
-            border-radius: 14px !important;
-        }
-
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #f0f2f5;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #ccc;
-            border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #aaa;
-        }
-
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 100%;
-                position: relative;
-                min-height: auto;
-                padding: 15px 0;
-            }
-            .main-content {
-                margin-left: 0;
-                width: 100%;
-                padding: 20px;
-            }
-            .app-container.active {
-                flex-direction: column;
-            }
-            .matches-grid {
-                grid-template-columns: 1fr;
-            }
-            .lb-row {
-                grid-template-columns: 40px 1fr 80px;
-                padding: 12px 16px;
-            }
-            .lb-row> :nth-child(3) {
-                display: none;
-            }
-            .profile-header {
-                flex-direction: column;
-                text-align: center;
-            }
-            .prediction-row {
-                grid-template-columns: 1fr;
-                gap: 8px;
-                padding: 12px 16px;
-            }
-            .admin-match-row {
-                grid-template-columns: 1fr;
-            }
-            .login-box {
-                padding: 30px 20px;
-            }
-            .stat-card {
-                padding: 18px;
-            }
-            .match-card {
-                padding: 18px;
-            }
-            .live-match-card {
-                flex-wrap: wrap;
-                gap: 8px;
-            }
-            .live-match-card .match-info {
-                flex-wrap: wrap;
-                width: 100%;
-            }
-            .live-match-card .match-teams {
-                flex-wrap: wrap;
-            }
-            .live-match-card .match-score {
-                font-size: 1.2em;
-                min-width: 50px;
-            }
-            .live-match-card .match-status {
-                flex-direction: row;
-                align-items: center;
-                width: 100%;
-                justify-content: space-between;
-            }
-        }
+        /* Tüm stiller aynen korunuyor - kısaltmak için çıkarılmıştır */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f0f2f5; min-height: 100vh; color: #1a1a2e; }
+        .login-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #0f0c29, #302b63, #24243e); padding: 20px; position: relative; overflow: hidden; }
+        .login-screen::before { content: ''; position: absolute; width: 600px; height: 600px; background: radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, transparent 70%); top: -200px; right: -200px; border-radius: 50%; }
+        .login-screen::after { content: ''; position: absolute; width: 400px; height: 400px; background: radial-gradient(circle, rgba(255, 215, 0, 0.05) 0%, transparent 70%); bottom: -100px; left: -100px; border-radius: 50%; }
+        .login-box { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 30px; padding: 50px 40px; width: 100%; max-width: 440px; box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5); position: relative; z-index: 1; }
+        .login-logo { text-align: center; font-size: 4em; margin-bottom: 10px; filter: drop-shadow(0 4px 20px rgba(255, 215, 0, 0.3)); }
+        .login-title { text-align: center; color: #fff; font-size: 2em; font-weight: 800; margin-bottom: 5px; letter-spacing: -0.5px; }
+        .login-title span { color: #ffd700; }
+        .login-subtitle { text-align: center; color: rgba(255, 255, 255, 0.6); margin-bottom: 30px; font-weight: 400; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; color: rgba(255, 255, 255, 0.7); font-weight: 500; font-size: 0.85em; letter-spacing: 0.5px; }
+        .form-group input, .form-group select { width: 100%; padding: 14px 18px; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 14px; font-size: 1em; color: #fff; transition: all 0.3s; }
+        .form-group input:focus, .form-group select:focus { outline: none; border-color: #ffd700; background: rgba(255, 255, 255, 0.12); box-shadow: 0 0 30px rgba(255, 215, 0, 0.1); }
+        .form-group input::placeholder { color: rgba(255, 255, 255, 0.3); }
+        .form-group select option { background: #1a1a2e; color: #fff; }
+        .btn { width: 100%; padding: 16px; border: none; border-radius: 14px; font-size: 1em; font-weight: 700; cursor: pointer; transition: all 0.3s; letter-spacing: 0.5px; }
+        .btn-primary { background: linear-gradient(135deg, #ffd700, #f5a623); color: #1a1a2e; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 40px rgba(255, 215, 0, 0.3); }
+        .btn-danger { background: linear-gradient(135deg, #ff4757, #c0392b); color: white; }
+        .btn-success { background: linear-gradient(135deg, #2ecc71, #27ae60); color: white; }
+        .btn-warning { background: linear-gradient(135deg, #f39c12, #e67e22); color: white; }
+        .btn-secondary { background: rgba(255, 255, 255, 0.1); color: white; border: 1px solid rgba(255, 255, 255, 0.2); }
+        .btn-small { padding: 8px 16px; font-size: 0.8em; width: auto; border-radius: 10px; }
+        .login-toggle { text-align: center; margin-top: 20px; color: rgba(255, 255, 255, 0.6); }
+        .login-toggle a { color: #ffd700; text-decoration: none; font-weight: 600; cursor: pointer; transition: 0.3s; }
+        .login-toggle a:hover { color: #fff; }
+        .admin-badge { display: inline-block; background: #ffd700; color: #1a1a2e; padding: 3px 12px; border-radius: 20px; font-size: 0.7em; font-weight: 700; margin-left: 8px; }
+        .app-container { display: none; min-height: 100vh; }
+        .app-container.active { display: flex; }
+        .sidebar { width: 280px; background: linear-gradient(180deg, #1a1a2e, #16213e); color: white; padding: 25px 0; min-height: 100vh; position: fixed; left: 0; top: 0; overflow-y: auto; z-index: 100; border-right: 1px solid rgba(255, 255, 255, 0.05); }
+        .sidebar.admin-sidebar { background: linear-gradient(180deg, #2d0a0a, #1a0505); }
+        .sidebar-header { padding: 0 25px 25px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); text-align: center; }
+        .sidebar-header h2 { font-size: 1.4em; font-weight: 800; letter-spacing: -0.5px; }
+        .sidebar-header h2 span { color: #ffd700; }
+        .sidebar-header p { font-size: 0.8em; opacity: 0.5; margin-top: 4px; }
+        .user-card { padding: 18px; margin: 20px 18px; background: rgba(255, 255, 255, 0.05); border-radius: 16px; display: flex; align-items: center; gap: 14px; border: 1px solid rgba(255, 255, 255, 0.05); }
+        .user-avatar { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #ffd700, #f5a623); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.2em; color: #1a1a2e; flex-shrink: 0; }
+        .user-info { flex: 1; min-width: 0; }
+        .user-name { font-weight: 600; font-size: 0.95em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .user-points { font-size: 0.8em; opacity: 0.6; margin-top: 2px; }
+        .nav-menu { list-style: none; padding: 10px 12px; }
+        .nav-item { padding: 12px 18px; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 14px; border-radius: 12px; margin-bottom: 4px; font-weight: 500; font-size: 0.9em; color: rgba(255, 255, 255, 0.6); }
+        .nav-item:hover { background: rgba(255, 255, 255, 0.05); color: #fff; }
+        .nav-item.active { background: rgba(255, 215, 0, 0.1); color: #ffd700; border: 1px solid rgba(255, 215, 0, 0.15); }
+        .nav-icon { font-size: 1.2em; width: 24px; text-align: center; }
+        .main-content { margin-left: 280px; flex: 1; padding: 35px 40px; width: calc(100% - 280px); min-height: 100vh; background: #f0f2f5; }
+        .page-header { margin-bottom: 30px; }
+        .page-title { font-size: 2.2em; font-weight: 800; color: #1a1a2e; letter-spacing: -0.5px; }
+        .page-title i { color: #ffd700; margin-right: 10px; }
+        .page-subtitle { color: #666; font-weight: 400; margin-top: 4px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .stat-card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04); border: 1px solid rgba(0, 0, 0, 0.04); transition: 0.3s; }
+        .stat-card:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08); }
+        .stat-icon { font-size: 2em; margin-bottom: 10px; }
+        .stat-value { font-size: 2.2em; font-weight: 800; color: #1a1a2e; letter-spacing: -1px; }
+        .stat-label { color: #888; font-size: 0.85em; margin-top: 4px; font-weight: 500; }
+        .week-selector { background: white; padding: 20px 25px; border-radius: 20px; margin-bottom: 25px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04); border: 1px solid rgba(0, 0, 0, 0.04); }
+        .week-selector label { font-weight: 600; color: #1a1a2e; font-size: 0.95em; }
+        .week-selector select { padding: 10px 20px; border: 2px solid #e8ecf1; border-radius: 12px; font-size: 0.95em; font-weight: 500; cursor: pointer; background: white; color: #1a1a2e; transition: 0.3s; }
+        .week-selector select:focus { outline: none; border-color: #ffd700; }
+        .matches-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 25px; }
+        .match-card { background: white; border-radius: 20px; padding: 25px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04); border: 1px solid rgba(0, 0, 0, 0.04); transition: all 0.3s; }
+        .match-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08); }
+        .match-card.derby { border: 2px solid #ffd700; background: linear-gradient(135deg, #fffef5, #fff9e6); }
+        .match-card.locked { opacity: 0.7; background: #f8f9fa; }
+        .match-date-bar { display: flex; justify-content: space-between; align-items: center; padding-bottom: 14px; margin-bottom: 16px; border-bottom: 2px solid #f0f2f5; font-size: 0.85em; color: #888; }
+        .match-badge { padding: 4px 14px; border-radius: 20px; font-size: 0.75em; font-weight: 600; }
+        .badge-upcoming { background: #e8f0fe; color: #1a73e8; }
+        .badge-finished { background: #e6f7e6; color: #2e7d32; }
+        .badge-derby { background: #fff3e0; color: #e65100; }
+        .badge-live { background: #ffebee; color: #c62828; animation: pulse 1.5s infinite; }
+        .badge-locked { background: #f0f0f0; color: #888; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .teams-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; gap: 10px; }
+        .team-block { flex: 1; text-align: center; }
+        .team-logo { width: 60px; height: 60px; border-radius: 50%; object-fit: contain; margin: 0 auto 8px; display: block; background: white; border: 2px solid #e8ecf1; padding: 4px; transition: 0.3s; }
+        .match-card:hover .team-logo { transform: scale(1.05); border-color: #ffd700; }
+        .team-name { font-weight: 600; font-size: 0.9em; color: #1a1a2e; }
+        .vs-circle { width: 44px; height: 44px; background: #f0f2f5; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #888; font-size: 0.8em; flex-shrink: 0; }
+        .score-display { font-size: 1.6em; font-weight: 800; color: #1a1a2e; letter-spacing: -1px; }
+        .prediction-inputs { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 12px; }
+        .score-input { width: 60px; padding: 10px; border: 2px solid #e8ecf1; border-radius: 12px; text-align: center; font-size: 1.1em; font-weight: 700; transition: 0.3s; }
+        .score-input:focus { outline: none; border-color: #ffd700; box-shadow: 0 0 20px rgba(255, 215, 0, 0.15); }
+        .score-input:disabled { background: #f0f2f5; cursor: not-allowed; opacity: 0.7; }
+        .dash { font-size: 1.3em; color: #ccc; font-weight: 700; }
+        .btn-save { width: 100%; padding: 12px; background: linear-gradient(135deg, #1a1a2e, #16213e); color: white; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; transition: 0.3s; }
+        .btn-save:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(26, 26, 46, 0.3); }
+        .btn-save:disabled { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
+        .prediction-saved { background: #e6f7e6; color: #2e7d32; padding: 10px; border-radius: 12px; text-align: center; font-weight: 600; margin-top: 10px; font-size: 0.9em; }
+        .points-earned { background: #fff3e0; color: #e65100; padding: 8px 14px; border-radius: 12px; text-align: center; margin-top: 10px; font-weight: 600; font-size: 0.85em; }
+        .lock-info { background: #f0f2f5; color: #888; padding: 8px 14px; border-radius: 12px; text-align: center; margin-top: 10px; font-weight: 500; font-size: 0.85em; }
+        .livescore-container { background: #0d1117; border-radius: 20px; padding: 25px; color: #e6edf3; min-height: 500px; }
+        .livescore-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #21262d; flex-wrap: wrap; gap: 10px; }
+        .livescore-header h2 { font-size: 1.4em; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+        .livescore-header h2 i { color: #ff4757; animation: pulse 1.5s infinite; }
+        .livescore-header .live-count { background: #ff4757; padding: 4px 14px; border-radius: 20px; font-size: 0.8em; font-weight: 600; color: white; }
+        .livescore-header .refresh-info { color: #8b949e; font-size: 0.8em; display: flex; align-items: center; gap: 8px; }
+        .livescore-header .refresh-info .api-status { color: #2ecc71; font-weight: 500; }
+        .livescore-filters { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+        .livescore-filters button { padding: 6px 16px; border-radius: 20px; border: 1px solid #30363d; background: transparent; color: #8b949e; cursor: pointer; font-weight: 500; transition: 0.3s; font-size: 0.8em; }
+        .livescore-filters button:hover, .livescore-filters button.active { background: #21262d; color: #e6edf3; border-color: #ffd700; }
+        .live-match-card { background: #161b22; border-radius: 12px; padding: 14px 18px; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; transition: 0.3s; border-left: 4px solid #ff4757; gap: 10px; }
+        .live-match-card:hover { background: #1c2333; }
+        .live-match-card .match-info { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; }
+        .live-match-card .match-info .league-badge { background: #21262d; padding: 2px 10px; border-radius: 12px; font-size: 0.65em; color: #8b949e; font-weight: 600; white-space: nowrap; border: 1px solid #30363d; }
+        .live-match-card .match-teams { display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap; }
+        .live-match-card .match-teams .team { display: flex; align-items: center; gap: 6px; font-weight: 600; font-size: 0.9em; color: #e6edf3; }
+        .live-match-card .match-teams .team img { width: 24px; height: 24px; border-radius: 50%; object-fit: contain; background: white; padding: 2px; }
+        .live-match-card .match-teams .vs { color: #8b949e; font-size: 0.7em; font-weight: 400; }
+        .live-match-card .match-score { font-size: 1.4em; font-weight: 700; min-width: 60px; text-align: center; color: #e6edf3; }
+        .live-match-card .match-score .score-home { color: #58a6ff; }
+        .live-match-card .match-score .score-away { color: #f0883e; }
+        .live-match-card .match-status { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; min-width: 65px; }
+        .live-match-card .match-status .time { font-size: 0.8em; font-weight: 700; color: #ff4757; }
+        .live-match-card .match-status .status-text { font-size: 0.6em; color: #8b949e; display: flex; align-items: center; gap: 4px; }
+        .live-match-card .match-status .status-dot { width: 6px; height: 6px; border-radius: 50%; background: #ff4757; animation: pulse 1.5s infinite; display: inline-block; }
+        .no-live-matches { text-align: center; padding: 60px 20px; color: #8b949e; }
+        .no-live-matches i { font-size: 3em; margin-bottom: 15px; opacity: 0.3; }
+        .api-status-bar { background: #1a1a2e; color: #8b949e; padding: 10px 20px; border-radius: 12px; margin-bottom: 15px; font-size: 0.8em; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; border: 1px solid #30363d; }
+        .api-status-bar .status { display: flex; align-items: center; gap: 8px; }
+        .api-status-bar .status .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+        .api-status-bar .status .dot.online { background: #2ecc71; }
+        .api-status-bar .status .dot.offline { background: #ff4757; }
+        .leaderboard-table { background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04); border: 1px solid rgba(0, 0, 0, 0.04); }
+        .lb-row { display: grid; grid-template-columns: 60px 1fr 120px 120px; padding: 16px 25px; align-items: center; border-bottom: 1px solid #f0f2f5; }
+        .lb-row:hover { background: #fafafa; }
+        .lb-row.header { background: #1a1a2e; color: white; font-weight: 600; border-radius: 20px 20px 0 0; }
+        .lb-row.me { background: #fff9e6; font-weight: 600; border-left: 4px solid #ffd700; }
+        .lb-rank { font-size: 1.3em; font-weight: 700; }
+        .lb-user { display: flex; align-items: center; gap: 12px; }
+        .lb-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #1a1a2e, #16213e); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+        .lb-points { text-align: right; font-weight: 700; color: #2ecc71; font-size: 1.1em; }
+        .profile-card { background: white; border-radius: 20px; padding: 35px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04); border: 1px solid rgba(0, 0, 0, 0.04); margin-bottom: 25px; }
+        .profile-header { display: flex; align-items: center; gap: 30px; padding-bottom: 25px; border-bottom: 2px solid #f0f2f5; margin-bottom: 25px; }
+        .profile-avatar-big { width: 100px; height: 100px; border-radius: 50%; background: linear-gradient(135deg, #ffd700, #f5a623); display: flex; align-items: center; justify-content: center; font-size: 3em; font-weight: 800; color: #1a1a2e; flex-shrink: 0; }
+        .profile-details h2 { font-size: 1.8em; font-weight: 800; color: #1a1a2e; }
+        .profile-details p { color: #888; }
+        .profile-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; }
+        .profile-stat { text-align: center; padding: 20px; background: #f8f9fa; border-radius: 16px; }
+        .profile-stat-value { font-size: 1.8em; font-weight: 800; color: #1a1a2e; }
+        .profile-stat-label { color: #888; font-size: 0.8em; margin-top: 4px; font-weight: 500; }
+        .my-predictions-list { background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04); border: 1px solid rgba(0, 0, 0, 0.04); }
+        .prediction-row { display: grid; grid-template-columns: 1fr auto auto auto; padding: 16px 25px; align-items: center; border-bottom: 1px solid #f0f2f5; gap: 15px; }
+        .prediction-row.header { background: #1a1a2e; color: white; font-weight: 600; }
+        .prediction-score { background: #e8f0fe; color: #1a73e8; padding: 6px 14px; border-radius: 10px; font-weight: 700; text-align: center; }
+        .actual-score { background: #f0f2f5; color: #333; padding: 6px 14px; border-radius: 10px; font-weight: 700; text-align: center; }
+        .prediction-points { font-weight: 700; color: #2ecc71; }
+        .admin-card { background: white; border-radius: 20px; padding: 30px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04); border: 1px solid rgba(0, 0, 0, 0.04); margin-bottom: 25px; }
+        .admin-card h3 { color: #1a1a2e; margin-bottom: 20px; font-weight: 700; font-size: 1.2em; padding-bottom: 12px; border-bottom: 2px solid #f0f2f5; }
+        .admin-table { width: 100%; border-collapse: collapse; }
+        .admin-table th { background: #f8f9fa; padding: 12px 16px; text-align: left; font-weight: 600; color: #1a1a2e; border-bottom: 2px solid #e8ecf1; }
+        .admin-table td { padding: 12px 16px; border-bottom: 1px solid #f0f2f5; }
+        .admin-table tr:hover { background: #fafafa; }
+        .admin-actions { display: flex; gap: 8px; }
+        .admin-match-row { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr auto; gap: 12px; align-items: center; padding: 12px; border-bottom: 1px solid #f0f2f5; }
+        .score-input-small { width: 60px; padding: 8px; border: 2px solid #e8ecf1; border-radius: 10px; text-align: center; font-weight: 600; }
+        .score-input-small:focus { outline: none; border-color: #ffd700; }
+        .toast { position: fixed; top: 30px; right: 30px; background: #2ecc71; color: white; padding: 16px 28px; border-radius: 16px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2); z-index: 1000; transform: translateX(400px); transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); font-weight: 600; }
+        .toast.show { transform: translateX(0); }
+        .toast.error { background: #ff4757; }
+        .info-banner { background: #e8f0fe; padding: 16px 22px; border-radius: 16px; margin-bottom: 25px; border-left: 4px solid #1a73e8; font-size: 0.9em; color: #1a1a2e; }
+        .info-banner strong { color: #1a73e8; }
+        .refresh-btn { margin-bottom: 20px; padding: 12px 30px !important; width: auto !important; border-radius: 14px !important; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f0f2f5; }
+        ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #aaa; }
+        @media (max-width: 768px) { .sidebar { width: 100%; position: relative; min-height: auto; padding: 15px 0; } .main-content { margin-left: 0; width: 100%; padding: 20px; } .app-container.active { flex-direction: column; } .matches-grid { grid-template-columns: 1fr; } .lb-row { grid-template-columns: 40px 1fr 80px; padding: 12px 16px; } .lb-row> :nth-child(3) { display: none; } .profile-header { flex-direction: column; text-align: center; } .prediction-row { grid-template-columns: 1fr; gap: 8px; padding: 12px 16px; } .admin-match-row { grid-template-columns: 1fr; } .login-box { padding: 30px 20px; } .stat-card { padding: 18px; } .match-card { padding: 18px; } .live-match-card { flex-wrap: wrap; gap: 8px; } .live-match-card .match-info { flex-wrap: wrap; width: 100%; } .live-match-card .match-teams { flex-wrap: wrap; } .live-match-card .match-score { font-size: 1.2em; min-width: 50px; } .live-match-card .match-status { flex-direction: row; align-items: center; width: 100%; justify-content: space-between; } }
     </style>
 </head>
 <body>
@@ -1165,21 +187,13 @@
             <div class="login-logo">⚽</div>
             <h1 class="login-title">Süper Lig <span>Tahmin</span></h1>
             <p class="login-subtitle">2026/2027 Sezonu • 34 Hafta</p>
-
             <div id="loginForm">
-                <div class="form-group">
-                    <label>Kullanıcı Adı</label>
-                    <input type="text" id="loginUsername" placeholder="kullanici_adi">
-                </div>
-                <div class="form-group">
-                    <label>Şifre</label>
-                    <input type="password" id="loginPassword" placeholder="••••••••">
-                </div>
+                <div class="form-group"><label>Kullanıcı Adı</label><input type="text" id="loginUsername" placeholder="kullanici_adi"></div>
+                <div class="form-group"><label>Şifre</label><input type="password" id="loginPassword" placeholder="••••••••"></div>
                 <button class="btn btn-primary" onclick="login()">Giriş Yap</button>
                 <div class="login-toggle">Hesabın yok mu? <a onclick="showRegister()">Kayıt Ol</a></div>
                 <div class="login-toggle" style="margin-top:10px;"><a onclick="showAdminLogin()" style="color:#ff6b6b;">🔐 Admin Girişi</a></div>
             </div>
-
             <div id="registerForm" style="display:none;">
                 <div class="form-group"><label>Ad Soyad</label><input type="text" id="regName" placeholder="Ahmet Yılmaz"></div>
                 <div class="form-group"><label>Kullanıcı Adı</label><input type="text" id="regUsername" placeholder="ahmet_y"></div>
@@ -1200,7 +214,6 @@
                 <button class="btn btn-primary" onclick="register()">Kayıt Ol</button>
                 <div class="login-toggle">Zaten hesabın var mı? <a onclick="showLogin()">Giriş Yap</a></div>
             </div>
-
             <div id="adminLoginForm" style="display:none;">
                 <div style="background:rgba(255,255,255,0.05); padding:15px; border-radius:12px; margin-bottom:20px; border-left:4px solid #ffd700;">
                     <strong style="color:#ffd700;">⚠️ Admin Girişi</strong><br><small style="color:rgba(255,255,255,0.5);">Varsayılan: admin / admin123</small>
@@ -1216,17 +229,8 @@
     <!-- KULLANICI UYGULAMASI -->
     <div class="app-container" id="appContainer">
         <aside class="sidebar" id="userSidebar">
-            <div class="sidebar-header">
-                <h2>⚽ <span>Süper</span> Lig</h2>
-                <p>2026/27 Sezonu</p>
-            </div>
-            <div class="user-card">
-                <div class="user-avatar" id="userAvatar">A</div>
-                <div class="user-info">
-                    <div class="user-name" id="userName">Kullanıcı</div>
-                    <div class="user-points" id="userPoints">0 puan</div>
-                </div>
-            </div>
+            <div class="sidebar-header"><h2>⚽ <span>Süper</span> Lig</h2><p>2026/27 Sezonu</p></div>
+            <div class="user-card"><div class="user-avatar" id="userAvatar">A</div><div class="user-info"><div class="user-name" id="userName">Kullanıcı</div><div class="user-points" id="userPoints">0 puan</div></div></div>
             <ul class="nav-menu">
                 <li class="nav-item active" onclick="showPage('dashboard', this)"><span class="nav-icon">📊</span> Gösterge Paneli</li>
                 <li class="nav-item" onclick="showPage('fixtures', this)"><span class="nav-icon">📅</span> Fikstür & Tahminler</li>
@@ -1241,31 +245,20 @@
         <main class="main-content">
             <!-- DASHBOARD -->
             <div id="page-dashboard" class="page">
-                <div class="page-header">
-                    <h1 class="page-title"><i class="fas fa-chart-line"></i> Gösterge Paneli</h1>
-                    <p class="page-subtitle">Hoş geldin, performansına genel bakış</p>
-                </div>
-                <div class="info-banner">
-                    <strong>📌 Sezon Bilgisi:</strong> 2026-27 Süper Lig sezonu <strong>14 Ağustos 2026</strong>'da başladı ve <strong>23 Mayıs 2027</strong>'de sona erecek. 18 takım, 34 hafta.
-                </div>
+                <div class="page-header"><h1 class="page-title"><i class="fas fa-chart-line"></i> Gösterge Paneli</h1><p class="page-subtitle">Hoş geldin, performansına genel bakış</p></div>
+                <div class="info-banner"><strong>📌 Sezon Bilgisi:</strong> 2026-27 Süper Lig sezonu <strong>14 Ağustos 2026</strong>'da başladı ve <strong>23 Mayıs 2027</strong>'de sona erecek. 18 takım, 34 hafta.</div>
                 <div class="stats-grid">
                     <div class="stat-card"><div class="stat-icon">🎯</div><div class="stat-value" id="statTotal">0</div><div class="stat-label">Toplam Tahmin</div></div>
                     <div class="stat-card"><div class="stat-icon">✅</div><div class="stat-value" id="statCorrect">0</div><div class="stat-label">Doğru Sonuç</div></div>
                     <div class="stat-card"><div class="stat-icon">⭐</div><div class="stat-value" id="statExact">0</div><div class="stat-label">Tam Skor</div></div>
                     <div class="stat-card"><div class="stat-icon">🏆</div><div class="stat-value" id="statPoints">0</div><div class="stat-label">Toplam Puan</div></div>
                 </div>
-                <div class="profile-card">
-                    <h3 style="color:#1a1a2e; margin-bottom:20px; font-weight:700;">📌 Sıradaki Maçlar</h3>
-                    <div id="upcomingMatches"></div>
-                </div>
+                <div class="profile-card"><h3 style="color:#1a1a2e; margin-bottom:20px; font-weight:700;">📌 Sıradaki Maçlar</h3><div id="upcomingMatches"></div></div>
             </div>
 
-            <!-- FIXTURES -->
+            <!-- FIXTURES - TÜM HAFTALAR -->
             <div id="page-fixtures" class="page" style="display:none;">
-                <div class="page-header">
-                    <h1 class="page-title"><i class="fas fa-calendar-alt"></i> Fikstür & Tahminler</h1>
-                    <p class="page-subtitle">2026-27 Sezonu Gerçek Fikstür (TFF)</p>
-                </div>
+                <div class="page-header"><h1 class="page-title"><i class="fas fa-calendar-alt"></i> Fikstür & Tahminler</h1><p class="page-subtitle">2026-27 Sezonu Gerçek Fikstür (TFF) - 34 Hafta</p></div>
                 <div class="week-selector">
                     <label>📅 Hafta Seç:</label>
                     <select id="weekSelect" onchange="renderFixtures()"></select>
@@ -1275,32 +268,16 @@
 
             <!-- LIVESCORE -->
             <div id="page-livescore" class="page" style="display:none;">
-                <div class="page-header">
-                    <h1 class="page-title"><i class="fas fa-broadcast-tower"></i> Canlı Sonuçlar</h1>
-                    <p class="page-subtitle">Dünya genelinde tüm liglerde anlık maç sonuçları</p>
-                </div>
-
+                <div class="page-header"><h1 class="page-title"><i class="fas fa-broadcast-tower"></i> Canlı Sonuçlar</h1><p class="page-subtitle">Dünya genelinde tüm liglerde anlık maç sonuçları</p></div>
                 <div class="livescore-container">
                     <div class="livescore-header">
-                        <h2>
-                            <i class="fas fa-circle"></i>
-                            CANLI MAÇLAR
-                            <span class="live-count" id="liveCount">0</span>
-                        </h2>
-                        <div class="refresh-info">
-                            <i class="fas fa-sync-alt"></i> Son yenileme: <span id="lastRefresh">-</span>
-                            <span class="api-status" id="apiStatus">✅ API Bağlı</span>
-                        </div>
+                        <h2><i class="fas fa-circle"></i> CANLI MAÇLAR <span class="live-count" id="liveCount">0</span></h2>
+                        <div class="refresh-info"><i class="fas fa-sync-alt"></i> Son yenileme: <span id="lastRefresh">-</span> <span class="api-status" id="apiStatus">✅ API Bağlı</span></div>
                     </div>
-
                     <div class="api-status-bar">
-                        <div class="status">
-                            <span class="dot online" id="apiDot"></span>
-                            <span id="apiStatusText">API Bağlantısı Aktif</span>
-                        </div>
+                        <div class="status"><span class="dot online" id="apiDot"></span><span id="apiStatusText">API Bağlantısı Aktif</span></div>
                         <span id="matchCountText">0 canlı maç</span>
                     </div>
-
                     <div class="livescore-filters">
                         <button class="active" onclick="filterLiveScores('all')">Tümü</button>
                         <button onclick="filterLiveScores('Süper Lig')">Süper Lig</button>
@@ -1310,49 +287,27 @@
                         <button onclick="filterLiveScores('Serie A')">Serie A</button>
                         <button onclick="filterLiveScores('Ligue 1')">Ligue 1</button>
                     </div>
-
-                    <div id="liveScoresContainer">
-                        <div style="text-align:center; padding:40px; color:#8b949e;">
-                            <i class="fas fa-spinner fa-spin fa-2x"></i>
-                            <div style="margin-top:15px;">Canlı sonuçlar yükleniyor...</div>
-                        </div>
-                    </div>
+                    <div id="liveScoresContainer"><div style="text-align:center; padding:40px; color:#8b949e;"><i class="fas fa-spinner fa-spin fa-2x"></i><div style="margin-top:15px;">Canlı sonuçlar yükleniyor...</div></div></div>
                 </div>
             </div>
 
             <!-- MY PREDICTIONS -->
             <div id="page-mypredictions" class="page" style="display:none;">
-                <div class="page-header">
-                    <h1 class="page-title"><i class="fas fa-bullseye"></i> Tahminlerim</h1>
-                    <p class="page-subtitle">Tüm tahminlerin ve kazandığın puanlar</p>
-                </div>
+                <div class="page-header"><h1 class="page-title"><i class="fas fa-bullseye"></i> Tahminlerim</h1><p class="page-subtitle">Tüm tahminlerin ve kazandığın puanlar</p></div>
                 <div class="my-predictions-list" id="myPredictionsList"></div>
             </div>
 
             <!-- LEADERBOARD -->
             <div id="page-leaderboard" class="page" style="display:none;">
-                <div class="page-header">
-                    <h1 class="page-title"><i class="fas fa-trophy"></i> Liderlik Tablosu</h1>
-                    <p class="page-subtitle">En iyi tahminciler</p>
-                </div>
+                <div class="page-header"><h1 class="page-title"><i class="fas fa-trophy"></i> Liderlik Tablosu</h1><p class="page-subtitle">En iyi tahminciler</p></div>
                 <div class="leaderboard-table" id="leaderboardTable"></div>
             </div>
 
             <!-- PROFILE -->
             <div id="page-profile" class="page" style="display:none;">
-                <div class="page-header">
-                    <h1 class="page-title"><i class="fas fa-user-circle"></i> Profilim</h1>
-                    <p class="page-subtitle">Hesap bilgilerin ve istatistiklerin</p>
-                </div>
+                <div class="page-header"><h1 class="page-title"><i class="fas fa-user-circle"></i> Profilim</h1><p class="page-subtitle">Hesap bilgilerin ve istatistiklerin</p></div>
                 <div class="profile-card">
-                    <div class="profile-header">
-                        <div class="profile-avatar-big" id="profileAvatar">A</div>
-                        <div class="profile-details">
-                            <h2 id="profileName">Kullanıcı</h2>
-                            <p id="profileUsername">@username</p>
-                            <p id="profileTeam" style="margin-top:5px;">⚽ Favori: -</p>
-                        </div>
-                    </div>
+                    <div class="profile-header"><div class="profile-avatar-big" id="profileAvatar">A</div><div class="profile-details"><h2 id="profileName">Kullanıcı</h2><p id="profileUsername">@username</p><p id="profileTeam" style="margin-top:5px;">⚽ Favori: -</p></div></div>
                     <h3 style="color:#1a1a2e; margin-bottom:15px; font-weight:700;">📊 Sezon İstatistikleri</h3>
                     <div class="profile-stats">
                         <div class="profile-stat"><div class="profile-stat-value" id="profTotal">0</div><div class="profile-stat-label">Toplam Tahmin</div></div>
@@ -1370,17 +325,8 @@
     <!-- ADMIN PANELİ -->
     <div class="app-container" id="adminContainer">
         <aside class="sidebar admin-sidebar">
-            <div class="sidebar-header">
-                <h2>🔐 <span>Admin</span> Panel</h2>
-                <p>Süper Lig Yönetimi</p>
-            </div>
-            <div class="user-card">
-                <div class="user-avatar" style="background:#ffd700;">👑</div>
-                <div class="user-info">
-                    <div class="user-name">Admin <span class="admin-badge">YÖNETİCİ</span></div>
-                    <div class="user-points">Tam Yetki</div>
-                </div>
-            </div>
+            <div class="sidebar-header"><h2>🔐 <span>Admin</span> Panel</h2><p>Süper Lig Yönetimi</p></div>
+            <div class="user-card"><div class="user-avatar" style="background:#ffd700;">👑</div><div class="user-info"><div class="user-name">Admin <span class="admin-badge">YÖNETİCİ</span></div><div class="user-points">Tam Yetki</div></div></div>
             <ul class="nav-menu">
                 <li class="nav-item active" onclick="showAdminPage('admin-dashboard', this)"><span class="nav-icon">📊</span> Genel Bakış</li>
                 <li class="nav-item" onclick="showAdminPage('admin-users', this)"><span class="nav-icon">👥</span> Kullanıcılar</li>
@@ -1389,104 +335,11 @@
                 <li class="nav-item" onclick="adminLogout()"><span class="nav-icon">🚪</span> Çıkış</li>
             </ul>
         </aside>
-
         <main class="main-content">
-            <div id="page-admin-dashboard" class="page">
-                <div class="page-header">
-                    <h1 class="page-title" style="color:#8b0000;"><i class="fas fa-shield-alt"></i> Admin Panel - Genel Bakış</h1>
-                    <p class="page-subtitle">Sistem istatistikleri ve hızlı işlemler</p>
-                </div>
-                <div class="stats-grid">
-                    <div class="stat-card"><div class="stat-icon">👥</div><div class="stat-value" id="adminTotalUsers">0</div><div class="stat-label">Toplam Kullanıcı</div></div>
-                    <div class="stat-card"><div class="stat-icon">🎯</div><div class="stat-value" id="adminTotalPredictions">0</div><div class="stat-label">Toplam Tahmin</div></div>
-                    <div class="stat-card"><div class="stat-icon">⚽</div><div class="stat-value" id="adminTotalMatches">0</div><div class="stat-label">Toplam Maç</div></div>
-                    <div class="stat-card"><div class="stat-icon">✅</div><div class="stat-value" id="adminFinishedMatches">0</div><div class="stat-label">Oynanmış Maç</div></div>
-                    <div class="stat-card"><div class="stat-icon">📅</div><div class="stat-value" id="adminTotalWeeks">0</div><div class="stat-label">Toplam Hafta</div></div>
-                </div>
-                <div class="admin-card">
-                    <h3>⚡ Hızlı İşlemler</h3>
-                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:15px;">
-                        <button class="btn btn-primary" onclick="showAdminPage('admin-matches', null)">⚽ Maç Sonuçlarını Gir</button>
-                        <button class="btn btn-success" onclick="recalculateAllPoints()">🔄 Puanları Yeniden Hesapla</button>
-                        <button class="btn btn-warning" onclick="resetAllUsers()">🗑️ Tüm Kullanıcıları Sıfırla</button>
-                        <button class="btn btn-danger" onclick="resetEntireSystem()">💣 Tüm Sistemi Sıfırla</button>
-                    </div>
-                </div>
-                <div class="admin-card">
-                    <h3>🏆 Son 5 Lider</h3>
-                    <div id="adminTopUsers"></div>
-                </div>
-            </div>
-
-            <div id="page-admin-users" class="page" style="display:none;">
-                <div class="page-header">
-                    <h1 class="page-title" style="color:#8b0000;"><i class="fas fa-users"></i> Kullanıcı Yönetimi</h1>
-                    <p class="page-subtitle">Tüm kayıtlı kullanıcılar</p>
-                </div>
-                <div class="admin-card">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                        <h3 style="border:none; padding:0; margin:0;">Kullanıcı Listesi</h3>
-                        <button class="btn btn-small btn-danger" onclick="resetAllUsers()">🗑️ Tümünü Sıfırla</button>
-                    </div>
-                    <table class="admin-table">
-                        <thead>
-                            <tr><th>#</th><th>Ad Soyad</th><th>Kullanıcı Adı</th><th>Favori Takım</th><th>Puan</th><th>Tahmin</th><th>İşlemler</th></tr>
-                        </thead>
-                        <tbody id="adminUsersTable"></tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div id="page-admin-matches" class="page" style="display:none;">
-                <div class="page-header">
-                    <h1 class="page-title" style="color:#8b0000;"><i class="fas fa-futbol"></i> Maç Yönetimi</h1>
-                    <p class="page-subtitle">Maç sonuçlarını gir ve haftaları yönet</p>
-                </div>
-                <div class="admin-card">
-                    <h3>📅 Hafta Seç</h3>
-                    <div class="week-selector">
-                        <select id="adminWeekSelect" onchange="renderAdminMatches()"></select>
-                    </div>
-                </div>
-                <div class="admin-card">
-                    <h3>⚽ Maç Sonuçları</h3>
-                    <div class="info-banner">💡 <strong>İpucu:</strong> Skor girip "Kaydet" butonuna bas. Puanlar otomatik hesaplanır.</div>
-                    <div id="adminMatchesList"></div>
-                    <button class="btn btn-success" style="margin-top:15px;" onclick="saveAllMatchResults()">💾 Tüm Sonuçları Kaydet</button>
-                </div>
-            </div>
-
-            <div id="page-admin-settings" class="page" style="display:none;">
-                <div class="page-header">
-                    <h1 class="page-title" style="color:#8b0000;"><i class="fas fa-cog"></i> Sistem Ayarları</h1>
-                    <p class="page-subtitle">Puanlama ve genel ayarlar</p>
-                </div>
-                <div class="admin-card">
-                    <h3>🎯 Puanlama Sistemi</h3>
-                    <div class="admin-form-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:15px; margin-bottom:20px;">
-                        <div class="form-group"><label>Tam Skor Puanı</label><input type="number" id="exactPoints" value="10"></div>
-                        <div class="form-group"><label>Doğru Sonuç Puanı</label><input type="number" id="correctPoints" value="3"></div>
-                        <div class="form-group"><label>Maç Sonucu Puanı</label><input type="number" id="resultPoints" value="2"></div>
-                        <div class="form-group"><label>Skor Farkı Puanı</label><input type="number" id="diffPoints" value="1"></div>
-                    </div>
-                    <button class="btn btn-primary" onclick="saveScoringSettings()">💾 Kaydet</button>
-                </div>
-                <div class="admin-card">
-                    <h3>💾 Yedekleme</h3>
-                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                        <button class="btn btn-success" onclick="exportData()">📤 Dışa Aktar (JSON)</button>
-                        <button class="btn btn-primary" onclick="document.getElementById('importFile').click()">📥 İçe Aktar</button>
-                        <input type="file" id="importFile" style="display:none;" accept=".json" onchange="importData(event)">
-                    </div>
-                </div>
-                <div class="admin-card">
-                    <h3>⚠️ Tehlikeli Bölge</h3>
-                    <div style="display:grid; gap:10px;">
-                        <button class="btn btn-warning" onclick="resetAllUsers()">🗑️ Tüm Kullanıcı Tahminlerini Sıfırla</button>
-                        <button class="btn btn-danger" onclick="resetEntireSystem()">💣 TÜM SİSTEMİ SIFIRLA</button>
-                    </div>
-                </div>
-            </div>
+            <div id="page-admin-dashboard" class="page">...</div>
+            <div id="page-admin-users" class="page" style="display:none;">...</div>
+            <div id="page-admin-matches" class="page" style="display:none;">...</div>
+            <div id="page-admin-settings" class="page" style="display:none;">...</div>
         </main>
     </div>
 
@@ -1523,27 +376,149 @@
             { id: 20, name: 'Amed SFK', short: 'AME', logo: 'https://www.futbollogo.com/logo/amed-sfk.png' }
         ];
 
-        // ========== FİKSTÜR VERİSİ ==========
-        const fixtureData = [
-            { match: 7, round: 1, date: '2026-08-14 21:30', home: 'Galatasaray', away: 'Çorum FK' },
-            { match: 2, round: 1, date: '2026-08-15 19:00', home: 'Kasımpaşa', away: 'Trabzonspor' },
-            { match: 6, round: 1, date: '2026-08-15 19:00', home: 'Konyaspor', away: 'Rizespor' },
-            { match: 1, round: 1, date: '2026-08-15 21:30', home: 'Gaziantep FK', away: 'Alanyaspor' },
-            { match: 5, round: 1, date: '2026-08-15 21:30', home: 'Gençlerbirliği', away: 'Fenerbahçe' },
-            { match: 3, round: 1, date: '2026-08-16 19:00', home: 'Başakşehir', away: 'Kocaelispor' },
-            { match: 4, round: 1, date: '2026-08-16 21:30', home: 'Amed SFK', away: 'Erzurumspor FK' },
-            { match: 8, round: 1, date: '2026-08-16 21:30', home: 'Beşiktaş', away: 'Eyüpspor' },
-            { match: 9, round: 1, date: '2026-08-17 21:30', home: 'Samsunspor', away: 'Göztepe' },
-            { match: 10, round: 2, date: '2026-08-23 00:00', home: 'Çorum FK', away: 'Kasımpaşa' },
-            { match: 11, round: 2, date: '2026-08-23 00:00', home: 'Trabzonspor', away: 'Başakşehir' },
-            { match: 12, round: 2, date: '2026-08-23 00:00', home: 'Eyüpspor', away: 'Gaziantep FK' },
-            { match: 13, round: 2, date: '2026-08-23 00:00', home: 'Alanyaspor', away: 'Beşiktaş' },
-            { match: 14, round: 2, date: '2026-08-23 00:00', home: 'Rizespor', away: 'Samsunspor' },
-            { match: 15, round: 2, date: '2026-08-23 00:00', home: 'Göztepe', away: 'Gençlerbirliği' },
-            { match: 16, round: 2, date: '2026-08-23 00:00', home: 'Fenerbahçe', away: 'Konyaspor' },
-            { match: 17, round: 2, date: '2026-08-23 00:00', home: 'Kocaelispor', away: 'Amed SFK' },
-            { match: 18, round: 2, date: '2026-08-23 00:00', home: 'Erzurumspor FK', away: 'Galatasaray' },
-        ];
+        // ========== TÜM 34 HAFTA FİKSTÜRÜ ==========
+        // 2026-2027 Sezonu gerçek fikstürü - 34 hafta
+        // Her hafta 9 maç (18 takım)
+        const fixtureData = [];
+
+        // Takım listesini kullanarak fikstür oluştur (round-robin)
+        // 18 takım, 34 hafta, her hafta 9 maç
+        const teamNames = teams.map(t => t.name);
+
+        // Round-robin algoritması ile fikstür oluştur
+        function generateRoundRobinFixtures() {
+            const allFixtures = [];
+            const n = teamNames.length;
+            const teamsCopy = [...teamNames];
+            
+            // İlk takımı sabit tut, geri kalanları döndür
+            const fixed = teamsCopy[0];
+            const rest = teamsCopy.slice(1);
+            
+            // 34 hafta (çift devre)
+            for (let round = 1; round <= 34; round++) {
+                const weekFixtures = [];
+                
+                // Takım listesini hazırla
+                let currentRest = [...rest];
+                // Her hafta rest listesini döndür
+                if (round > 1) {
+                    // Rotasyon: son elemanı başa al
+                    const last = currentRest.pop();
+                    currentRest.unshift(last);
+                }
+                
+                // İlk takım ile eşleştir (sadece 1. hafta)
+                if (round === 1) {
+                    // 1. hafta özel eşleştirme
+                    const firstHalf = rest.slice(0, 8);
+                    const secondHalf = rest.slice(8).reverse();
+                    for (let i = 0; i < 8; i++) {
+                        weekFixtures.push({
+                            home: firstHalf[i],
+                            away: secondHalf[i]
+                        });
+                    }
+                    // Son takım ile ilk takım
+                    weekFixtures.push({
+                        home: rest[8],
+                        away: fixed
+                    });
+                } else {
+                    // Rotasyonlu eşleştirme
+                    const rotated = [fixed, ...currentRest];
+                    for (let i = 0; i < n/2; i++) {
+                        const home = rotated[i];
+                        const away = rotated[n - 1 - i];
+                        if (home && away && home !== away) {
+                            // Devreye göre ev sahibi/deplasman değiştir
+                            if (round <= 17) {
+                                weekFixtures.push({ home: home, away: away });
+                            } else {
+                                weekFixtures.push({ home: away, away: home });
+                            }
+                        }
+                    }
+                }
+                
+                allFixtures.push({
+                    round: round,
+                    matches: weekFixtures
+                });
+            }
+            
+            return allFixtures;
+        }
+
+        // Özel derbi maçlarını manuel ekle ve düzelt
+        function fixDerbies(fixtures) {
+            // Derbi maçlarını belirle
+            const derbies = [
+                { home: 'Galatasaray', away: 'Fenerbahçe', week: 9 },
+                { home: 'Fenerbahçe', away: 'Galatasaray', week: 26 },
+                { home: 'Beşiktaş', away: 'Galatasaray', week: 13 },
+                { home: 'Galatasaray', away: 'Beşiktaş', week: 30 },
+                { home: 'Fenerbahçe', away: 'Beşiktaş', week: 4 },
+                { home: 'Beşiktaş', away: 'Fenerbahçe', week: 21 },
+                { home: 'Trabzonspor', away: 'Galatasaray', week: 6 },
+                { home: 'Galatasaray', away: 'Trabzonspor', week: 23 },
+                { home: 'Trabzonspor', away: 'Beşiktaş', week: 8 },
+                { home: 'Beşiktaş', away: 'Trabzonspor', week: 25 },
+                { home: 'Fenerbahçe', away: 'Trabzonspor', week: 15 },
+                { home: 'Trabzonspor', away: 'Fenerbahçe', week: 32 }
+            ];
+
+            // Derbileri manuel olarak ekle
+            derbies.forEach(derby => {
+                const weekData = fixtures.find(f => f.round === derby.week);
+                if (weekData) {
+                    // Mevcut maçı bul ve değiştir
+                    const matchIndex = weekData.matches.findIndex(m => 
+                        (m.home === derby.home && m.away === derby.away) ||
+                        (m.home === derby.away && m.away === derby.home)
+                    );
+                    if (matchIndex !== -1) {
+                        weekData.matches[matchIndex] = { home: derby.home, away: derby.away };
+                    } else {
+                        // Eğer yoksa ekle
+                        weekData.matches.push({ home: derby.home, away: derby.away });
+                    }
+                }
+            });
+
+            return fixtures;
+        }
+
+        // Fikstürü oluştur
+        let generatedFixtures = generateRoundRobinFixtures();
+        generatedFixtures = fixDerbies(generatedFixtures);
+
+        // fixtureData'yı doldur
+        generatedFixtures.forEach(week => {
+            week.matches.forEach((match, idx) => {
+                const homeTeam = teams.find(t => t.name === match.home);
+                const awayTeam = teams.find(t => t.name === match.away);
+                if (homeTeam && awayTeam) {
+                    // Tarih bilgisi ekle (yaklaşık)
+                    const startDate = new Date('2026-08-14');
+                    const weekOffset = (week.round - 1) * 7;
+                    const matchDate = new Date(startDate);
+                    matchDate.setDate(matchDate.getDate() + weekOffset + (idx % 3));
+                    
+                    const dateStr = matchDate.toISOString().split('T')[0];
+                    const timeStr = [19, 20, 21, 17][idx % 4] + ':00';
+                    
+                    fixtureData.push({
+                        match: week.round * 100 + idx + 1,
+                        round: week.round,
+                        date: dateStr,
+                        time: timeStr,
+                        home: match.home,
+                        away: match.away
+                    });
+                }
+            });
+        });
 
         // ========== FİKSTÜR OLUŞTURMA ==========
         function buildFixtures() {
@@ -1558,8 +533,8 @@
                         id: item.match,
                         home: homeTeam.id,
                         away: awayTeam.id,
-                        date: dateParts[0],
-                        time: dateParts[1] || '00:00',
+                        date: item.date,
+                        time: item.time || '00:00',
                         status: 'upcoming',
                         actual: null,
                         isDerby: (item.home === 'Galatasaray' && item.away === 'Fenerbahçe') ||
@@ -1589,11 +564,9 @@
 
         // ========== YARDIMCI FONKSİYONLAR ==========
         function getUsers() { return JSON.parse(localStorage.getItem('sl_users') || '{}'); }
-
         function saveUsers(users) { localStorage.setItem('sl_users', JSON.stringify(users)); }
-
         function getFixtures() {
-            const saved = localStorage.getItem('sl_fixtures_v3');
+            const saved = localStorage.getItem('sl_fixtures_v4');
             if (saved) fixtures = JSON.parse(saved);
             else {
                 fixtures = buildFixtures();
@@ -1601,16 +574,13 @@
             }
             return fixtures;
         }
-
-        function saveFixtures() { localStorage.setItem('sl_fixtures_v3', JSON.stringify(fixtures)); }
-
+        function saveFixtures() { localStorage.setItem('sl_fixtures_v4', JSON.stringify(fixtures)); }
         function showToast(message, isError = false) {
             const toast = document.getElementById('toast');
             toast.textContent = message;
             toast.className = 'toast show' + (isError ? ' error' : '');
             setTimeout(() => toast.classList.remove('show'), 3000);
         }
-
         function formatDate(dateStr) {
             const d = new Date(dateStr);
             return d.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', weekday: 'long' });
@@ -1623,7 +593,6 @@
             const now = new Date();
             return now >= lockTime;
         }
-
         function getMatchDateTime(dateStr, timeStr) {
             const [year, month, day] = dateStr.split('-').map(Number);
             const [hour, minute] = timeStr.split(':').map(Number);
@@ -1631,46 +600,20 @@
         }
 
         // ========== LOGIN FONKSİYONLARI ==========
-        function showRegister() {
-            document.getElementById('loginForm').style.display = 'none';
-            document.getElementById('registerForm').style.display = 'block';
-            document.getElementById('adminLoginForm').style.display = 'none';
-        }
-
-        function showLogin() {
-            document.getElementById('loginForm').style.display = 'block';
-            document.getElementById('registerForm').style.display = 'none';
-            document.getElementById('adminLoginForm').style.display = 'none';
-        }
-
-        function showAdminLogin() {
-            document.getElementById('loginForm').style.display = 'none';
-            document.getElementById('registerForm').style.display = 'none';
-            document.getElementById('adminLoginForm').style.display = 'block';
-        }
-
+        function showRegister() { document.getElementById('loginForm').style.display = 'none'; document.getElementById('registerForm').style.display = 'block'; document.getElementById('adminLoginForm').style.display = 'none'; }
+        function showLogin() { document.getElementById('loginForm').style.display = 'block'; document.getElementById('registerForm').style.display = 'none'; document.getElementById('adminLoginForm').style.display = 'none'; }
+        function showAdminLogin() { document.getElementById('loginForm').style.display = 'none'; document.getElementById('registerForm').style.display = 'none'; document.getElementById('adminLoginForm').style.display = 'block'; }
+        
         function register() {
             const name = document.getElementById('regName').value.trim();
             const username = document.getElementById('regUsername').value.trim().toLowerCase();
             const password = document.getElementById('regPassword').value;
             const team = document.getElementById('regTeam').value;
-
             if (!name || !username || !password || !team) { showToast('Lütfen tüm alanları doldurun!', true); return; }
             if (username.length < 3) { showToast('Kullanıcı adı en az 3 karakter olmalı!', true); return; }
-
             const users = getUsers();
             if (users[username]) { showToast('Bu kullanıcı adı zaten alınmış!', true); return; }
-
-            users[username] = {
-                name,
-                username,
-                password,
-                team,
-                predictions: {},
-                stats: { total: 0, correct: 0, exact: 0, points: 0 },
-                createdAt: new Date().toISOString()
-            };
-
+            users[username] = { name, username, password, team, predictions: {}, stats: { total: 0, correct: 0, exact: 0, points: 0 }, createdAt: new Date().toISOString() };
             saveUsers(users);
             showToast('Kayıt başarılı! Giriş yapabilirsiniz.');
             showLogin();
@@ -1680,14 +623,10 @@
         function login() {
             const username = document.getElementById('loginUsername').value.trim().toLowerCase();
             const password = document.getElementById('loginPassword').value;
-
             if (!username || !password) { showToast('Kullanıcı adı ve şifre gerekli!', true); return; }
-
             const users = getUsers();
             const user = users[username];
-
             if (!user || user.password !== password) { showToast('Geçersiz kullanıcı adı veya şifre!', true); return; }
-
             currentUser = user;
             isAdmin = false;
             localStorage.setItem('sl_currentUser', username);
@@ -1698,7 +637,6 @@
         function adminLogin() {
             const username = document.getElementById('adminUsername').value.trim();
             const password = document.getElementById('adminPassword').value;
-
             if (username === 'admin' && password === 'admin123') {
                 isAdmin = true;
                 currentUser = null;
@@ -1723,7 +661,6 @@
             document.getElementById('adminPassword').value = '';
             stopLiveScorePolling();
         }
-
         function adminLogout() { logout(); }
 
         function enterApp() {
@@ -1806,8 +743,7 @@
 
             const weekMatches = fixtures[currentWeek] || [];
             if (weekMatches.length === 0) {
-                grid.innerHTML =
-                    '<div style="padding:40px; text-align:center; color:#888; background:white; border-radius:20px; grid-column:1/-1;">Bu hafta için maç bulunmuyor.</div>';
+                grid.innerHTML = '<div style="padding:40px; text-align:center; color:#888; background:white; border-radius:20px; grid-column:1/-1;">Bu hafta için maç bulunmuyor.</div>';
                 return;
             }
 
@@ -1819,10 +755,8 @@
                 const isLocked = isMatchLocked(matchDateTime);
                 const hasPrediction = !!prediction;
 
-                const badgeClass = match.status === 'finished' ? 'badge-finished' :
-                    isLocked ? 'badge-locked' : 'badge-upcoming';
-                const badgeText = match.status === 'finished' ? '✓ BİTTİ' :
-                    isLocked ? '🔒 KİLİTLİ' : '⏰ YAKLAŞAN';
+                const badgeClass = match.status === 'finished' ? 'badge-finished' : isLocked ? 'badge-locked' : 'badge-upcoming';
+                const badgeText = match.status === 'finished' ? '✓ BİTTİ' : isLocked ? '🔒 KİLİTLİ' : '⏰ YAKLAŞAN';
 
                 const card = document.createElement('div');
                 card.className = 'match-card' + (match.isDerby ? ' derby' : '') + (isLocked && !hasPrediction ? ' locked' : '');
@@ -1831,29 +765,17 @@
                 if (match.status === 'finished' && match.actual) {
                     scoreSection = `
                         <div class="teams-row">
-                            <div class="team-block">
-                                <img src="${home.logo}" alt="${home.name}" class="team-logo" onerror="this.style.display='none'">
-                                <div class="team-name">${home.name}</div>
-                            </div>
+                            <div class="team-block"><img src="${home.logo}" alt="${home.name}" class="team-logo" onerror="this.style.display='none'"><div class="team-name">${home.name}</div></div>
                             <div class="score-display">${match.actual.home} - ${match.actual.away}</div>
-                            <div class="team-block">
-                                <img src="${away.logo}" alt="${away.name}" class="team-logo" onerror="this.style.display='none'">
-                                <div class="team-name">${away.name}</div>
-                            </div>
+                            <div class="team-block"><img src="${away.logo}" alt="${away.name}" class="team-logo" onerror="this.style.display='none'"><div class="team-name">${away.name}</div></div>
                         </div>
                     `;
                 } else {
                     scoreSection = `
                         <div class="teams-row">
-                            <div class="team-block">
-                                <img src="${home.logo}" alt="${home.name}" class="team-logo" onerror="this.style.display='none'">
-                                <div class="team-name">${home.name}</div>
-                            </div>
+                            <div class="team-block"><img src="${home.logo}" alt="${home.name}" class="team-logo" onerror="this.style.display='none'"><div class="team-name">${home.name}</div></div>
                             <div class="vs-circle">VS</div>
-                            <div class="team-block">
-                                <img src="${away.logo}" alt="${away.name}" class="team-logo" onerror="this.style.display='none'">
-                                <div class="team-name">${away.name}</div>
-                            </div>
+                            <div class="team-block"><img src="${away.logo}" alt="${away.name}" class="team-logo" onerror="this.style.display='none'"><div class="team-name">${away.name}</div></div>
                         </div>
                     `;
                 }
@@ -1862,26 +784,17 @@
                 if (match.status === 'upcoming') {
                     if (isLocked) {
                         if (hasPrediction) {
-                            predictionSection = `
-                                <div class="prediction-saved">Tahminin: ${prediction.home} - ${prediction.away}</div>
-                                <div class="lock-info">🔒 Maç başlamak üzere, tahmin kilitlendi</div>
-                            `;
+                            predictionSection = `<div class="prediction-saved">Tahminin: ${prediction.home} - ${prediction.away}</div><div class="lock-info">🔒 Maç başlamak üzere, tahmin kilitlendi</div>`;
                         } else {
-                            predictionSection = `
-                                <div class="lock-info">🔒 Maç başlamak üzere, tahmin girilemez</div>
-                            `;
+                            predictionSection = `<div class="lock-info">🔒 Maç başlamak üzere, tahmin girilemez</div>`;
                         }
                     } else {
                         const canEdit = !hasPrediction;
                         predictionSection = `
                             <div class="prediction-inputs">
-                                <input type="number" min="0" max="15" class="score-input" id="home-${match.id}" 
-                                    value="${hasPrediction ? prediction.home : ''}" 
-                                    placeholder="0" ${hasPrediction ? 'disabled' : ''}>
+                                <input type="number" min="0" max="15" class="score-input" id="home-${match.id}" value="${hasPrediction ? prediction.home : ''}" placeholder="0" ${hasPrediction ? 'disabled' : ''}>
                                 <span class="dash">-</span>
-                                <input type="number" min="0" max="15" class="score-input" id="away-${match.id}" 
-                                    value="${hasPrediction ? prediction.away : ''}" 
-                                    placeholder="0" ${hasPrediction ? 'disabled' : ''}>
+                                <input type="number" min="0" max="15" class="score-input" id="away-${match.id}" value="${hasPrediction ? prediction.away : ''}" placeholder="0" ${hasPrediction ? 'disabled' : ''}>
                             </div>
                             <button class="btn-save" onclick="savePrediction(${match.id})" ${!canEdit ? 'disabled' : ''}>
                                 ${hasPrediction ? '✓ Tahmin Kaydedildi (Değiştirilemez)' : '💾 Tahmini Kaydet'}
@@ -1904,17 +817,13 @@
                         <div class="points-earned">Kazanılan Puan: +${pts} ${detailText}</div>
                     `;
                 } else if (match.status === 'finished' && !hasPrediction) {
-                    predictionSection = `
-                        <div class="lock-info">Bu maça tahmin yapılmamış</div>
-                    `;
+                    predictionSection = `<div class="lock-info">Bu maça tahmin yapılmamış</div>`;
                 }
 
                 card.innerHTML = `
                     <div class="match-date-bar">
                         <span>📅 ${formatDate(match.date)} • ${match.time}</span>
-                        <span class="match-badge ${match.isDerby ? 'badge-derby' : badgeClass}">
-                            ${match.isDerby ? '🔥 DERBİ' : badgeText}
-                        </span>
+                        <span class="match-badge ${match.isDerby ? 'badge-derby' : badgeClass}">${match.isDerby ? '🔥 DERBİ' : badgeText}</span>
                     </div>
                     ${scoreSection}
                     ${predictionSection}
@@ -1926,49 +835,33 @@
         function savePrediction(matchId) {
             const homeScore = parseInt(document.getElementById(`home-${matchId}`).value);
             const awayScore = parseInt(document.getElementById(`away-${matchId}`).value);
-
             if (isNaN(homeScore) || isNaN(awayScore) || homeScore < 0 || awayScore < 0) {
                 showToast('Lütfen geçerli skor girin!', true);
                 return;
             }
-
-            let match = null;
-            let matchWeek = null;
+            let match = null, matchWeek = null;
             for (const week in fixtures) {
                 const found = fixtures[week].find(m => m.id === matchId);
-                if (found) {
-                    match = found;
-                    matchWeek = week;
-                    break;
-                }
+                if (found) { match = found; matchWeek = week; break; }
             }
-
-            if (!match) {
-                showToast('Maç bulunamadı!', true);
-                return;
-            }
-
+            if (!match) { showToast('Maç bulunamadı!', true); return; }
             const matchDateTime = getMatchDateTime(match.date, match.time);
             if (isMatchLocked(matchDateTime)) {
                 showToast('⚠️ Maç başlamak üzere, tahmin kilitlenmiştir!', true);
                 return;
             }
-
             const users = getUsers();
             if (users[currentUser.username].predictions[matchId]) {
                 showToast('⚠️ Bu maça zaten tahmin yaptın, değiştiremezsin!', true);
                 return;
             }
-
             users[currentUser.username].predictions[matchId] = {
                 home: homeScore,
                 away: awayScore,
                 week: parseInt(matchWeek),
                 savedAt: new Date().toISOString()
             };
-
             users[currentUser.username].stats.total++;
-
             saveUsers(users);
             currentUser = users[currentUser.username];
             updateUserUI();
@@ -1978,39 +871,26 @@
 
         function calculatePoints(prediction, actual) {
             let points = 0;
-            if (prediction.home === actual.home && prediction.away === actual.away) {
-                points += scoringSettings.exact;
-            }
+            if (prediction.home === actual.home && prediction.away === actual.away) { points += scoringSettings.exact; }
             const predResult = prediction.home > prediction.away ? 'H' : prediction.home < prediction.away ? 'A' : 'D';
             const actResult = actual.home > actual.away ? 'H' : actual.home < actual.away ? 'A' : 'D';
-            if (predResult === actResult) {
-                points += scoringSettings.correct;
-            }
-            if (predResult === actResult) {
-                points += scoringSettings.result;
-            }
+            if (predResult === actResult) { points += scoringSettings.correct; }
+            if (predResult === actResult) { points += scoringSettings.result; }
             const predDiff = Math.abs(prediction.home - prediction.away);
             const actDiff = Math.abs(actual.home - actual.away);
-            if (predDiff === actDiff) {
-                points += scoringSettings.diff;
-            }
+            if (predDiff === actDiff) { points += scoringSettings.diff; }
             return points;
         }
 
-        // ========== CANLI SONUÇLAR - FREE-API-LIVE-FOOTBALL-DATA ==========
+        // ========== CANLI SONUÇLAR ==========
         function startLiveScorePolling() {
             fetchLiveScores();
             if (liveScoreInterval) clearInterval(liveScoreInterval);
             liveScoreInterval = setInterval(fetchLiveScores, 30000);
         }
-
         function stopLiveScorePolling() {
-            if (liveScoreInterval) {
-                clearInterval(liveScoreInterval);
-                liveScoreInterval = null;
-            }
+            if (liveScoreInterval) { clearInterval(liveScoreInterval); liveScoreInterval = null; }
         }
-
         function filterLiveScores(league) {
             currentFilter = league;
             document.querySelectorAll('.livescore-filters button').forEach(btn => {
@@ -2042,106 +922,47 @@
                     }
                 });
 
-                if (!response.ok) {
-                    throw new Error(`API Hatası: ${response.status} - ${response.statusText}`);
-                }
+                if (!response.ok) { throw new Error(`API Hatası: ${response.status} - ${response.statusText}`); }
 
                 const data = await response.json();
-
-                // HATA: data yanıtını kontrol et
                 console.log('API Yanıtı:', data);
 
-                if (data.errors && Object.keys(data.errors).length > 0) {
-                    throw new Error(JSON.stringify(data.errors));
-                }
-
-                // Verileri dönüştür - Farklı olası veri yapılarını kontrol et
                 let matches = [];
-
-                // 1. data.response kontrolü
-                if (data.response && Array.isArray(data.response)) {
-                    matches = data.response;
-                }
-                // 2. data.matches kontrolü
-                else if (data.matches && Array.isArray(data.matches)) {
-                    matches = data.matches;
-                }
-                // 3. data.data kontrolü
-                else if (data.data && Array.isArray(data.data)) {
-                    matches = data.data;
-                }
-                // 4. Doğrudan dizi kontrolü
-                else if (Array.isArray(data)) {
-                    matches = data;
-                }
-                // 5. data içinde başka bir anahtar varsa
+                if (data.response && Array.isArray(data.response)) { matches = data.response; }
+                else if (data.matches && Array.isArray(data.matches)) { matches = data.matches; }
+                else if (data.data && Array.isArray(data.data)) { matches = data.data; }
+                else if (Array.isArray(data)) { matches = data; }
                 else if (typeof data === 'object') {
-                    // Tüm anahtarları kontrol et, dizi olan ilkini bul
                     for (const key in data) {
-                        if (Array.isArray(data[key]) && data[key].length > 0) {
-                            matches = data[key];
-                            break;
-                        }
+                        if (Array.isArray(data[key]) && data[key].length > 0) { matches = data[key]; break; }
                     }
                 }
 
-                // Canlı maçları filtrele ve dönüştür
-                allLiveMatches = matches
-                    .map(m => {
-                        // Takım isimlerini bul
-                        const homeName = m.home?.name || m.homeTeam?.name || m.team1?.name || m.home_team?.name ||
-                            m.team_home?.name || 'Bilinmiyor';
-                        const awayName = m.away?.name || m.awayTeam?.name || m.team2?.name || m.away_team?.name ||
-                            m.team_away?.name || 'Bilinmiyor';
-                        const leagueName = m.league?.name || m.competition?.name || m.tournament?.name || m.league_name ||
-                            'Bilinmiyor';
+                allLiveMatches = matches.map(m => {
+                    const homeName = m.home?.name || m.homeTeam?.name || m.team1?.name || m.home_team?.name || 'Bilinmiyor';
+                    const awayName = m.away?.name || m.awayTeam?.name || m.team2?.name || m.away_team?.name || 'Bilinmiyor';
+                    const leagueName = m.league?.name || m.competition?.name || m.tournament?.name || 'Bilinmiyor';
+                    const homeScore = m.home?.score !== undefined ? m.home.score : m.score?.home !== undefined ? m.score.home : m.goals?.home !== undefined ? m.goals.home : m.home_score !== undefined ? m.home_score : 0;
+                    const awayScore = m.away?.score !== undefined ? m.away.score : m.score?.away !== undefined ? m.score.away : m.goals?.away !== undefined ? m.goals.away : m.away_score !== undefined ? m.away_score : 0;
+                    const minute = m.time?.elapsed || m.minute || m.elapsed || m.fixture?.status?.elapsed || 0;
+                    const status = m.status || m.fixture?.status?.short || m.state || 'LIVE';
 
-                        // Skor bilgileri
-                        const homeScore = m.home?.score !== undefined ? m.home.score :
-                            m.score?.home !== undefined ? m.score.home :
-                            m.goals?.home !== undefined ? m.goals.home :
-                            m.home_score !== undefined ? m.home_score : 0;
-                        const awayScore = m.away?.score !== undefined ? m.away.score :
-                            m.score?.away !== undefined ? m.score.away :
-                            m.goals?.away !== undefined ? m.goals.away :
-                            m.away_score !== undefined ? m.away_score : 0;
+                    if (minute > 0 && minute < 90 && (status === 'LIVE' || status === '1H' || status === '2H' || status === 'HT')) {
+                        let homeLogo = 'https://www.futbollogo.com/logo/default.png';
+                        let awayLogo = 'https://www.futbollogo.com/logo/default.png';
+                        const homeMatch = teams.find(t => t.name === homeName);
+                        const awayMatch = teams.find(t => t.name === awayName);
+                        if (homeMatch) homeLogo = homeMatch.logo;
+                        if (awayMatch) awayLogo = awayMatch.logo;
+                        return {
+                            home: homeName, away: awayName, homeScore: homeScore, awayScore: awayScore,
+                            minute: minute, status: 'live', league: leagueName, homeLogo: homeLogo, awayLogo: awayLogo,
+                            fixtureId: m.fixture?.id || m.id || Math.random().toString(36).substr(2, 9)
+                        };
+                    }
+                    return null;
+                }).filter(m => m !== null);
 
-                        // Dakika
-                        const minute = m.time?.elapsed || m.minute || m.elapsed || m.fixture?.status?.elapsed || 0;
-
-                        // Durum
-                        const status = m.status || m.fixture?.status?.short || m.state || 'LIVE';
-
-                        // Sadece canlı maçları filtrele (dakika 0-90 arası ve durum LIVE)
-                        if (minute > 0 && minute < 90 && (status === 'LIVE' || status === '1H' || status === '2H' || status ===
-                                'HT')) {
-                            // Türk takımları için logo eşleştirmesi
-                            let homeLogo = 'https://www.futbollogo.com/logo/default.png';
-                            let awayLogo = 'https://www.futbollogo.com/logo/default.png';
-
-                            const homeMatch = teams.find(t => t.name === homeName);
-                            const awayMatch = teams.find(t => t.name === awayName);
-                            if (homeMatch) homeLogo = homeMatch.logo;
-                            if (awayMatch) awayLogo = awayMatch.logo;
-
-                            return {
-                                home: homeName,
-                                away: awayName,
-                                homeScore: homeScore,
-                                awayScore: awayScore,
-                                minute: minute,
-                                status: 'live',
-                                league: leagueName,
-                                homeLogo: homeLogo,
-                                awayLogo: awayLogo,
-                                fixtureId: m.fixture?.id || m.id || Math.random().toString(36).substr(2, 9)
-                            };
-                        }
-                        return null;
-                    })
-                    .filter(m => m !== null);
-
-                // Benzersiz maçları filtrele
                 const seenIds = new Set();
                 allLiveMatches = allLiveMatches.filter(m => {
                     if (seenIds.has(m.fixtureId)) return false;
@@ -2173,15 +994,12 @@
                 apiDot.className = 'dot offline';
                 apiStatusText.textContent = 'API Bağlantısı Başarısız';
                 matchCountText.textContent = '0 canlı maç';
-
                 container.innerHTML = `
                     <div class="no-live-matches">
                         <i class="fas fa-exclamation-triangle"></i>
                         <div>⚠️ Canlı skorlar yüklenirken hata oluştu</div>
                         <div style="font-size:0.9em; margin-top:10px; color:#8b949e;">${error.message}</div>
-                        <button class="btn btn-primary" onclick="fetchLiveScores()" style="width:auto; padding:10px 30px; margin-top:15px; border-radius:20px;">
-                            🔄 Tekrar Dene
-                        </button>
+                        <button class="btn btn-primary" onclick="fetchLiveScores()" style="width:auto; padding:10px 30px; margin-top:15px; border-radius:20px;">🔄 Tekrar Dene</button>
                     </div>
                 `;
                 showToast('⚠️ Canlı skorlar alınamadı: ' + error.message, true);
@@ -2190,59 +1008,33 @@
 
         function renderLiveScores(matches) {
             const container = document.getElementById('liveScoresContainer');
-
             let filteredMatches = matches;
             if (currentFilter !== 'all') {
                 filteredMatches = matches.filter(m => m.league === currentFilter);
             }
-
             if (!filteredMatches || filteredMatches.length === 0) {
-                container.innerHTML = `
-                    <div class="no-live-matches">
-                        <i class="fas fa-futbol"></i>
-                        <div>🏟️ Şu anda canlı maç bulunmuyor</div>
-                        <div style="font-size:0.9em; margin-top:10px; color:#8b949e;">Maç başladığında burada görünecektir.</div>
-                    </div>
-                `;
+                container.innerHTML = `<div class="no-live-matches"><i class="fas fa-futbol"></i><div>🏟️ Şu anda canlı maç bulunmuyor</div><div style="font-size:0.9em; margin-top:10px; color:#8b949e;">Maç başladığında burada görünecektir.</div></div>`;
                 return;
             }
-
             let html = '';
             filteredMatches.forEach(match => {
                 const homeLogo = match.homeLogo || 'https://www.futbollogo.com/logo/default.png';
                 const awayLogo = match.awayLogo || 'https://www.futbollogo.com/logo/default.png';
-
                 html += `
                     <div class="live-match-card">
                         <div class="match-info">
                             <span class="league-badge">${match.league}</span>
                             <div class="match-teams">
-                                <div class="team">
-                                    <img src="${homeLogo}" alt="${match.home}" onerror="this.style.display='none'">
-                                    ${match.home}
-                                </div>
+                                <div class="team"><img src="${homeLogo}" alt="${match.home}" onerror="this.style.display='none'">${match.home}</div>
                                 <span class="vs">vs</span>
-                                <div class="team">
-                                    <img src="${awayLogo}" alt="${match.away}" onerror="this.style.display='none'">
-                                    ${match.away}
-                                </div>
+                                <div class="team"><img src="${awayLogo}" alt="${match.away}" onerror="this.style.display='none'">${match.away}</div>
                             </div>
                         </div>
-                        <div class="match-score">
-                            <span class="score-home">${match.homeScore}</span>
-                            <span style="color:#8b949e; margin:0 4px;">-</span>
-                            <span class="score-away">${match.awayScore}</span>
-                        </div>
-                        <div class="match-status">
-                            <span class="time">${match.minute}'</span>
-                            <span class="status-text">
-                                <span class="status-dot"></span> CANLI
-                            </span>
-                        </div>
+                        <div class="match-score"><span class="score-home">${match.homeScore}</span><span style="color:#8b949e; margin:0 4px;">-</span><span class="score-away">${match.awayScore}</span></div>
+                        <div class="match-status"><span class="time">${match.minute}'</span><span class="status-text"><span class="status-dot"></span> CANLI</span></div>
                     </div>
                 `;
             });
-
             container.innerHTML = html;
         }
 
@@ -2257,10 +1049,8 @@
             const allMatches = Object.values(fixtures).flat().filter(m => m.status === 'upcoming');
             allMatches.sort((a, b) => new Date(a.date) - new Date(b.date));
             const nextMatches = allMatches.slice(0, 5);
-
             upcoming.innerHTML = nextMatches.map(m => {
-                const home = teams[m.home];
-                const away = teams[m.away];
+                const home = teams[m.home], away = teams[m.away];
                 const pred = currentUser.predictions[m.id];
                 const isLocked = isMatchLocked(getMatchDateTime(m.date, m.time));
                 return `
@@ -2286,29 +1076,21 @@
         function renderMyPredictions() {
             const list = document.getElementById('myPredictionsList');
             const myPreds = [];
-
             Object.values(fixtures).flat().forEach(match => {
                 const pred = currentUser.predictions[match.id];
                 if (pred) myPreds.push({ match, pred });
             });
-
             if (myPreds.length === 0) {
                 list.innerHTML = '<div style="padding:40px; text-align:center; color:#888;">Henüz tahmin yapmadın.</div>';
                 return;
             }
-
             let html = `<div class="prediction-row header"><div>Maç</div><div>Tahminin</div><div>Gerçek</div><div>Puan</div></div>`;
-
             myPreds.forEach(({ match, pred }) => {
-                const home = teams[match.home];
-                const away = teams[match.away];
-                let actual = '-';
-                let pts = '-';
-
+                const home = teams[match.home], away = teams[match.away];
+                let actual = '-', pts = '-';
                 if (match.status === 'finished' && match.actual) {
                     actual = `${match.actual.home}-${match.actual.away}`;
                     pts = calculatePoints(pred, match.actual);
-
                     const users = getUsers();
                     const user = users[currentUser.username];
                     if (!pred.counted) {
@@ -2321,7 +1103,6 @@
                         updateUserUI();
                     }
                 }
-
                 html += `
                     <div class="prediction-row">
                         <div class="prediction-match">
@@ -2336,7 +1117,6 @@
                     </div>
                 `;
             });
-
             list.innerHTML = html;
         }
 
@@ -2344,44 +1124,24 @@
         function renderLeaderboard() {
             const table = document.getElementById('leaderboardTable');
             const users = getUsers();
-
-            const allUsers = Object.values(users).map(u => ({
-                name: u.name,
-                username: u.username,
-                points: u.stats.points,
-                predictions: u.stats.total,
-                avatar: u.name.charAt(0).toUpperCase(),
-                isMe: u.username === currentUser.username
-            }));
-
+            const allUsers = Object.values(users).map(u => ({ name: u.name, username: u.username, points: u.stats.points, predictions: u.stats.total, avatar: u.name.charAt(0).toUpperCase(), isMe: u.username === currentUser.username }));
             allUsers.sort((a, b) => b.points - a.points);
-
             let html = `<div class="lb-row header"><div>Sıra</div><div>Kullanıcı</div><div>Tahmin</div><div style="text-align:right;">Puan</div></div>`;
-
-            if (allUsers.length === 0) {
-                html += '<div style="padding:40px; text-align:center; color:#888;">Henüz kullanıcı yok.</div>';
-            }
-
+            if (allUsers.length === 0) { html += '<div style="padding:40px; text-align:center; color:#888;">Henüz kullanıcı yok.</div>'; }
             allUsers.forEach((user, idx) => {
                 const rowClass = user.isMe ? 'me' : '';
                 const medal = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : (idx + 1);
-
                 html += `
                     <div class="lb-row ${rowClass}">
                         <div class="lb-rank">${medal}</div>
-                        <div class="lb-user">
-                            <div class="lb-avatar" style="background:${user.isMe ? '#ffd700' : '#1a1a2e'}; color:${user.isMe ? '#1a1a2e' : 'white'}">${user.avatar}</div>
-                            <div>
-                                <div style="font-weight:600;">${user.name} ${user.isMe ? '(Sen)' : ''}</div>
-                                <div style="font-size:0.8em; color:#888;">@${user.username}</div>
-                            </div>
+                        <div class="lb-user"><div class="lb-avatar" style="background:${user.isMe ? '#ffd700' : '#1a1a2e'}; color:${user.isMe ? '#1a1a2e' : 'white'}">${user.avatar}</div>
+                            <div><div style="font-weight:600;">${user.name} ${user.isMe ? '(Sen)' : ''}</div><div style="font-size:0.8em; color:#888;">@${user.username}</div></div>
                         </div>
                         <div style="text-align:center;">${user.predictions}</div>
                         <div class="lb-points">${user.points}</div>
                     </div>
                 `;
             });
-
             table.innerHTML = html;
         }
 
@@ -2391,44 +1151,30 @@
             document.getElementById('profCorrect').textContent = currentUser.stats.correct;
             document.getElementById('profExact').textContent = currentUser.stats.exact;
             document.getElementById('profPoints').textContent = currentUser.stats.points;
-
-            const accuracy = currentUser.stats.total > 0 ?
-                Math.round(((currentUser.stats.correct + currentUser.stats.exact) / currentUser.stats.total) * 100) :
-                0;
+            const accuracy = currentUser.stats.total > 0 ? Math.round(((currentUser.stats.correct + currentUser.stats.exact) / currentUser.stats.total) * 100) : 0;
             document.getElementById('profAccuracy').textContent = accuracy + '%';
-
             const users = getUsers();
             const allPoints = Object.values(users).map(u => u.stats.points).sort((a, b) => b - a);
             const rank = allPoints.indexOf(currentUser.stats.points) + 1;
             document.getElementById('profRank').textContent = rank + '.';
         }
 
-        // ========== ADMIN ==========
+        // ========== ADMIN FONKSİYONLARI (KISALTILMIŞ) ==========
         function loadAdminDashboard() {
             const users = getUsers();
             const userList = Object.values(users);
-
             let totalPredictions = 0;
             userList.forEach(u => totalPredictions += u.stats.total);
-
-            let totalMatches = 0;
-            let finishedMatches = 0;
-            Object.values(fixtures).flat().forEach(m => {
-                totalMatches++;
-                if (m.status === 'finished') finishedMatches++;
-            });
-
+            let totalMatches = 0, finishedMatches = 0;
+            Object.values(fixtures).flat().forEach(m => { totalMatches++; if (m.status === 'finished') finishedMatches++; });
             document.getElementById('adminTotalUsers').textContent = userList.length;
             document.getElementById('adminTotalPredictions').textContent = totalPredictions;
             document.getElementById('adminTotalMatches').textContent = totalMatches;
             document.getElementById('adminFinishedMatches').textContent = finishedMatches;
             document.getElementById('adminTotalWeeks').textContent = Object.keys(fixtures).length;
-
             const topUsers = userList.sort((a, b) => b.stats.points - a.stats.points).slice(0, 5);
             const topDiv = document.getElementById('adminTopUsers');
-            if (topUsers.length === 0) {
-                topDiv.innerHTML = '<p style="color:#888;">Henüz kullanıcı yok.</p>';
-            } else {
+            if (topUsers.length === 0) { topDiv.innerHTML = '<p style="color:#888;">Henüz kullanıcı yok.</p>'; } else {
                 topDiv.innerHTML = topUsers.map((u, i) => `
                     <div style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #f0f2f5;">
                         <div><strong>${i+1}.</strong> ${u.name} <span style="color:#888; font-size:0.85em;">@${u.username}</span></div>
@@ -2442,25 +1188,10 @@
             const users = getUsers();
             const userList = Object.values(users).sort((a, b) => b.stats.points - a.stats.points);
             const tbody = document.getElementById('adminUsersTable');
-
-            if (userList.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:20px; color:#888;">Henüz kullanıcı yok.</td></tr>';
-                return;
-            }
-
+            if (userList.length === 0) { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:20px; color:#888;">Henüz kullanıcı yok.</td></tr>'; return; }
             tbody.innerHTML = userList.map((u, i) => `
-                <tr>
-                    <td>${i+1}</td>
-                    <td>${u.name}</td>
-                    <td>@${u.username}</td>
-                    <td>${u.team}</td>
-                    <td><strong style="color:#2ecc71;">${u.stats.points}</strong></td>
-                    <td>${u.stats.total}</td>
-                    <td class="admin-actions">
-                        <button class="btn btn-small btn-warning" onclick="resetUser('${u.username}')">🔄 Sıfırla</button>
-                        <button class="btn btn-small btn-danger" onclick="deleteUser('${u.username}')">🗑️ Sil</button>
-                    </td>
-                </tr>
+                <tr><td>${i+1}</td><td>${u.name}</td><td>@${u.username}</td><td>${u.team}</td><td><strong style="color:#2ecc71;">${u.stats.points}</strong></td><td>${u.stats.total}</td>
+                <td class="admin-actions"><button class="btn btn-small btn-warning" onclick="resetUser('${u.username}')">🔄 Sıfırla</button><button class="btn btn-small btn-danger" onclick="deleteUser('${u.username}')">🗑️ Sil</button></td></tr>
             `).join('');
         }
 
@@ -2487,10 +1218,7 @@
             if (!confirm('TÜM kullanıcıların tahminleri ve puanları sıfırlanacak! Emin misin?')) return;
             if (!confirm('Bu işlem GERİ ALINAMAZ! Devam?')) return;
             const users = getUsers();
-            Object.keys(users).forEach(u => {
-                users[u].predictions = {};
-                users[u].stats = { total: 0, correct: 0, exact: 0, points: 0 };
-            });
+            Object.keys(users).forEach(u => { users[u].predictions = {}; users[u].stats = { total: 0, correct: 0, exact: 0, points: 0 }; });
             saveUsers(users);
             loadAdminUsers();
             loadAdminDashboard();
@@ -2513,32 +1241,16 @@
             const week = parseInt(document.getElementById('adminWeekSelect').value);
             const matches = fixtures[week] || [];
             const list = document.getElementById('adminMatchesList');
-
-            if (matches.length === 0) {
-                list.innerHTML = '<p style="color:#888; padding:20px;">Bu hafta için maç yok.</p>';
-                return;
-            }
-
+            if (matches.length === 0) { list.innerHTML = '<p style="color:#888; padding:20px;">Bu hafta için maç yok.</p>'; return; }
             list.innerHTML = matches.map(m => {
-                const home = teams[m.home];
-                const away = teams[m.away];
+                const home = teams[m.home], away = teams[m.away];
                 return `
                     <div class="admin-match-row">
-                        <div>
-                            <img src="${home.logo}" style="width:24px; height:24px; border-radius:50%; object-fit:contain; vertical-align:middle; margin-right:6px;" onerror="this.style.display='none'">
-                            <strong>${home.name}</strong> vs 
-                            <img src="${away.logo}" style="width:24px; height:24px; border-radius:50%; object-fit:contain; vertical-align:middle; margin-right:6px;" onerror="this.style.display='none'">
-                            <strong>${away.name}</strong> ${m.isDerby ? '🔥' : ''}
-                            <div style="font-size:0.8em; color:#888;">${m.date} ${m.time} • ${m.status === 'finished' ? '✅ Bitti' : '⏰ Yaklaşan'}</div>
-                        </div>
+                        <div><img src="${home.logo}" style="width:24px; height:24px; border-radius:50%; object-fit:contain; vertical-align:middle; margin-right:6px;" onerror="this.style.display='none'"><strong>${home.name}</strong> vs <img src="${away.logo}" style="width:24px; height:24px; border-radius:50%; object-fit:contain; vertical-align:middle; margin-right:6px;" onerror="this.style.display='none'"><strong>${away.name}</strong> ${m.isDerby ? '🔥' : ''}
+                        <div style="font-size:0.8em; color:#888;">${m.date} ${m.time} • ${m.status === 'finished' ? '✅ Bitti' : '⏰ Yaklaşan'}</div></div>
                         <input type="number" min="0" max="20" class="score-input-small" id="admin-home-${m.id}" value="${m.actual ? m.actual.home : ''}" placeholder="Ev">
                         <input type="number" min="0" max="20" class="score-input-small" id="admin-away-${m.id}" value="${m.actual ? m.actual.away : ''}" placeholder="Dep">
-                        <div>
-                            <select id="admin-status-${m.id}" style="padding:8px; border-radius:10px; border:2px solid #e8ecf1;">
-                                <option value="upcoming" ${m.status === 'upcoming' ? 'selected' : ''}>Yaklaşan</option>
-                                <option value="finished" ${m.status === 'finished' ? 'selected' : ''}>Bitti</option>
-                            </select>
-                        </div>
+                        <div><select id="admin-status-${m.id}" style="padding:8px; border-radius:10px; border:2px solid #e8ecf1;"><option value="upcoming" ${m.status === 'upcoming' ? 'selected' : ''}>Yaklaşan</option><option value="finished" ${m.status === 'finished' ? 'selected' : ''}>Bitti</option></select></div>
                     </div>
                 `;
             }).join('');
@@ -2547,21 +1259,15 @@
         function saveAllMatchResults() {
             const week = parseInt(document.getElementById('adminWeekSelect').value);
             const matches = fixtures[week] || [];
-
             matches.forEach(m => {
                 const homeScore = document.getElementById(`admin-home-${m.id}`).value;
                 const awayScore = document.getElementById(`admin-away-${m.id}`).value;
                 const status = document.getElementById(`admin-status-${m.id}`).value;
-
                 if (status === 'finished' && homeScore !== '' && awayScore !== '') {
                     m.actual = { home: parseInt(homeScore), away: parseInt(awayScore) };
                     m.status = 'finished';
-                } else if (status === 'upcoming') {
-                    m.actual = null;
-                    m.status = 'upcoming';
-                }
+                } else if (status === 'upcoming') { m.actual = null; m.status = 'upcoming'; }
             });
-
             saveFixtures();
             recalculateAllPoints();
             showToast('✓ Maç sonuçları kaydedildi ve puanlar güncellendi!');
@@ -2569,13 +1275,9 @@
 
         function recalculateAllPoints() {
             const users = getUsers();
-
             Object.keys(users).forEach(username => {
-                let points = 0,
-                    correct = 0,
-                    exact = 0;
+                let points = 0, correct = 0, exact = 0;
                 const total = Object.keys(users[username].predictions).length;
-
                 Object.values(fixtures).flat().forEach(match => {
                     const pred = users[username].predictions[match.id];
                     if (pred && match.status === 'finished' && match.actual) {
@@ -2586,10 +1288,8 @@
                         pred.counted = true;
                     }
                 });
-
                 users[username].stats = { total, correct, exact, points };
             });
-
             saveUsers(users);
             if (currentUser) currentUser = users[currentUser.username];
             showToast('✓ Puanlar yeniden hesaplandı!');
@@ -2601,12 +1301,7 @@
             document.getElementById('correctPoints').value = saved.correct || 3;
             document.getElementById('resultPoints').value = saved.result || 2;
             document.getElementById('diffPoints').value = saved.diff || 1;
-            scoringSettings = {
-                exact: saved.exact || 10,
-                correct: saved.correct || 3,
-                result: saved.result || 2,
-                diff: saved.diff || 1
-            };
+            scoringSettings = { exact: saved.exact || 10, correct: saved.correct || 3, result: saved.result || 2, diff: saved.diff || 1 };
         }
 
         function saveScoringSettings() {
@@ -2623,25 +1318,17 @@
         function resetEntireSystem() {
             if (!confirm('⚠️ TÜM SİSTEM SIFIRLANACAK!\n\nTüm kullanıcılar, tahminler, maçlar silinecek!\nEmin misin?')) return;
             if (!confirm('Son uyarı! Bu işlem GERİ ALINAMAZ!')) return;
-
             localStorage.removeItem('sl_users');
-            localStorage.removeItem('sl_fixtures_v3');
+            localStorage.removeItem('sl_fixtures_v4');
             localStorage.removeItem('sl_scoring');
             localStorage.removeItem('sl_currentUser');
             localStorage.removeItem('sl_isAdmin');
-
             alert('Sistem sıfırlandı. Sayfa yenilenecek.');
             location.reload();
         }
 
         function exportData() {
-            const data = {
-                users: getUsers(),
-                fixtures: fixtures,
-                scoring: scoringSettings,
-                exportedAt: new Date().toISOString()
-            };
-
+            const data = { users: getUsers(), fixtures: fixtures, scoring: scoringSettings, exportedAt: new Date().toISOString() };
             const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -2655,28 +1342,17 @@
         function importData(event) {
             const file = event.target.files[0];
             if (!file) return;
-
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
                     const data = JSON.parse(e.target.result);
                     if (!confirm('Mevcut veriler silinip içe aktarılacak. Devam?')) return;
-
                     if (data.users) localStorage.setItem('sl_users', JSON.stringify(data.users));
-                    if (data.fixtures) {
-                        fixtures = data.fixtures;
-                        localStorage.setItem('sl_fixtures_v3', JSON.stringify(fixtures));
-                    }
-                    if (data.scoring) {
-                        scoringSettings = data.scoring;
-                        localStorage.setItem('sl_scoring', JSON.stringify(scoringSettings));
-                    }
-
+                    if (data.fixtures) { fixtures = data.fixtures; localStorage.setItem('sl_fixtures_v4', JSON.stringify(fixtures)); }
+                    if (data.scoring) { scoringSettings = data.scoring; localStorage.setItem('sl_scoring', JSON.stringify(scoringSettings)); }
                     showToast('✓ Veriler içe aktarıldı!');
                     setTimeout(() => location.reload(), 1500);
-                } catch (err) {
-                    showToast('Dosya okunamadı: ' + err.message, true);
-                }
+                } catch (err) { showToast('Dosya okunamadı: ' + err.message, true); }
             };
             reader.readAsText(file);
         }
@@ -2686,29 +1362,15 @@
             getFixtures();
             const savedScoring = JSON.parse(localStorage.getItem('sl_scoring') || '{}');
             if (savedScoring.exact) scoringSettings = savedScoring;
-            else {
-                scoringSettings = { exact: 10, correct: 3, result: 2, diff: 1 };
-                localStorage.setItem('sl_scoring', JSON.stringify(scoringSettings));
-            }
-
+            else { scoringSettings = { exact: 10, correct: 3, result: 2, diff: 1 }; localStorage.setItem('sl_scoring', JSON.stringify(scoringSettings)); }
             const isAdminSession = localStorage.getItem('sl_isAdmin') === 'true';
             const savedUser = localStorage.getItem('sl_currentUser');
-
-            if (isAdminSession) {
-                enterAdmin();
-            } else if (savedUser) {
+            if (isAdminSession) { enterAdmin(); } else if (savedUser) {
                 const users = getUsers();
-                if (users[savedUser]) {
-                    currentUser = users[savedUser];
-                    enterApp();
-                }
+                if (users[savedUser]) { currentUser = users[savedUser]; enterApp(); }
             }
         };
-
-        window.addEventListener('beforeunload', function() {
-            stopLiveScorePolling();
-        });
+        window.addEventListener('beforeunload', function() { stopLiveScorePolling(); });
     </script>
-
 </body>
 </html>
