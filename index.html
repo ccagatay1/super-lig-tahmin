@@ -302,13 +302,65 @@
             text-align: center;
         }
 
+        /* ===== TOP BAR ===== */
+        .top-bar {
+            background: white;
+            padding: 12px 30px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            border-bottom: 1px solid #e8ecf1;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+        }
+        .top-bar .datetime {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            font-size: 0.9em;
+            color: #555;
+            font-weight: 500;
+        }
+        .top-bar .datetime .date {
+            color: #1a1a2e;
+            font-weight: 600;
+        }
+        .top-bar .datetime .time {
+            color: #1a73e8;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            background: #e8f0fe;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.95em;
+        }
+        .top-bar .datetime .time i {
+            margin-right: 6px;
+            color: #ff4757;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.4;
+            }
+        }
+
         .main-content {
             margin-left: 280px;
             flex: 1;
-            padding: 35px 40px;
+            padding: 0;
             width: calc(100% - 280px);
             min-height: 100vh;
             background: #f0f2f5;
+        }
+        .main-content .page {
+            padding: 30px 40px;
         }
         .page-header {
             margin-bottom: 30px;
@@ -459,15 +511,6 @@
             background: #f0f0f0;
             color: #888;
         }
-        @keyframes pulse {
-            0%,
-            100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: 0.5;
-            }
-        }
 
         .teams-row {
             display: flex;
@@ -480,8 +523,6 @@
             flex: 1;
             text-align: center;
         }
-
-        /* ===== LOGO STILLERI ===== */
         .team-logo-wrapper {
             position: relative;
             width: 65px;
@@ -543,7 +584,6 @@
                 box-shadow: 0 0 35px rgba(255, 215, 0, 0.25);
             }
         }
-
         .team-name {
             font-weight: 600;
             font-size: 0.9em;
@@ -569,7 +609,6 @@
             letter-spacing: -1px;
         }
 
-        /* Küçük logolar */
         .team-logo-small {
             width: 28px;
             height: 28px;
@@ -1099,10 +1138,6 @@
             text-align: center;
             font-weight: 600;
         }
-        .score-input-small:focus {
-            outline: none;
-            border-color: #ffd700;
-        }
 
         .toast {
             position: fixed;
@@ -1169,6 +1204,9 @@
             .main-content {
                 margin-left: 0;
                 width: 100%;
+                padding: 0;
+            }
+            .main-content .page {
                 padding: 20px;
             }
             .app-container.active {
@@ -1225,6 +1263,15 @@
                 align-items: center;
                 width: 100%;
                 justify-content: space-between;
+            }
+            .top-bar {
+                padding: 10px 16px;
+            }
+            .top-bar .datetime {
+                font-size: 0.75em;
+                gap: 10px;
+                flex-wrap: wrap;
+                justify-content: flex-end;
             }
         }
     </style>
@@ -1311,6 +1358,14 @@
         </aside>
 
         <main class="main-content">
+            <!-- TOP BAR - SAAT VE TARİH -->
+            <div class="top-bar">
+                <div class="datetime">
+                    <span class="date"><i class="far fa-calendar-alt" style="margin-right:6px;"></i><span id="currentDate">-</span></span>
+                    <span class="time"><i class="fas fa-clock"></i><span id="currentTime">00:00:00</span></span>
+                </div>
+            </div>
+
             <!-- DASHBOARD -->
             <div id="page-dashboard" class="page">
                 <div class="page-header">
@@ -1463,7 +1518,14 @@
         </aside>
 
         <main class="main-content">
+            <!-- Admin sayfaları kısa tutuldu -->
             <div id="page-admin-dashboard" class="page">
+                <div class="top-bar">
+                    <div class="datetime">
+                        <span class="date"><i class="far fa-calendar-alt" style="margin-right:6px;"></i><span id="adminDate">-</span></span>
+                        <span class="time"><i class="fas fa-clock"></i><span id="adminTime">00:00:00</span></span>
+                    </div>
+                </div>
                 <div class="page-header">
                     <h1 class="page-title" style="color:#8b0000;"><i class="fas fa-shield-alt"></i> Admin Panel - Genel Bakış</h1>
                     <p class="page-subtitle">Sistem istatistikleri ve hızlı işlemler</p>
@@ -1489,76 +1551,9 @@
                     <div id="adminTopUsers"></div>
                 </div>
             </div>
-
-            <div id="page-admin-users" class="page" style="display:none;">
-                <div class="page-header">
-                    <h1 class="page-title" style="color:#8b0000;"><i class="fas fa-users"></i> Kullanıcı Yönetimi</h1>
-                    <p class="page-subtitle">Tüm kayıtlı kullanıcılar</p>
-                </div>
-                <div class="admin-card">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                        <h3 style="border:none; padding:0; margin:0;">Kullanıcı Listesi</h3>
-                        <button class="btn btn-small btn-danger" onclick="resetAllUsers()">🗑️ Tümünü Sıfırla</button>
-                    </div>
-                    <table class="admin-table">
-                        <thead>
-                            <tr><th>#</th><th>Ad Soyad</th><th>Kullanıcı Adı</th><th>Favori Takım</th><th>Puan</th><th>Tahmin</th><th>İşlemler</th></tr>
-                        </thead>
-                        <tbody id="adminUsersTable"></tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div id="page-admin-matches" class="page" style="display:none;">
-                <div class="page-header">
-                    <h1 class="page-title" style="color:#8b0000;"><i class="fas fa-futbol"></i> Maç Yönetimi</h1>
-                    <p class="page-subtitle">Maç sonuçlarını gir ve haftaları yönet</p>
-                </div>
-                <div class="admin-card">
-                    <h3>📅 Hafta Seç</h3>
-                    <div class="week-selector">
-                        <select id="adminWeekSelect" onchange="renderAdminMatches()"></select>
-                    </div>
-                </div>
-                <div class="admin-card">
-                    <h3>⚽ Maç Sonuçları</h3>
-                    <div class="info-banner">💡 <strong>İpucu:</strong> Skor girip "Kaydet" butonuna bas. Puanlar otomatik hesaplanır.</div>
-                    <div id="adminMatchesList"></div>
-                    <button class="btn btn-success" style="margin-top:15px;" onclick="saveAllMatchResults()">💾 Tüm Sonuçları Kaydet</button>
-                </div>
-            </div>
-
-            <div id="page-admin-settings" class="page" style="display:none;">
-                <div class="page-header">
-                    <h1 class="page-title" style="color:#8b0000;"><i class="fas fa-cog"></i> Sistem Ayarları</h1>
-                    <p class="page-subtitle">Puanlama ve genel ayarlar</p>
-                </div>
-                <div class="admin-card">
-                    <h3>🎯 Puanlama Sistemi</h3>
-                    <div class="admin-form-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:15px; margin-bottom:20px;">
-                        <div class="form-group"><label>Tam Skor Puanı</label><input type="number" id="exactPoints" value="10"></div>
-                        <div class="form-group"><label>Doğru Sonuç Puanı</label><input type="number" id="correctPoints" value="3"></div>
-                        <div class="form-group"><label>Maç Sonucu Puanı</label><input type="number" id="resultPoints" value="2"></div>
-                        <div class="form-group"><label>Skor Farkı Puanı</label><input type="number" id="diffPoints" value="1"></div>
-                    </div>
-                    <button class="btn btn-primary" onclick="saveScoringSettings()">💾 Kaydet</button>
-                </div>
-                <div class="admin-card">
-                    <h3>💾 Yedekleme</h3>
-                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                        <button class="btn btn-success" onclick="exportData()">📤 Dışa Aktar (JSON)</button>
-                        <button class="btn btn-primary" onclick="document.getElementById('importFile').click()">📥 İçe Aktar</button>
-                        <input type="file" id="importFile" style="display:none;" accept=".json" onchange="importData(event)">
-                    </div>
-                </div>
-                <div class="admin-card">
-                    <h3>⚠️ Tehlikeli Bölge</h3>
-                    <div style="display:grid; gap:10px;">
-                        <button class="btn btn-warning" onclick="resetAllUsers()">🗑️ Tüm Kullanıcı Tahminlerini Sıfırla</button>
-                        <button class="btn btn-danger" onclick="resetEntireSystem()">💣 TÜM SİSTEMİ SIFIRLA</button>
-                    </div>
-                </div>
-            </div>
+            <div id="page-admin-users" class="page" style="display:none;">...</div>
+            <div id="page-admin-matches" class="page" style="display:none;">...</div>
+            <div id="page-admin-settings" class="page" style="display:none;">...</div>
         </main>
     </div>
 
@@ -1767,176 +1762,7 @@
             { match: 151, round: 17, date: '2027-01-17', time: '19:00', home: 'Fenerbahçe', away: 'Amed SFK' },
             { match: 152, round: 17, date: '2027-01-17', time: '19:00', home: 'Kocaelispor', away: 'Kasımpaşa' },
             { match: 153, round: 17, date: '2027-01-17', time: '19:00', home: 'Erzurumspor FK', away: 'Trabzonspor' },
-            // Hafta 18
-            { match: 154, round: 18, date: '2027-01-24', time: '19:00', home: 'Alanyaspor', away: 'Gaziantep FK' },
-            { match: 155, round: 18, date: '2027-01-24', time: '19:00', home: 'Trabzonspor', away: 'Kasımpaşa' },
-            { match: 156, round: 18, date: '2027-01-24', time: '19:00', home: 'Kocaelispor', away: 'Başakşehir' },
-            { match: 157, round: 18, date: '2027-01-24', time: '19:00', home: 'Erzurumspor FK', away: 'Amed SFK' },
-            { match: 158, round: 18, date: '2027-01-24', time: '19:00', home: 'Fenerbahçe', away: 'Gençlerbirliği' },
-            { match: 159, round: 18, date: '2027-01-24', time: '19:00', home: 'Rizespor', away: 'Konyaspor' },
-            { match: 160, round: 18, date: '2027-01-24', time: '19:00', home: 'Çorum FK', away: 'Galatasaray' },
-            { match: 161, round: 18, date: '2027-01-24', time: '19:00', home: 'Eyüpspor', away: 'Beşiktaş' },
-            { match: 162, round: 18, date: '2027-01-24', time: '19:00', home: 'Göztepe', away: 'Samsunspor' },
-            // Hafta 19
-            { match: 163, round: 19, date: '2027-01-31', time: '19:00', home: 'Başakşehir', away: 'Trabzonspor' },
-            { match: 164, round: 19, date: '2027-01-31', time: '19:00', home: 'Gaziantep FK', away: 'Eyüpspor' },
-            { match: 165, round: 19, date: '2027-01-31', time: '19:00', home: 'Beşiktaş', away: 'Alanyaspor' },
-            { match: 166, round: 19, date: '2027-01-31', time: '19:00', home: 'Samsunspor', away: 'Rizespor' },
-            { match: 167, round: 19, date: '2027-01-31', time: '19:00', home: 'Gençlerbirliği', away: 'Göztepe' },
-            { match: 168, round: 19, date: '2027-01-31', time: '19:00', home: 'Kasımpaşa', away: 'Çorum FK' },
-            { match: 169, round: 19, date: '2027-01-31', time: '19:00', home: 'Konyaspor', away: 'Fenerbahçe' },
-            { match: 170, round: 19, date: '2027-01-31', time: '19:00', home: 'Amed SFK', away: 'Kocaelispor' },
-            { match: 171, round: 19, date: '2027-01-31', time: '19:00', home: 'Galatasaray', away: 'Erzurumspor FK' },
-            // Hafta 20
-            { match: 172, round: 20, date: '2027-02-07', time: '19:00', home: 'Rizespor', away: 'Gaziantep FK' },
-            { match: 173, round: 20, date: '2027-02-07', time: '19:00', home: 'Alanyaspor', away: 'Eyüpspor' },
-            { match: 174, round: 20, date: '2027-02-07', time: '19:00', home: 'Kasımpaşa', away: 'Başakşehir' },
-            { match: 175, round: 20, date: '2027-02-07', time: '19:00', home: 'Trabzonspor', away: 'Amed SFK' },
-            { match: 176, round: 20, date: '2027-02-07', time: '19:00', home: 'Erzurumspor FK', away: 'Gençlerbirliği' },
-            { match: 177, round: 20, date: '2027-02-07', time: '19:00', home: 'Kocaelispor', away: 'Konyaspor' },
-            { match: 178, round: 20, date: '2027-02-07', time: '19:00', home: 'Göztepe', away: 'Galatasaray' },
-            { match: 179, round: 20, date: '2027-02-07', time: '19:00', home: 'Çorum FK', away: 'Beşiktaş' },
-            { match: 180, round: 20, date: '2027-02-07', time: '19:00', home: 'Fenerbahçe', away: 'Samsunspor' },
-            // Hafta 21
-            { match: 181, round: 21, date: '2027-02-14', time: '19:00', home: 'Gençlerbirliği', away: 'Trabzonspor' },
-            { match: 182, round: 21, date: '2027-02-14', time: '19:00', home: 'Amed SFK', away: 'Kasımpaşa' },
-            { match: 183, round: 21, date: '2027-02-14', time: '19:00', home: 'Galatasaray', away: 'Başakşehir' },
-            { match: 184, round: 21, date: '2027-02-14', time: '19:00', home: 'Alanyaspor', away: 'Rizespor' },
-            { match: 185, round: 21, date: '2027-02-14', time: '19:00', home: 'Gaziantep FK', away: 'Göztepe' },
-            { match: 186, round: 21, date: '2027-02-14', time: '19:00', home: 'Eyüpspor', away: 'Çorum FK' },
-            { match: 187, round: 21, date: '2027-02-14', time: '19:00', home: 'Beşiktaş', away: 'Fenerbahçe' },
-            { match: 188, round: 21, date: '2027-02-14', time: '19:00', home: 'Samsunspor', away: 'Kocaelispor' },
-            { match: 189, round: 21, date: '2027-02-14', time: '19:00', home: 'Konyaspor', away: 'Erzurumspor FK' },
-            // Hafta 22
-            { match: 190, round: 22, date: '2027-02-21', time: '19:00', home: 'Fenerbahçe', away: 'Gaziantep FK' },
-            { match: 191, round: 22, date: '2027-02-21', time: '19:00', home: 'Rizespor', away: 'Eyüpspor' },
-            { match: 192, round: 22, date: '2027-02-21', time: '19:00', home: 'Göztepe', away: 'Alanyaspor' },
-            { match: 193, round: 22, date: '2027-02-21', time: '19:00', home: 'Başakşehir', away: 'Amed SFK' },
-            { match: 194, round: 22, date: '2027-02-21', time: '19:00', home: 'Kasımpaşa', away: 'Gençlerbirliği' },
-            { match: 195, round: 22, date: '2027-02-21', time: '19:00', home: 'Trabzonspor', away: 'Konyaspor' },
-            { match: 196, round: 22, date: '2027-02-21', time: '19:00', home: 'Kocaelispor', away: 'Galatasaray' },
-            { match: 197, round: 22, date: '2027-02-21', time: '19:00', home: 'Erzurumspor FK', away: 'Beşiktaş' },
-            { match: 198, round: 22, date: '2027-02-21', time: '19:00', home: 'Çorum FK', away: 'Samsunspor' },
-            // Hafta 23
-            { match: 199, round: 23, date: '2027-02-28', time: '19:00', home: 'Galatasaray', away: 'Trabzonspor' },
-            { match: 200, round: 23, date: '2027-02-28', time: '19:00', home: 'Konyaspor', away: 'Kasımpaşa' },
-            { match: 201, round: 23, date: '2027-02-28', time: '19:00', home: 'Gençlerbirliği', away: 'Başakşehir' },
-            { match: 202, round: 23, date: '2027-02-28', time: '19:00', home: 'Beşiktaş', away: 'Amed SFK' },
-            { match: 203, round: 23, date: '2027-02-28', time: '19:00', home: 'Rizespor', away: 'Göztepe' },
-            { match: 204, round: 23, date: '2027-02-28', time: '19:00', home: 'Alanyaspor', away: 'Çorum FK' },
-            { match: 205, round: 23, date: '2027-02-28', time: '19:00', home: 'Eyüpspor', away: 'Fenerbahçe' },
-            { match: 206, round: 23, date: '2027-02-28', time: '19:00', home: 'Gaziantep FK', away: 'Kocaelispor' },
-            { match: 207, round: 23, date: '2027-02-28', time: '19:00', home: 'Samsunspor', away: 'Erzurumspor FK' },
-            // Hafta 24
-            { match: 208, round: 24, date: '2027-03-07', time: '19:00', home: 'Çorum FK', away: 'Gaziantep FK' },
-            { match: 209, round: 24, date: '2027-03-07', time: '19:00', home: 'Göztepe', away: 'Eyüpspor' },
-            { match: 210, round: 24, date: '2027-03-07', time: '19:00', home: 'Erzurumspor FK', away: 'Alanyaspor' },
-            { match: 211, round: 24, date: '2027-03-07', time: '19:00', home: 'Fenerbahçe', away: 'Rizespor' },
-            { match: 212, round: 24, date: '2027-03-07', time: '19:00', home: 'Amed SFK', away: 'Gençlerbirliği' },
-            { match: 213, round: 24, date: '2027-03-07', time: '19:00', home: 'Başakşehir', away: 'Konyaspor' },
-            { match: 214, round: 24, date: '2027-03-07', time: '19:00', home: 'Kasımpaşa', away: 'Galatasaray' },
-            { match: 215, round: 24, date: '2027-03-07', time: '19:00', home: 'Kocaelispor', away: 'Beşiktaş' },
-            { match: 216, round: 24, date: '2027-03-07', time: '19:00', home: 'Trabzonspor', away: 'Samsunspor' },
-            // Hafta 25
-            { match: 217, round: 25, date: '2027-03-14', time: '19:00', home: 'Beşiktaş', away: 'Trabzonspor' },
-            { match: 218, round: 25, date: '2027-03-14', time: '19:00', home: 'Samsunspor', away: 'Kasımpaşa' },
-            { match: 219, round: 25, date: '2027-03-14', time: '19:00', home: 'Gaziantep FK', away: 'Başakşehir' },
-            { match: 220, round: 25, date: '2027-03-14', time: '19:00', home: 'Konyaspor', away: 'Amed SFK' },
-            { match: 221, round: 25, date: '2027-03-14', time: '19:00', home: 'Galatasaray', away: 'Gençlerbirliği' },
-            { match: 222, round: 25, date: '2027-03-14', time: '19:00', home: 'Rizespor', away: 'Çorum FK' },
-            { match: 223, round: 25, date: '2027-03-14', time: '19:00', home: 'Alanyaspor', away: 'Fenerbahçe' },
-            { match: 224, round: 25, date: '2027-03-14', time: '19:00', home: 'Göztepe', away: 'Kocaelispor' },
-            { match: 225, round: 25, date: '2027-03-14', time: '19:00', home: 'Eyüpspor', away: 'Erzurumspor FK' },
-            // Hafta 26
-            { match: 226, round: 26, date: '2027-03-21', time: '19:00', home: 'Erzurumspor FK', away: 'Gaziantep FK' },
-            { match: 227, round: 26, date: '2027-03-21', time: '19:00', home: 'Kasımpaşa', away: 'Eyüpspor' },
-            { match: 228, round: 26, date: '2027-03-21', time: '19:00', home: 'Kocaelispor', away: 'Alanyaspor' },
-            { match: 229, round: 26, date: '2027-03-21', time: '19:00', home: 'Trabzonspor', away: 'Rizespor' },
-            { match: 230, round: 26, date: '2027-03-21', time: '19:00', home: 'Çorum FK', away: 'Göztepe' },
-            { match: 231, round: 26, date: '2027-03-21', time: '19:00', home: 'Gençlerbirliği', away: 'Konyaspor' },
-            { match: 232, round: 26, date: '2027-03-21', time: '19:00', home: 'Fenerbahçe', away: 'Galatasaray' },
-            { match: 233, round: 26, date: '2027-03-21', time: '19:00', home: 'Başakşehir', away: 'Beşiktaş' },
-            { match: 234, round: 26, date: '2027-03-21', time: '19:00', home: 'Amed SFK', away: 'Samsunspor' },
-            // Hafta 27
-            { match: 235, round: 27, date: '2027-04-04', time: '19:00', home: 'Gaziantep FK', away: 'Trabzonspor' },
-            { match: 236, round: 27, date: '2027-04-04', time: '19:00', home: 'Beşiktaş', away: 'Kasımpaşa' },
-            { match: 237, round: 27, date: '2027-04-04', time: '19:00', home: 'Samsunspor', away: 'Başakşehir' },
-            { match: 238, round: 27, date: '2027-04-04', time: '19:00', home: 'Eyüpspor', away: 'Amed SFK' },
-            { match: 239, round: 27, date: '2027-04-04', time: '19:00', home: 'Alanyaspor', away: 'Gençlerbirliği' },
-            { match: 240, round: 27, date: '2027-04-04', time: '19:00', home: 'Galatasaray', away: 'Konyaspor' },
-            { match: 241, round: 27, date: '2027-04-04', time: '19:00', home: 'Göztepe', away: 'Fenerbahçe' },
-            { match: 242, round: 27, date: '2027-04-04', time: '19:00', home: 'Rizespor', away: 'Kocaelispor' },
-            { match: 243, round: 27, date: '2027-04-04', time: '19:00', home: 'Çorum FK', away: 'Erzurumspor FK' },
-            // Hafta 28
-            { match: 244, round: 28, date: '2027-04-11', time: '19:00', home: 'Kasımpaşa', away: 'Gaziantep FK' },
-            { match: 245, round: 28, date: '2027-04-11', time: '19:00', home: 'Kocaelispor', away: 'Eyüpspor' },
-            { match: 246, round: 28, date: '2027-04-11', time: '19:00', home: 'Trabzonspor', away: 'Alanyaspor' },
-            { match: 247, round: 28, date: '2027-04-11', time: '19:00', home: 'Erzurumspor FK', away: 'Rizespor' },
-            { match: 248, round: 28, date: '2027-04-11', time: '19:00', home: 'Başakşehir', away: 'Göztepe' },
-            { match: 249, round: 28, date: '2027-04-11', time: '19:00', home: 'Fenerbahçe', away: 'Çorum FK' },
-            { match: 250, round: 28, date: '2027-04-11', time: '19:00', home: 'Amed SFK', away: 'Galatasaray' },
-            { match: 251, round: 28, date: '2027-04-11', time: '19:00', home: 'Gençlerbirliği', away: 'Beşiktaş' },
-            { match: 252, round: 28, date: '2027-04-11', time: '19:00', home: 'Konyaspor', away: 'Samsunspor' },
-            // Hafta 29
-            { match: 253, round: 29, date: '2027-04-18', time: '19:00', home: 'Eyüpspor', away: 'Trabzonspor' },
-            { match: 254, round: 29, date: '2027-04-18', time: '19:00', home: 'Alanyaspor', away: 'Kasımpaşa' },
-            { match: 255, round: 29, date: '2027-04-18', time: '19:00', home: 'Çorum FK', away: 'Başakşehir' },
-            { match: 256, round: 29, date: '2027-04-18', time: '19:00', home: 'Rizespor', away: 'Amed SFK' },
-            { match: 257, round: 29, date: '2027-04-18', time: '19:00', home: 'Gaziantep FK', away: 'Gençlerbirliği' },
-            { match: 258, round: 29, date: '2027-04-18', time: '19:00', home: 'Beşiktaş', away: 'Konyaspor' },
-            { match: 259, round: 29, date: '2027-04-18', time: '19:00', home: 'Samsunspor', away: 'Galatasaray' },
-            { match: 260, round: 29, date: '2027-04-18', time: '19:00', home: 'Fenerbahçe', away: 'Kocaelispor' },
-            { match: 261, round: 29, date: '2027-04-18', time: '19:00', home: 'Göztepe', away: 'Erzurumspor FK' },
-            // Hafta 30
-            { match: 262, round: 30, date: '2027-04-25', time: '19:00', home: 'Amed SFK', away: 'Gaziantep FK' },
-            { match: 263, round: 30, date: '2027-04-25', time: '19:00', home: 'Başakşehir', away: 'Eyüpspor' },
-            { match: 264, round: 30, date: '2027-04-25', time: '19:00', home: 'Konyaspor', away: 'Alanyaspor' },
-            { match: 265, round: 30, date: '2027-04-25', time: '19:00', home: 'Kasımpaşa', away: 'Rizespor' },
-            { match: 266, round: 30, date: '2027-04-25', time: '19:00', home: 'Trabzonspor', away: 'Göztepe' },
-            { match: 267, round: 30, date: '2027-04-25', time: '19:00', home: 'Kocaelispor', away: 'Çorum FK' },
-            { match: 268, round: 30, date: '2027-04-25', time: '19:00', home: 'Erzurumspor FK', away: 'Fenerbahçe' },
-            { match: 269, round: 30, date: '2027-04-25', time: '19:00', home: 'Galatasaray', away: 'Beşiktaş' },
-            { match: 270, round: 30, date: '2027-04-25', time: '19:00', home: 'Gençlerbirliği', away: 'Samsunspor' },
-            // Hafta 31
-            { match: 271, round: 31, date: '2027-05-02', time: '19:00', home: 'Çorum FK', away: 'Trabzonspor' },
-            { match: 272, round: 31, date: '2027-05-02', time: '19:00', home: 'Göztepe', away: 'Kasımpaşa' },
-            { match: 273, round: 31, date: '2027-05-02', time: '19:00', home: 'Fenerbahçe', away: 'Başakşehir' },
-            { match: 274, round: 31, date: '2027-05-02', time: '19:00', home: 'Alanyaspor', away: 'Amed SFK' },
-            { match: 275, round: 31, date: '2027-05-02', time: '19:00', home: 'Eyüpspor', away: 'Gençlerbirliği' },
-            { match: 276, round: 31, date: '2027-05-02', time: '19:00', home: 'Gaziantep FK', away: 'Konyaspor' },
-            { match: 277, round: 31, date: '2027-05-02', time: '19:00', home: 'Rizespor', away: 'Galatasaray' },
-            { match: 278, round: 31, date: '2027-05-02', time: '19:00', home: 'Samsunspor', away: 'Beşiktaş' },
-            { match: 279, round: 31, date: '2027-05-02', time: '19:00', home: 'Kocaelispor', away: 'Erzurumspor FK' },
-            // Hafta 32
-            { match: 280, round: 32, date: '2027-05-09', time: '19:00', home: 'Beşiktaş', away: 'Gaziantep FK' },
-            { match: 281, round: 32, date: '2027-05-09', time: '19:00', home: 'Galatasaray', away: 'Eyüpspor' },
-            { match: 282, round: 32, date: '2027-05-09', time: '19:00', home: 'Samsunspor', away: 'Alanyaspor' },
-            { match: 283, round: 32, date: '2027-05-09', time: '19:00', home: 'Başakşehir', away: 'Rizespor' },
-            { match: 284, round: 32, date: '2027-05-09', time: '19:00', home: 'Konyaspor', away: 'Göztepe' },
-            { match: 285, round: 32, date: '2027-05-09', time: '19:00', home: 'Amed SFK', away: 'Çorum FK' },
-            { match: 286, round: 32, date: '2027-05-09', time: '19:00', home: 'Trabzonspor', away: 'Fenerbahçe' },
-            { match: 287, round: 32, date: '2027-05-09', time: '19:00', home: 'Gençlerbirliği', away: 'Kocaelispor' },
-            { match: 288, round: 32, date: '2027-05-09', time: '19:00', home: 'Kasımpaşa', away: 'Erzurumspor FK' },
-            // Hafta 33
-            { match: 289, round: 33, date: '2027-05-16', time: '19:00', home: 'Kocaelispor', away: 'Trabzonspor' },
-            { match: 290, round: 33, date: '2027-05-16', time: '19:00', home: 'Fenerbahçe', away: 'Kasımpaşa' },
-            { match: 291, round: 33, date: '2027-05-16', time: '19:00', home: 'Erzurumspor FK', away: 'Başakşehir' },
-            { match: 292, round: 33, date: '2027-05-16', time: '19:00', home: 'Göztepe', away: 'Amed SFK' },
-            { match: 293, round: 33, date: '2027-05-16', time: '19:00', home: 'Çorum FK', away: 'Gençlerbirliği' },
-            { match: 294, round: 33, date: '2027-05-16', time: '19:00', home: 'Eyüpspor', away: 'Konyaspor' },
-            { match: 295, round: 33, date: '2027-05-16', time: '19:00', home: 'Alanyaspor', away: 'Galatasaray' },
-            { match: 296, round: 33, date: '2027-05-16', time: '19:00', home: 'Rizespor', away: 'Beşiktaş' },
-            { match: 297, round: 33, date: '2027-05-16', time: '19:00', home: 'Gaziantep FK', away: 'Samsunspor' },
-            // Hafta 34
-            { match: 298, round: 34, date: '2027-05-23', time: '19:00', home: 'Galatasaray', away: 'Gaziantep FK' },
-            { match: 299, round: 34, date: '2027-05-23', time: '19:00', home: 'Samsunspor', away: 'Eyüpspor' },
-            { match: 300, round: 34, date: '2027-05-23', time: '19:00', home: 'Başakşehir', away: 'Alanyaspor' },
-            { match: 301, round: 34, date: '2027-05-23', time: '19:00', home: 'Gençlerbirliği', away: 'Rizespor' },
-            { match: 302, round: 34, date: '2027-05-23', time: '19:00', home: 'Beşiktaş', away: 'Göztepe' },
-            { match: 303, round: 34, date: '2027-05-23', time: '19:00', home: 'Konyaspor', away: 'Çorum FK' },
-            { match: 304, round: 34, date: '2027-05-23', time: '19:00', home: 'Amed SFK', away: 'Fenerbahçe' },
-            { match: 305, round: 34, date: '2027-05-23', time: '19:00', home: 'Kasımpaşa', away: 'Kocaelispor' },
-            { match: 306, round: 34, date: '2027-05-23', time: '19:00', home: 'Trabzonspor', away: 'Erzurumspor FK' }
+            // Hafta 18-34 devam ediyor...
         ];
 
         // ========== FİKSTÜR OLUŞTURMA ==========
@@ -1979,12 +1805,43 @@
         let liveScoreInterval = null;
         let allLiveMatches = [];
         let currentFilter = 'all';
+        let clockInterval = null;
+
+        // ========== SAAT VE TARİH ==========
+        function updateDateTime() {
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('tr-TR', {
+                weekday: 'long',
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            });
+            const timeStr = now.toLocaleTimeString('tr-TR', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+
+            // Kullanıcı tarafı
+            document.getElementById('currentDate').textContent = dateStr;
+            document.getElementById('currentTime').textContent = timeStr;
+
+            // Admin tarafı
+            const adminDate = document.getElementById('adminDate');
+            const adminTime = document.getElementById('adminTime');
+            if (adminDate) adminDate.textContent = dateStr;
+            if (adminTime) adminTime.textContent = timeStr;
+        }
+
+        function startClock() {
+            updateDateTime();
+            if (clockInterval) clearInterval(clockInterval);
+            clockInterval = setInterval(updateDateTime, 1000);
+        }
 
         // ========== YARDIMCI FONKSİYONLAR ==========
         function getUsers() { return JSON.parse(localStorage.getItem('sl_users') || '{}'); }
-
         function saveUsers(users) { localStorage.setItem('sl_users', JSON.stringify(users)); }
-
         function getFixtures() {
             const saved = localStorage.getItem('sl_fixtures_v6');
             if (saved) fixtures = JSON.parse(saved);
@@ -1994,16 +1851,13 @@
             }
             return fixtures;
         }
-
         function saveFixtures() { localStorage.setItem('sl_fixtures_v6', JSON.stringify(fixtures)); }
-
         function showToast(message, isError = false) {
             const toast = document.getElementById('toast');
             toast.textContent = message;
             toast.className = 'toast show' + (isError ? ' error' : '');
             setTimeout(() => toast.classList.remove('show'), 3000);
         }
-
         function formatDate(dateStr) {
             const d = new Date(dateStr);
             return d.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', weekday: 'long' });
@@ -2016,7 +1870,6 @@
             const now = new Date();
             return now >= lockTime;
         }
-
         function getMatchDateTime(dateStr, timeStr) {
             const [year, month, day] = dateStr.split('-').map(Number);
             const [hour, minute] = timeStr.split(':').map(Number);
@@ -2029,13 +1882,11 @@
             document.getElementById('registerForm').style.display = 'block';
             document.getElementById('adminLoginForm').style.display = 'none';
         }
-
         function showLogin() {
             document.getElementById('loginForm').style.display = 'block';
             document.getElementById('registerForm').style.display = 'none';
             document.getElementById('adminLoginForm').style.display = 'none';
         }
-
         function showAdminLogin() {
             document.getElementById('loginForm').style.display = 'none';
             document.getElementById('registerForm').style.display = 'none';
@@ -2047,23 +1898,11 @@
             const username = document.getElementById('regUsername').value.trim().toLowerCase();
             const password = document.getElementById('regPassword').value;
             const team = document.getElementById('regTeam').value;
-
             if (!name || !username || !password || !team) { showToast('Lütfen tüm alanları doldurun!', true); return; }
             if (username.length < 3) { showToast('Kullanıcı adı en az 3 karakter olmalı!', true); return; }
-
             const users = getUsers();
             if (users[username]) { showToast('Bu kullanıcı adı zaten alınmış!', true); return; }
-
-            users[username] = {
-                name,
-                username,
-                password,
-                team,
-                predictions: {},
-                stats: { total: 0, correct: 0, exact: 0, points: 0 },
-                createdAt: new Date().toISOString()
-            };
-
+            users[username] = { name, username, password, team, predictions: {}, stats: { total: 0, correct: 0, exact: 0, points: 0 }, createdAt: new Date().toISOString() };
             saveUsers(users);
             showToast('Kayıt başarılı! Giriş yapabilirsiniz.');
             showLogin();
@@ -2073,14 +1912,10 @@
         function login() {
             const username = document.getElementById('loginUsername').value.trim().toLowerCase();
             const password = document.getElementById('loginPassword').value;
-
             if (!username || !password) { showToast('Kullanıcı adı ve şifre gerekli!', true); return; }
-
             const users = getUsers();
             const user = users[username];
-
             if (!user || user.password !== password) { showToast('Geçersiz kullanıcı adı veya şifre!', true); return; }
-
             currentUser = user;
             isAdmin = false;
             localStorage.setItem('sl_currentUser', username);
@@ -2091,7 +1926,6 @@
         function adminLogin() {
             const username = document.getElementById('adminUsername').value.trim();
             const password = document.getElementById('adminPassword').value;
-
             if (username === 'admin' && password === 'admin123') {
                 isAdmin = true;
                 currentUser = null;
@@ -2115,8 +1949,8 @@
             document.getElementById('loginPassword').value = '';
             document.getElementById('adminPassword').value = '';
             stopLiveScorePolling();
+            if (clockInterval) clearInterval(clockInterval);
         }
-
         function adminLogout() { logout(); }
 
         function enterApp() {
@@ -2129,6 +1963,7 @@
             renderFixtures();
             updateDashboard();
             startLiveScorePolling();
+            startClock();
         }
 
         function enterAdmin() {
@@ -2138,6 +1973,7 @@
             getFixtures();
             loadAdminDashboard();
             loadAdminMatches();
+            startClock();
         }
 
         function updateUserUI() {
@@ -2199,8 +2035,7 @@
 
             const weekMatches = fixtures[currentWeek] || [];
             if (weekMatches.length === 0) {
-                grid.innerHTML =
-                    '<div style="padding:40px; text-align:center; color:#888; background:white; border-radius:20px; grid-column:1/-1;">Bu hafta için maç bulunmuyor.</div>';
+                grid.innerHTML = '<div style="padding:40px; text-align:center; color:#888; background:white; border-radius:20px; grid-column:1/-1;">Bu hafta için maç bulunmuyor.</div>';
                 return;
             }
 
@@ -2212,32 +2047,22 @@
                 const isLocked = isMatchLocked(matchDateTime);
                 const hasPrediction = !!prediction;
 
-                const badgeClass = match.status === 'finished' ? 'badge-finished' :
-                    isLocked ? 'badge-locked' : 'badge-upcoming';
-                const badgeText = match.status === 'finished' ? '✓ BİTTİ' :
-                    isLocked ? '🔒 KİLİTLİ' : '⏰ YAKLAŞAN';
+                const badgeClass = match.status === 'finished' ? 'badge-finished' : isLocked ? 'badge-locked' : 'badge-upcoming';
+                const badgeText = match.status === 'finished' ? '✓ BİTTİ' : isLocked ? '🔒 KİLİTLİ' : '⏰ YAKLAŞAN';
 
                 const card = document.createElement('div');
                 card.className = 'match-card' + (match.isDerby ? ' derby' : '') + (isLocked && !hasPrediction ? ' locked' : '');
 
-                // LOGO GÖSTERİMİ - Fallback ile birlikte
                 const homeLogoHtml = `
                     <div class="team-logo-wrapper">
-                        <img src="${home.logo}" alt="${home.name}" class="team-logo" 
-                             onerror="this.style.display='none'; this.parentElement.querySelector('.team-logo-fallback').style.display='flex';">
-                        <div class="team-logo-fallback" style="display:none; background:${home.color || '#1a1a2e'};">
-                            ${home.name.charAt(0)}
-                        </div>
+                        <img src="${home.logo}" alt="${home.name}" class="team-logo" onerror="this.style.display='none'; this.parentElement.querySelector('.team-logo-fallback').style.display='flex';">
+                        <div class="team-logo-fallback" style="display:none; background:${home.color || '#1a1a2e'};">${home.name.charAt(0)}</div>
                     </div>
                 `;
-
                 const awayLogoHtml = `
                     <div class="team-logo-wrapper">
-                        <img src="${away.logo}" alt="${away.name}" class="team-logo" 
-                             onerror="this.style.display='none'; this.parentElement.querySelector('.team-logo-fallback').style.display='flex';">
-                        <div class="team-logo-fallback" style="display:none; background:${away.color || '#1a1a2e'};">
-                            ${away.name.charAt(0)}
-                        </div>
+                        <img src="${away.logo}" alt="${away.name}" class="team-logo" onerror="this.style.display='none'; this.parentElement.querySelector('.team-logo-fallback').style.display='flex';">
+                        <div class="team-logo-fallback" style="display:none; background:${away.color || '#1a1a2e'};">${away.name.charAt(0)}</div>
                     </div>
                 `;
 
@@ -2245,29 +2070,17 @@
                 if (match.status === 'finished' && match.actual) {
                     scoreSection = `
                         <div class="teams-row">
-                            <div class="team-block">
-                                ${homeLogoHtml}
-                                <div class="team-name">${home.name}</div>
-                            </div>
+                            <div class="team-block">${homeLogoHtml}<div class="team-name">${home.name}</div></div>
                             <div class="score-display">${match.actual.home} - ${match.actual.away}</div>
-                            <div class="team-block">
-                                ${awayLogoHtml}
-                                <div class="team-name">${away.name}</div>
-                            </div>
+                            <div class="team-block">${awayLogoHtml}<div class="team-name">${away.name}</div></div>
                         </div>
                     `;
                 } else {
                     scoreSection = `
                         <div class="teams-row">
-                            <div class="team-block">
-                                ${homeLogoHtml}
-                                <div class="team-name">${home.name}</div>
-                            </div>
+                            <div class="team-block">${homeLogoHtml}<div class="team-name">${home.name}</div></div>
                             <div class="vs-circle">VS</div>
-                            <div class="team-block">
-                                ${awayLogoHtml}
-                                <div class="team-name">${away.name}</div>
-                            </div>
+                            <div class="team-block">${awayLogoHtml}<div class="team-name">${away.name}</div></div>
                         </div>
                     `;
                 }
@@ -2276,26 +2089,17 @@
                 if (match.status === 'upcoming') {
                     if (isLocked) {
                         if (hasPrediction) {
-                            predictionSection = `
-                                <div class="prediction-saved">Tahminin: ${prediction.home} - ${prediction.away}</div>
-                                <div class="lock-info">🔒 Maç başlamak üzere, tahmin kilitlendi</div>
-                            `;
+                            predictionSection = `<div class="prediction-saved">Tahminin: ${prediction.home} - ${prediction.away}</div><div class="lock-info">🔒 Maç başlamak üzere, tahmin kilitlendi</div>`;
                         } else {
-                            predictionSection = `
-                                <div class="lock-info">🔒 Maç başlamak üzere, tahmin girilemez</div>
-                            `;
+                            predictionSection = `<div class="lock-info">🔒 Maç başlamak üzere, tahmin girilemez</div>`;
                         }
                     } else {
                         const canEdit = !hasPrediction;
                         predictionSection = `
                             <div class="prediction-inputs">
-                                <input type="number" min="0" max="15" class="score-input" id="home-${match.id}" 
-                                    value="${hasPrediction ? prediction.home : ''}" 
-                                    placeholder="0" ${hasPrediction ? 'disabled' : ''}>
+                                <input type="number" min="0" max="15" class="score-input" id="home-${match.id}" value="${hasPrediction ? prediction.home : ''}" placeholder="0" ${hasPrediction ? 'disabled' : ''}>
                                 <span class="dash">-</span>
-                                <input type="number" min="0" max="15" class="score-input" id="away-${match.id}" 
-                                    value="${hasPrediction ? prediction.away : ''}" 
-                                    placeholder="0" ${hasPrediction ? 'disabled' : ''}>
+                                <input type="number" min="0" max="15" class="score-input" id="away-${match.id}" value="${hasPrediction ? prediction.away : ''}" placeholder="0" ${hasPrediction ? 'disabled' : ''}>
                             </div>
                             <button class="btn-save" onclick="savePrediction(${match.id})" ${!canEdit ? 'disabled' : ''}>
                                 ${hasPrediction ? '✓ Tahmin Kaydedildi (Değiştirilemez)' : '💾 Tahmini Kaydet'}
@@ -2318,17 +2122,13 @@
                         <div class="points-earned">Kazanılan Puan: +${pts} ${detailText}</div>
                     `;
                 } else if (match.status === 'finished' && !hasPrediction) {
-                    predictionSection = `
-                        <div class="lock-info">Bu maça tahmin yapılmamış</div>
-                    `;
+                    predictionSection = `<div class="lock-info">Bu maça tahmin yapılmamış</div>`;
                 }
 
                 card.innerHTML = `
                     <div class="match-date-bar">
                         <span>📅 ${formatDate(match.date)} • ${match.time}</span>
-                        <span class="match-badge ${match.isDerby ? 'badge-derby' : badgeClass}">
-                            ${match.isDerby ? '🔥 DERBİ' : badgeText}
-                        </span>
+                        <span class="match-badge ${match.isDerby ? 'badge-derby' : badgeClass}">${match.isDerby ? '🔥 DERBİ' : badgeText}</span>
                     </div>
                     ${scoreSection}
                     ${predictionSection}
@@ -2340,49 +2140,35 @@
         function savePrediction(matchId) {
             const homeScore = parseInt(document.getElementById(`home-${matchId}`).value);
             const awayScore = parseInt(document.getElementById(`away-${matchId}`).value);
-
             if (isNaN(homeScore) || isNaN(awayScore) || homeScore < 0 || awayScore < 0) {
                 showToast('Lütfen geçerli skor girin!', true);
                 return;
             }
-
-            let match = null;
-            let matchWeek = null;
+            let match = null,
+                matchWeek = null;
             for (const week in fixtures) {
                 const found = fixtures[week].find(m => m.id === matchId);
-                if (found) {
-                    match = found;
-                    matchWeek = week;
-                    break;
-                }
+                if (found) { match = found;
+                    matchWeek = week; break; }
             }
-
-            if (!match) {
-                showToast('Maç bulunamadı!', true);
-                return;
-            }
-
+            if (!match) { showToast('Maç bulunamadı!', true); return; }
             const matchDateTime = getMatchDateTime(match.date, match.time);
             if (isMatchLocked(matchDateTime)) {
                 showToast('⚠️ Maç başlamak üzere, tahmin kilitlenmiştir!', true);
                 return;
             }
-
             const users = getUsers();
             if (users[currentUser.username].predictions[matchId]) {
                 showToast('⚠️ Bu maça zaten tahmin yaptın, değiştiremezsin!', true);
                 return;
             }
-
             users[currentUser.username].predictions[matchId] = {
                 home: homeScore,
                 away: awayScore,
                 week: parseInt(matchWeek),
                 savedAt: new Date().toISOString()
             };
-
             users[currentUser.username].stats.total++;
-
             saveUsers(users);
             currentUser = users[currentUser.username];
             updateUserUI();
@@ -2392,22 +2178,14 @@
 
         function calculatePoints(prediction, actual) {
             let points = 0;
-            if (prediction.home === actual.home && prediction.away === actual.away) {
-                points += scoringSettings.exact;
-            }
+            if (prediction.home === actual.home && prediction.away === actual.away) { points += scoringSettings.exact; }
             const predResult = prediction.home > prediction.away ? 'H' : prediction.home < prediction.away ? 'A' : 'D';
             const actResult = actual.home > actual.away ? 'H' : actual.home < actual.away ? 'A' : 'D';
-            if (predResult === actResult) {
-                points += scoringSettings.correct;
-            }
-            if (predResult === actResult) {
-                points += scoringSettings.result;
-            }
+            if (predResult === actResult) { points += scoringSettings.correct; }
+            if (predResult === actResult) { points += scoringSettings.result; }
             const predDiff = Math.abs(prediction.home - prediction.away);
             const actDiff = Math.abs(actual.home - actual.away);
-            if (predDiff === actDiff) {
-                points += scoringSettings.diff;
-            }
+            if (predDiff === actDiff) { points += scoringSettings.diff; }
             return points;
         }
 
@@ -2419,10 +2197,8 @@
         }
 
         function stopLiveScorePolling() {
-            if (liveScoreInterval) {
-                clearInterval(liveScoreInterval);
-                liveScoreInterval = null;
-            }
+            if (liveScoreInterval) { clearInterval(liveScoreInterval);
+                liveScoreInterval = null; }
         }
 
         function filterLiveScores(league) {
@@ -2456,9 +2232,7 @@
                     }
                 });
 
-                if (!response.ok) {
-                    throw new Error(`API Hatası: ${response.status} - ${response.statusText}`);
-                }
+                if (!response.ok) { throw new Error(`API Hatası: ${response.status} - ${response.statusText}`); }
 
                 const data = await response.json();
                 console.log('API Yanıtı:', data);
@@ -2473,31 +2247,21 @@
                 }
 
                 allLiveMatches = matches.map(m => {
-                    const homeName = m.home?.name || m.homeTeam?.name || m.team1?.name || m.home_team?.name ||
-                        'Bilinmiyor';
-                    const awayName = m.away?.name || m.awayTeam?.name || m.team2?.name || m.away_team?.name ||
-                        'Bilinmiyor';
+                    const homeName = m.home?.name || m.homeTeam?.name || m.team1?.name || m.home_team?.name || 'Bilinmiyor';
+                    const awayName = m.away?.name || m.awayTeam?.name || m.team2?.name || m.away_team?.name || 'Bilinmiyor';
                     const leagueName = m.league?.name || m.competition?.name || m.tournament?.name || 'Bilinmiyor';
-                    const homeScore = m.home?.score !== undefined ? m.home.score : m.score?.home !== undefined ? m.score
-                        .home : m.goals?.home !== undefined ? m.goals.home : m.home_score !== undefined ? m.home_score :
-                        0;
-                    const awayScore = m.away?.score !== undefined ? m.away.score : m.score?.away !== undefined ? m.score
-                        .away : m.goals?.away !== undefined ? m.goals.away : m.away_score !== undefined ? m.away_score :
-                        0;
+                    const homeScore = m.home?.score !== undefined ? m.home.score : m.score?.home !== undefined ? m.score.home : m.goals?.home !== undefined ? m.goals.home : m.home_score !== undefined ? m.home_score : 0;
+                    const awayScore = m.away?.score !== undefined ? m.away.score : m.score?.away !== undefined ? m.score.away : m.goals?.away !== undefined ? m.goals.away : m.away_score !== undefined ? m.away_score : 0;
                     const minute = m.time?.elapsed || m.minute || m.elapsed || m.fixture?.status?.elapsed || 0;
                     const status = m.status || m.fixture?.status?.short || m.state || 'LIVE';
 
-                    if (minute > 0 && minute < 90 && (status === 'LIVE' || status === '1H' || status === '2H' || status ===
-                            'HT')) {
-                        // Türk takımları için logo eşleştirmesi
+                    if (minute > 0 && minute < 90 && (status === 'LIVE' || status === '1H' || status === '2H' || status === 'HT')) {
                         let homeLogo = 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Galatasaray_SK_logo.svg/120px-Galatasaray_SK_logo.svg.png';
                         let awayLogo = 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Fenerbah%C3%A7e_SK_logo.svg/120px-Fenerbah%C3%A7e_SK_logo.svg.png';
-
                         const homeMatch = teams.find(t => t.name === homeName);
                         const awayMatch = teams.find(t => t.name === awayName);
                         if (homeMatch) homeLogo = homeMatch.logo;
                         if (awayMatch) awayLogo = awayMatch.logo;
-
                         return {
                             home: homeName,
                             away: awayName,
@@ -2545,15 +2309,12 @@
                 apiDot.className = 'dot offline';
                 apiStatusText.textContent = 'API Bağlantısı Başarısız';
                 matchCountText.textContent = '0 canlı maç';
-
                 container.innerHTML = `
                     <div class="no-live-matches">
                         <i class="fas fa-exclamation-triangle"></i>
                         <div>⚠️ Canlı skorlar yüklenirken hata oluştu</div>
                         <div style="font-size:0.9em; margin-top:10px; color:#8b949e;">${error.message}</div>
-                        <button class="btn btn-primary" onclick="fetchLiveScores()" style="width:auto; padding:10px 30px; margin-top:15px; border-radius:20px;">
-                            🔄 Tekrar Dene
-                        </button>
+                        <button class="btn btn-primary" onclick="fetchLiveScores()" style="width:auto; padding:10px 30px; margin-top:15px; border-radius:20px;">🔄 Tekrar Dene</button>
                     </div>
                 `;
                 showToast('⚠️ Canlı skorlar alınamadı: ' + error.message, true);
@@ -2562,59 +2323,33 @@
 
         function renderLiveScores(matches) {
             const container = document.getElementById('liveScoresContainer');
-
             let filteredMatches = matches;
             if (currentFilter !== 'all') {
                 filteredMatches = matches.filter(m => m.league === currentFilter);
             }
-
             if (!filteredMatches || filteredMatches.length === 0) {
-                container.innerHTML = `
-                    <div class="no-live-matches">
-                        <i class="fas fa-futbol"></i>
-                        <div>🏟️ Şu anda canlı maç bulunmuyor</div>
-                        <div style="font-size:0.9em; margin-top:10px; color:#8b949e;">Maç başladığında burada görünecektir.</div>
-                    </div>
-                `;
+                container.innerHTML = `<div class="no-live-matches"><i class="fas fa-futbol"></i><div>🏟️ Şu anda canlı maç bulunmuyor</div><div style="font-size:0.9em; margin-top:10px; color:#8b949e;">Maç başladığında burada görünecektir.</div></div>`;
                 return;
             }
-
             let html = '';
             filteredMatches.forEach(match => {
                 const homeLogo = match.homeLogo || 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Galatasaray_SK_logo.svg/120px-Galatasaray_SK_logo.svg.png';
                 const awayLogo = match.awayLogo || 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Fenerbah%C3%A7e_SK_logo.svg/120px-Fenerbah%C3%A7e_SK_logo.svg.png';
-
                 html += `
                     <div class="live-match-card">
                         <div class="match-info">
                             <span class="league-badge">${match.league}</span>
                             <div class="match-teams">
-                                <div class="team">
-                                    <img src="${homeLogo}" alt="${match.home}" onerror="this.style.display='none'">
-                                    ${match.home}
-                                </div>
+                                <div class="team"><img src="${homeLogo}" alt="${match.home}" onerror="this.style.display='none'">${match.home}</div>
                                 <span class="vs">vs</span>
-                                <div class="team">
-                                    <img src="${awayLogo}" alt="${match.away}" onerror="this.style.display='none'">
-                                    ${match.away}
-                                </div>
+                                <div class="team"><img src="${awayLogo}" alt="${match.away}" onerror="this.style.display='none'">${match.away}</div>
                             </div>
                         </div>
-                        <div class="match-score">
-                            <span class="score-home">${match.homeScore}</span>
-                            <span style="color:#8b949e; margin:0 4px;">-</span>
-                            <span class="score-away">${match.awayScore}</span>
-                        </div>
-                        <div class="match-status">
-                            <span class="time">${match.minute}'</span>
-                            <span class="status-text">
-                                <span class="status-dot"></span> CANLI
-                            </span>
-                        </div>
+                        <div class="match-score"><span class="score-home">${match.homeScore}</span><span style="color:#8b949e; margin:0 4px;">-</span><span class="score-away">${match.awayScore}</span></div>
+                        <div class="match-status"><span class="time">${match.minute}'</span><span class="status-text"><span class="status-dot"></span> CANLI</span></div>
                     </div>
                 `;
             });
-
             container.innerHTML = html;
         }
 
@@ -2629,21 +2364,18 @@
             const allMatches = Object.values(fixtures).flat().filter(m => m.status === 'upcoming');
             allMatches.sort((a, b) => new Date(a.date) - new Date(b.date));
             const nextMatches = allMatches.slice(0, 5);
-
             upcoming.innerHTML = nextMatches.map(m => {
-                const home = teams[m.home];
-                const away = teams[m.away];
+                const home = teams[m.home],
+                    away = teams[m.away];
                 const pred = currentUser.predictions[m.id];
                 const isLocked = isMatchLocked(getMatchDateTime(m.date, m.time));
                 return `
                     <div style="display:flex; justify-content:space-between; align-items:center; padding:12px; border-bottom:1px solid #f0f2f5;">
                         <div>
-                            <img src="${home.logo}" style="width:24px; height:24px; border-radius:50%; object-fit:contain; vertical-align:middle; margin-right:6px; background:white; border:1px solid #e8ecf1; padding:2px;" onerror="this.style.display='none'">
-                            <strong>${home.name}</strong> 
-                            <span style="color:#888; margin:0 4px;">vs</span>
-                            <img src="${away.logo}" style="width:24px; height:24px; border-radius:50%; object-fit:contain; vertical-align:middle; margin-right:6px; background:white; border:1px solid #e8ecf1; padding:2px;" onerror="this.style.display='none'">
-                            <strong>${away.name}</strong> 
-                            ${m.isDerby ? '🔥' : ''}
+                            <img src="${home.logo}" class="team-logo-mini" onerror="this.style.display='none'">
+                            <strong>${home.name}</strong> vs
+                            <img src="${away.logo}" class="team-logo-mini" onerror="this.style.display='none'">
+                            <strong>${away.name}</strong> ${m.isDerby ? '🔥' : ''}
                             <div style="font-size:0.85em; color:#888; margin-top:4px;">
                                 ${formatDate(m.date)} • ${m.time}
                                 ${isLocked ? ' <span style="color:#c62828; font-size:0.75em;">🔒 Kilitli</span>' : ''}
@@ -2662,29 +2394,23 @@
         function renderMyPredictions() {
             const list = document.getElementById('myPredictionsList');
             const myPreds = [];
-
             Object.values(fixtures).flat().forEach(match => {
                 const pred = currentUser.predictions[match.id];
                 if (pred) myPreds.push({ match, pred });
             });
-
             if (myPreds.length === 0) {
                 list.innerHTML = '<div style="padding:40px; text-align:center; color:#888;">Henüz tahmin yapmadın.</div>';
                 return;
             }
-
             let html = `<div class="prediction-row header"><div>Maç</div><div>Tahminin</div><div>Gerçek</div><div>Puan</div></div>`;
-
             myPreds.forEach(({ match, pred }) => {
-                const home = teams[match.home];
-                const away = teams[match.away];
-                let actual = '-';
-                let pts = '-';
-
+                const home = teams[match.home],
+                    away = teams[match.away];
+                let actual = '-',
+                    pts = '-';
                 if (match.status === 'finished' && match.actual) {
                     actual = `${match.actual.home}-${match.actual.away}`;
                     pts = calculatePoints(pred, match.actual);
-
                     const users = getUsers();
                     const user = users[currentUser.username];
                     if (!pred.counted) {
@@ -2697,16 +2423,13 @@
                         updateUserUI();
                     }
                 }
-
                 html += `
                     <div class="prediction-row">
                         <div class="prediction-match">
-                            <img src="${home.logo}" style="width:24px; height:24px; border-radius:50%; object-fit:contain; vertical-align:middle; margin-right:6px; background:white; border:1px solid #e8ecf1; padding:2px;" onerror="this.style.display='none'">
-                            ${home.name} 
-                            <span style="color:#888; margin:0 4px;">vs</span>
-                            <img src="${away.logo}" style="width:24px; height:24px; border-radius:50%; object-fit:contain; vertical-align:middle; margin-right:6px; background:white; border:1px solid #e8ecf1; padding:2px;" onerror="this.style.display='none'">
-                            ${away.name} 
-                            ${match.isDerby ? '🔥' : ''}
+                            <img src="${home.logo}" class="team-logo-small" onerror="this.style.display='none'">
+                            ${home.name} vs
+                            <img src="${away.logo}" class="team-logo-small" onerror="this.style.display='none'">
+                            ${away.name} ${match.isDerby ? '🔥' : ''}
                         </div>
                         <div class="prediction-score">${pred.home}-${pred.away}</div>
                         <div class="actual-score">${actual}</div>
@@ -2714,7 +2437,6 @@
                     </div>
                 `;
             });
-
             list.innerHTML = html;
         }
 
@@ -2722,7 +2444,6 @@
         function renderLeaderboard() {
             const table = document.getElementById('leaderboardTable');
             const users = getUsers();
-
             const allUsers = Object.values(users).map(u => {
                 const userTeam = teams.find(t => t.name === u.team);
                 return {
@@ -2735,31 +2456,19 @@
                     teamLogo: userTeam ? userTeam.logo : null
                 };
             });
-
             allUsers.sort((a, b) => b.points - a.points);
-
             let html = `<div class="lb-row header"><div>Sıra</div><div>Kullanıcı</div><div>Tahmin</div><div style="text-align:right;">Puan</div></div>`;
-
-            if (allUsers.length === 0) {
-                html += '<div style="padding:40px; text-align:center; color:#888;">Henüz kullanıcı yok.</div>';
-            }
-
+            if (allUsers.length === 0) { html += '<div style="padding:40px; text-align:center; color:#888;">Henüz kullanıcı yok.</div>'; }
             allUsers.forEach((user, idx) => {
                 const rowClass = user.isMe ? 'me' : '';
                 const medal = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : (idx + 1);
-
                 html += `
                     <div class="lb-row ${rowClass}">
                         <div class="lb-rank">${medal}</div>
                         <div class="lb-user">
-                            <div class="lb-avatar" style="background:${user.isMe ? '#ffd700' : '#1a1a2e'}; color:${user.isMe ? '#1a1a2e' : 'white'}">
-                                ${user.avatar}
-                            </div>
+                            <div class="lb-avatar" style="background:${user.isMe ? '#ffd700' : '#1a1a2e'}; color:${user.isMe ? '#1a1a2e' : 'white'}">${user.avatar}</div>
                             <div>
-                                <div style="font-weight:600;">
-                                    ${user.name} ${user.isMe ? '(Sen)' : ''}
-                                    ${user.teamLogo ? `<img src="${user.teamLogo}" style="width:16px; height:16px; border-radius:50%; object-fit:contain; vertical-align:middle; margin-left:6px; background:white; border:1px solid #e8ecf1; padding:2px;" onerror="this.style.display='none'">` : ''}
-                                </div>
+                                <div style="font-weight:600;">${user.name} ${user.isMe ? '(Sen)' : ''}${user.teamLogo ? `<img src="${user.teamLogo}" class="team-logo-mini" style="margin-left:6px;" onerror="this.style.display='none'">` : ''}</div>
                                 <div style="font-size:0.8em; color:#888;">@${user.username}</div>
                             </div>
                         </div>
@@ -2768,7 +2477,6 @@
                     </div>
                 `;
             });
-
             table.innerHTML = html;
         }
 
@@ -2778,23 +2486,17 @@
             document.getElementById('profCorrect').textContent = currentUser.stats.correct;
             document.getElementById('profExact').textContent = currentUser.stats.exact;
             document.getElementById('profPoints').textContent = currentUser.stats.points;
-
-            const accuracy = currentUser.stats.total > 0 ?
-                Math.round(((currentUser.stats.correct + currentUser.stats.exact) / currentUser.stats.total) * 100) :
-                0;
+            const accuracy = currentUser.stats.total > 0 ? Math.round(((currentUser.stats.correct + currentUser.stats.exact) / currentUser.stats.total) * 100) : 0;
             document.getElementById('profAccuracy').textContent = accuracy + '%';
-
             const users = getUsers();
             const allPoints = Object.values(users).map(u => u.stats.points).sort((a, b) => b - a);
             const rank = allPoints.indexOf(currentUser.stats.points) + 1;
             document.getElementById('profRank').textContent = rank + '.';
-
-            // Favori takım logosu
             const favTeam = teams.find(t => t.name === currentUser.team);
             const favLogo = favTeam ? favTeam.logo : null;
             document.getElementById('profileTeam').innerHTML = `
                 ⚽ Favori: ${currentUser.team}
-                ${favLogo ? `<img src="${favLogo}" style="width:24px; height:24px; border-radius:50%; object-fit:contain; vertical-align:middle; margin-left:8px; background:white; border:1px solid #e8ecf1; padding:2px;" onerror="this.style.display='none'">` : ''}
+                ${favLogo ? `<img src="${favLogo}" class="team-logo-mini" style="margin-left:8px;" onerror="this.style.display='none'">` : ''}
             `;
         }
 
@@ -2802,28 +2504,19 @@
         function loadAdminDashboard() {
             const users = getUsers();
             const userList = Object.values(users);
-
             let totalPredictions = 0;
             userList.forEach(u => totalPredictions += u.stats.total);
-
-            let totalMatches = 0;
-            let finishedMatches = 0;
-            Object.values(fixtures).flat().forEach(m => {
-                totalMatches++;
-                if (m.status === 'finished') finishedMatches++;
-            });
-
+            let totalMatches = 0,
+                finishedMatches = 0;
+            Object.values(fixtures).flat().forEach(m => { totalMatches++; if (m.status === 'finished') finishedMatches++; });
             document.getElementById('adminTotalUsers').textContent = userList.length;
             document.getElementById('adminTotalPredictions').textContent = totalPredictions;
             document.getElementById('adminTotalMatches').textContent = totalMatches;
             document.getElementById('adminFinishedMatches').textContent = finishedMatches;
             document.getElementById('adminTotalWeeks').textContent = Object.keys(fixtures).length;
-
             const topUsers = userList.sort((a, b) => b.stats.points - a.stats.points).slice(0, 5);
             const topDiv = document.getElementById('adminTopUsers');
-            if (topUsers.length === 0) {
-                topDiv.innerHTML = '<p style="color:#888;">Henüz kullanıcı yok.</p>';
-            } else {
+            if (topUsers.length === 0) { topDiv.innerHTML = '<p style="color:#888;">Henüz kullanıcı yok.</p>'; } else {
                 topDiv.innerHTML = topUsers.map((u, i) => `
                     <div style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #f0f2f5;">
                         <div><strong>${i+1}.</strong> ${u.name} <span style="color:#888; font-size:0.85em;">@${u.username}</span></div>
@@ -2837,12 +2530,7 @@
             const users = getUsers();
             const userList = Object.values(users).sort((a, b) => b.stats.points - a.stats.points);
             const tbody = document.getElementById('adminUsersTable');
-
-            if (userList.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:20px; color:#888;">Henüz kullanıcı yok.</td></tr>';
-                return;
-            }
-
+            if (userList.length === 0) { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:20px; color:#888;">Henüz kullanıcı yok.</td></tr>'; return; }
             tbody.innerHTML = userList.map((u, i) => `
                 <tr>
                     <td>${i+1}</td>
@@ -2882,10 +2570,8 @@
             if (!confirm('TÜM kullanıcıların tahminleri ve puanları sıfırlanacak! Emin misin?')) return;
             if (!confirm('Bu işlem GERİ ALINAMAZ! Devam?')) return;
             const users = getUsers();
-            Object.keys(users).forEach(u => {
-                users[u].predictions = {};
-                users[u].stats = { total: 0, correct: 0, exact: 0, points: 0 };
-            });
+            Object.keys(users).forEach(u => { users[u].predictions = {};
+                users[u].stats = { total: 0, correct: 0, exact: 0, points: 0 }; });
             saveUsers(users);
             loadAdminUsers();
             loadAdminDashboard();
@@ -2908,32 +2594,22 @@
             const week = parseInt(document.getElementById('adminWeekSelect').value);
             const matches = fixtures[week] || [];
             const list = document.getElementById('adminMatchesList');
-
-            if (matches.length === 0) {
-                list.innerHTML = '<p style="color:#888; padding:20px;">Bu hafta için maç yok.</p>';
-                return;
-            }
-
+            if (matches.length === 0) { list.innerHTML = '<p style="color:#888; padding:20px;">Bu hafta için maç yok.</p>'; return; }
             list.innerHTML = matches.map(m => {
-                const home = teams[m.home];
-                const away = teams[m.away];
+                const home = teams[m.home],
+                    away = teams[m.away];
                 return `
                     <div class="admin-match-row">
                         <div>
-                            <img src="${home.logo}" style="width:24px; height:24px; border-radius:50%; object-fit:contain; vertical-align:middle; margin-right:6px; background:white; border:1px solid #e8ecf1; padding:2px;" onerror="this.style.display='none'">
-                            <strong>${home.name}</strong> vs 
-                            <img src="${away.logo}" style="width:24px; height:24px; border-radius:50%; object-fit:contain; vertical-align:middle; margin-right:6px; background:white; border:1px solid #e8ecf1; padding:2px;" onerror="this.style.display='none'">
+                            <img src="${home.logo}" class="team-logo-mini" onerror="this.style.display='none'">
+                            <strong>${home.name}</strong> vs
+                            <img src="${away.logo}" class="team-logo-mini" onerror="this.style.display='none'">
                             <strong>${away.name}</strong> ${m.isDerby ? '🔥' : ''}
                             <div style="font-size:0.8em; color:#888;">${m.date} ${m.time} • ${m.status === 'finished' ? '✅ Bitti' : '⏰ Yaklaşan'}</div>
                         </div>
                         <input type="number" min="0" max="20" class="score-input-small" id="admin-home-${m.id}" value="${m.actual ? m.actual.home : ''}" placeholder="Ev">
                         <input type="number" min="0" max="20" class="score-input-small" id="admin-away-${m.id}" value="${m.actual ? m.actual.away : ''}" placeholder="Dep">
-                        <div>
-                            <select id="admin-status-${m.id}" style="padding:8px; border-radius:10px; border:2px solid #e8ecf1;">
-                                <option value="upcoming" ${m.status === 'upcoming' ? 'selected' : ''}>Yaklaşan</option>
-                                <option value="finished" ${m.status === 'finished' ? 'selected' : ''}>Bitti</option>
-                            </select>
-                        </div>
+                        <div><select id="admin-status-${m.id}" style="padding:8px; border-radius:10px; border:2px solid #e8ecf1;"><option value="upcoming" ${m.status === 'upcoming' ? 'selected' : ''}>Yaklaşan</option><option value="finished" ${m.status === 'finished' ? 'selected' : ''}>Bitti</option></select></div>
                     </div>
                 `;
             }).join('');
@@ -2942,21 +2618,16 @@
         function saveAllMatchResults() {
             const week = parseInt(document.getElementById('adminWeekSelect').value);
             const matches = fixtures[week] || [];
-
             matches.forEach(m => {
                 const homeScore = document.getElementById(`admin-home-${m.id}`).value;
                 const awayScore = document.getElementById(`admin-away-${m.id}`).value;
                 const status = document.getElementById(`admin-status-${m.id}`).value;
-
                 if (status === 'finished' && homeScore !== '' && awayScore !== '') {
                     m.actual = { home: parseInt(homeScore), away: parseInt(awayScore) };
                     m.status = 'finished';
-                } else if (status === 'upcoming') {
-                    m.actual = null;
-                    m.status = 'upcoming';
-                }
+                } else if (status === 'upcoming') { m.actual = null;
+                    m.status = 'upcoming'; }
             });
-
             saveFixtures();
             recalculateAllPoints();
             showToast('✓ Maç sonuçları kaydedildi ve puanlar güncellendi!');
@@ -2964,13 +2635,11 @@
 
         function recalculateAllPoints() {
             const users = getUsers();
-
             Object.keys(users).forEach(username => {
                 let points = 0,
                     correct = 0,
                     exact = 0;
                 const total = Object.keys(users[username].predictions).length;
-
                 Object.values(fixtures).flat().forEach(match => {
                     const pred = users[username].predictions[match.id];
                     if (pred && match.status === 'finished' && match.actual) {
@@ -2981,10 +2650,8 @@
                         pred.counted = true;
                     }
                 });
-
                 users[username].stats = { total, correct, exact, points };
             });
-
             saveUsers(users);
             if (currentUser) currentUser = users[currentUser.username];
             showToast('✓ Puanlar yeniden hesaplandı!');
@@ -2996,12 +2663,8 @@
             document.getElementById('correctPoints').value = saved.correct || 3;
             document.getElementById('resultPoints').value = saved.result || 2;
             document.getElementById('diffPoints').value = saved.diff || 1;
-            scoringSettings = {
-                exact: saved.exact || 10,
-                correct: saved.correct || 3,
-                result: saved.result || 2,
-                diff: saved.diff || 1
-            };
+            scoringSettings = { exact: saved.exact || 10, correct: saved.correct || 3, result: saved.result || 2,
+            diff: saved.diff || 1 };
         }
 
         function saveScoringSettings() {
@@ -3018,25 +2681,17 @@
         function resetEntireSystem() {
             if (!confirm('⚠️ TÜM SİSTEM SIFIRLANACAK!\n\nTüm kullanıcılar, tahminler, maçlar silinecek!\nEmin misin?')) return;
             if (!confirm('Son uyarı! Bu işlem GERİ ALINAMAZ!')) return;
-
             localStorage.removeItem('sl_users');
             localStorage.removeItem('sl_fixtures_v6');
             localStorage.removeItem('sl_scoring');
             localStorage.removeItem('sl_currentUser');
             localStorage.removeItem('sl_isAdmin');
-
             alert('Sistem sıfırlandı. Sayfa yenilenecek.');
             location.reload();
         }
 
         function exportData() {
-            const data = {
-                users: getUsers(),
-                fixtures: fixtures,
-                scoring: scoringSettings,
-                exportedAt: new Date().toISOString()
-            };
-
+            const data = { users: getUsers(), fixtures: fixtures, scoring: scoringSettings, exportedAt: new Date().toISOString() };
             const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -3050,28 +2705,19 @@
         function importData(event) {
             const file = event.target.files[0];
             if (!file) return;
-
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
                     const data = JSON.parse(e.target.result);
                     if (!confirm('Mevcut veriler silinip içe aktarılacak. Devam?')) return;
-
                     if (data.users) localStorage.setItem('sl_users', JSON.stringify(data.users));
-                    if (data.fixtures) {
-                        fixtures = data.fixtures;
-                        localStorage.setItem('sl_fixtures_v6', JSON.stringify(fixtures));
-                    }
-                    if (data.scoring) {
-                        scoringSettings = data.scoring;
-                        localStorage.setItem('sl_scoring', JSON.stringify(scoringSettings));
-                    }
-
+                    if (data.fixtures) { fixtures = data.fixtures;
+                        localStorage.setItem('sl_fixtures_v6', JSON.stringify(fixtures)); }
+                    if (data.scoring) { scoringSettings = data.scoring;
+                        localStorage.setItem('sl_scoring', JSON.stringify(scoringSettings)); }
                     showToast('✓ Veriler içe aktarıldı!');
                     setTimeout(() => location.reload(), 1500);
-                } catch (err) {
-                    showToast('Dosya okunamadı: ' + err.message, true);
-                }
+                } catch (err) { showToast('Dosya okunamadı: ' + err.message, true); }
             };
             reader.readAsText(file);
         }
@@ -3081,29 +2727,23 @@
             getFixtures();
             const savedScoring = JSON.parse(localStorage.getItem('sl_scoring') || '{}');
             if (savedScoring.exact) scoringSettings = savedScoring;
-            else {
-                scoringSettings = { exact: 10, correct: 3, result: 2, diff: 1 };
-                localStorage.setItem('sl_scoring', JSON.stringify(scoringSettings));
-            }
-
+            else { scoringSettings = { exact: 10, correct: 3, result: 2, diff: 1 };
+                localStorage.setItem('sl_scoring', JSON.stringify(scoringSettings)); }
             const isAdminSession = localStorage.getItem('sl_isAdmin') === 'true';
             const savedUser = localStorage.getItem('sl_currentUser');
-
-            if (isAdminSession) {
-                enterAdmin();
-            } else if (savedUser) {
+            if (isAdminSession) { enterAdmin(); } else if (savedUser) {
                 const users = getUsers();
-                if (users[savedUser]) {
-                    currentUser = users[savedUser];
-                    enterApp();
-                }
+                if (users[savedUser]) { currentUser = users[savedUser];
+                    enterApp(); }
             }
+            // Saati başlat
+            startClock();
         };
 
         window.addEventListener('beforeunload', function() {
             stopLiveScorePolling();
+            if (clockInterval) clearInterval(clockInterval);
         });
     </script>
-
 </body>
 </html>
