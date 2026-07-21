@@ -54,9 +54,6 @@
             min-height: 100vh;
         }
 
-        /* ============================================================
-                   DARK MODE
-                   ============================================================ */
         body.dark-mode {
             --bg: #0F172A;
             --card: #1E293B;
@@ -72,11 +69,6 @@
         body.dark-mode .login-box {
             background: var(--card) !important;
             border-color: var(--border) !important;
-        }
-
-        body.dark-mode .login-title,
-        body.dark-mode .login-subtitle {
-            color: var(--text-primary);
         }
 
         /* ============================================================
@@ -506,6 +498,7 @@
             cursor: pointer;
             outline: none;
             font-family: var(--font-family);
+            min-width: 120px;
         }
 
         .week-selector select:focus {
@@ -540,6 +533,10 @@
             background: linear-gradient(135deg, var(--card), #FEF3C7);
         }
 
+        body.dark-mode .match-card.derby {
+            background: linear-gradient(135deg, var(--card), #3B2A0A);
+        }
+
         .match-card .match-header {
             display: flex;
             justify-content: space-between;
@@ -549,6 +546,8 @@
             padding-bottom: 12px;
             border-bottom: 1px solid var(--border);
             margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 6px;
         }
 
         .match-card .match-header .match-badge {
@@ -574,6 +573,23 @@
         .match-badge.derby-badge {
             background: #FEF3C7;
             color: #D97706;
+        }
+
+        body.dark-mode .match-badge.upcoming {
+            background: #1E293B;
+            color: var(--accent);
+        }
+        body.dark-mode .match-badge.finished {
+            background: #064E3B;
+            color: var(--success);
+        }
+        body.dark-mode .match-badge.locked {
+            background: #1E293B;
+            color: var(--text-muted);
+        }
+        body.dark-mode .match-badge.derby-badge {
+            background: #3B2A0A;
+            color: #F59E0B;
         }
 
         .match-teams {
@@ -713,6 +729,11 @@
             font-weight: 600;
             font-size: 14px;
             margin-top: 10px;
+        }
+
+        body.dark-mode .match-prediction-saved {
+            background: #064E3B;
+            color: #4ADE80;
         }
 
         .match-prediction-locked {
@@ -901,6 +922,10 @@
         .badge-item.unlocked {
             border-color: var(--warning);
             background: #FEF3C7;
+        }
+
+        body.dark-mode .badge-item.unlocked {
+            background: #3B2A0A;
         }
 
         .badge-item.locked {
@@ -1294,6 +1319,63 @@
                 font-size: 12px;
             }
         }
+
+        /* ============================================================
+                   LOGIN SCREEN OVERRIDE
+                   ============================================================ */
+        .login-box {
+            background: var(--card);
+            border-radius: 24px;
+            padding: 48px 40px;
+            max-width: 420px;
+            width: 100%;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .login-box input,
+        .login-box select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: var(--bg);
+            font-family: var(--font-family);
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        .login-box input:focus,
+        .login-box select:focus {
+            border-color: var(--accent);
+            outline: none;
+        }
+
+        .login-box label {
+            font-weight: 600;
+            font-size: 14px;
+            display: block;
+            margin-bottom: 4px;
+            color: var(--text-secondary);
+        }
+
+        .login-box .btn-save {
+            width: 100%;
+            padding: 12px;
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: var(--font-family);
+        }
+
+        .login-box .btn-save:hover {
+            background: #2563EB;
+        }
     </style>
 </head>
 <body>
@@ -1439,7 +1521,7 @@
         <section class="page" id="page-fixtures">
             <div class="week-selector">
                 <label><i class="fas fa-calendar-week"></i> Hafta Seç:</label>
-                <select id="weekSelect"></select>
+                <select id="weekSelect" onchange="renderFixtures()"></select>
             </div>
             <div class="matches-grid" id="fixturesGrid"></div>
         </section>
@@ -1594,7 +1676,7 @@
             <div id="adminMatches" style="display:none;">
                 <div style="background:var(--card);border-radius:var(--radius);padding:20px;border:1px solid var(--border);">
                     <h4 style="margin-bottom:12px;">📅 Hafta Seç</h4>
-                    <select id="adminWeekSelect" style="padding:10px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);font-family:var(--font-family);margin-bottom:16px;"></select>
+                    <select id="adminWeekSelect" style="padding:10px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);font-family:var(--font-family);margin-bottom:16px;" onchange="renderAdminMatches()"></select>
                     <div id="adminMatchesList"></div>
                     <button class="btn-save" style="margin-top:16px;" onclick="saveAllMatchResults()">💾 Tüm Sonuçları Kaydet</button>
                 </div>
@@ -1634,24 +1716,34 @@
     LOGIN SCREEN
     ============================================================ -->
     <div class="login-screen" id="loginScreen" style="display:flex;position:fixed;inset:0;z-index:9999;background:var(--bg);align-items:center;justify-content:center;padding:20px;">
-        <div class="login-box" style="background:var(--card);border-radius:24px;padding:48px 40px;max-width:420px;width:100%;border:1px solid var(--border);box-shadow:var(--shadow-lg);">
+        <div class="login-box">
             <div style="text-align:center;font-size:48px;margin-bottom:8px;">⚽</div>
             <h1 style="text-align:center;font-size:28px;font-weight:800;color:var(--text-primary);">Süper Lig <span style="color:var(--accent);">Tahmin</span></h1>
             <p style="text-align:center;color:var(--text-secondary);margin-bottom:32px;">2026/2027 Sezonu</p>
 
             <div id="loginForm">
-                <div style="margin-bottom:16px;"><label style="font-weight:600;font-size:14px;display:block;margin-bottom:4px;">Kullanıcı Adı</label><input type="text" id="loginUsername" placeholder="kullanici_adi" style="width:100%;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);font-family:var(--font-family);"></div>
-                <div style="margin-bottom:20px;"><label style="font-weight:600;font-size:14px;display:block;margin-bottom:4px;">Şifre</label><input type="password" id="loginPassword" placeholder="••••••••" style="width:100%;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);font-family:var(--font-family);"></div>
+                <div style="margin-bottom:16px;"><label>Kullanıcı Adı</label><input type="text" id="loginUsername" placeholder="kullanici_adi"></div>
+                <div style="margin-bottom:20px;"><label>Şifre</label><input type="password" id="loginPassword" placeholder="••••••••"></div>
                 <button class="btn-save" onclick="login()">Giriş Yap</button>
                 <div style="text-align:center;margin-top:16px;color:var(--text-secondary);font-size:14px;">Hesabın yok mu? <a onclick="showRegister()" style="color:var(--accent);font-weight:600;cursor:pointer;">Kayıt Ol</a></div>
                 <div style="text-align:center;margin-top:8px;font-size:14px;"><a onclick="showAdminLogin()" style="color:var(--danger);font-weight:600;cursor:pointer;">🔐 Admin Girişi</a></div>
             </div>
 
             <div id="registerForm" style="display:none;">
-                <div style="margin-bottom:12px;"><label style="font-weight:600;font-size:14px;">Ad Soyad</label><input type="text" id="regName" placeholder="Ahmet Yılmaz" style="width:100%;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);"></div>
-                <div style="margin-bottom:12px;"><label style="font-weight:600;font-size:14px;">Kullanıcı Adı</label><input type="text" id="regUsername" placeholder="ahmet_y" style="width:100%;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);"></div>
-                <div style="margin-bottom:12px;"><label style="font-weight:600;font-size:14px;">Şifre</label><input type="password" id="regPassword" placeholder="••••••••" style="width:100%;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);"></div>
-                <div style="margin-bottom:16px;"><label style="font-weight:600;font-size:14px;">Favori Takım</label><select id="regTeam" style="width:100%;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);font-family:var(--font-family);"><option value="">Seçiniz...</option><option>Galatasaray</option><option>Fenerbahçe</option><option>Beşiktaş</option><option>Trabzonspor</option><option>Başakşehir</option><option>Samsunspor</option><option>Konyaspor</option><option>Alanyaspor</option><option>Kasımpaşa</option><option>Gaziantep FK</option><option>Eyüpspor</option><option>Göztepe</option><option>Rizespor</option><option>Kocaelispor</option><option>Gençlerbirliği</option><option>Erzurumspor FK</option><option>Çorum FK</option><option>Amed SFK</option></select></div>
+                <div style="margin-bottom:12px;"><label>Ad Soyad</label><input type="text" id="regName" placeholder="Ahmet Yılmaz"></div>
+                <div style="margin-bottom:12px;"><label>Kullanıcı Adı</label><input type="text" id="regUsername" placeholder="ahmet_y"></div>
+                <div style="margin-bottom:12px;"><label>Şifre</label><input type="password" id="regPassword" placeholder="••••••••"></div>
+                <div style="margin-bottom:16px;"><label>Favori Takım</label>
+                    <select id="regTeam">
+                        <option value="">Seçiniz...</option>
+                        <option>Galatasaray</option><option>Fenerbahçe</option><option>Beşiktaş</option>
+                        <option>Trabzonspor</option><option>Başakşehir</option><option>Samsunspor</option>
+                        <option>Konyaspor</option><option>Alanyaspor</option><option>Kasımpaşa</option>
+                        <option>Gaziantep FK</option><option>Eyüpspor</option><option>Göztepe</option>
+                        <option>Rizespor</option><option>Kocaelispor</option><option>Gençlerbirliği</option>
+                        <option>Erzurumspor FK</option><option>Çorum FK</option><option>Amed SFK</option>
+                    </select>
+                </div>
                 <button class="btn-save" onclick="register()">Kayıt Ol</button>
                 <div style="text-align:center;margin-top:16px;font-size:14px;color:var(--text-secondary);">Zaten hesabın var mı? <a onclick="showLogin()" style="color:var(--accent);font-weight:600;cursor:pointer;">Giriş Yap</a></div>
             </div>
@@ -1660,8 +1752,8 @@
                 <div style="background:#FEF3C7;padding:12px;border-radius:10px;margin-bottom:20px;border-left:4px solid var(--warning);">
                     <strong style="color:#D97706;">⚠️ Admin Girişi</strong><br><small style="color:var(--text-secondary);">Varsayılan: admin / admin123</small>
                 </div>
-                <div style="margin-bottom:12px;"><label style="font-weight:600;font-size:14px;">Admin Kullanıcı Adı</label><input type="text" id="adminUsername" placeholder="admin" style="width:100%;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);"></div>
-                <div style="margin-bottom:20px;"><label style="font-weight:600;font-size:14px;">Admin Şifresi</label><input type="password" id="adminPassword" placeholder="••••••••" style="width:100%;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);"></div>
+                <div style="margin-bottom:12px;"><label>Admin Kullanıcı Adı</label><input type="text" id="adminUsername" placeholder="admin"></div>
+                <div style="margin-bottom:20px;"><label>Admin Şifresi</label><input type="password" id="adminPassword" placeholder="••••••••"></div>
                 <button class="btn-save" onclick="adminLogin()" style="background:var(--danger);">🔐 Admin Girişi</button>
                 <div style="text-align:center;margin-top:16px;font-size:14px;"><a onclick="showLogin()" style="color:var(--accent);font-weight:600;cursor:pointer;">← Kullanıcı Girişine Dön</a></div>
             </div>
@@ -1703,10 +1795,6 @@
             { id: 17, name: 'Amed SFK', short: 'AME', color: '#8d0801', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Amed_SFK_logo.svg/120px-Amed_SFK_logo.svg.png' }
         ];
 
-        // Takım adı -> id eşleştirme
-        const teamNameToId = {};
-        teams.forEach(t => teamNameToId[t.name] = t.id);
-
         // ============================================================
         // FİKSTÜR VERİSİ - 34 HAFTA, 306 MAÇ
         // CSV'den tam olarak aktarıldı
@@ -1723,335 +1811,335 @@
             { match: 8, round: 1, date: '2026-08-16', time: '21:30', home: 'Beşiktaş', away: 'Eyüpspor' },
             { match: 9, round: 1, date: '2026-08-17', time: '21:30', home: 'Samsunspor', away: 'Göztepe' },
             // === HAFTA 2 ===
-            { match: 10, round: 2, date: '2026-08-23', time: '00:00', home: 'Çorum FK', away: 'Kasımpaşa' },
-            { match: 11, round: 2, date: '2026-08-23', time: '00:00', home: 'Trabzonspor', away: 'Başakşehir' },
-            { match: 12, round: 2, date: '2026-08-23', time: '00:00', home: 'Eyüpspor', away: 'Gaziantep FK' },
-            { match: 13, round: 2, date: '2026-08-23', time: '00:00', home: 'Alanyaspor', away: 'Beşiktaş' },
-            { match: 14, round: 2, date: '2026-08-23', time: '00:00', home: 'Rizespor', away: 'Samsunspor' },
-            { match: 15, round: 2, date: '2026-08-23', time: '00:00', home: 'Göztepe', away: 'Gençlerbirliği' },
-            { match: 16, round: 2, date: '2026-08-23', time: '00:00', home: 'Fenerbahçe', away: 'Konyaspor' },
-            { match: 17, round: 2, date: '2026-08-23', time: '00:00', home: 'Kocaelispor', away: 'Amed SFK' },
-            { match: 18, round: 2, date: '2026-08-23', time: '00:00', home: 'Erzurumspor FK', away: 'Galatasaray' },
+            { match: 10, round: 2, date: '2026-08-23', time: '19:00', home: 'Çorum FK', away: 'Kasımpaşa' },
+            { match: 11, round: 2, date: '2026-08-23', time: '19:00', home: 'Trabzonspor', away: 'Başakşehir' },
+            { match: 12, round: 2, date: '2026-08-23', time: '19:00', home: 'Eyüpspor', away: 'Gaziantep FK' },
+            { match: 13, round: 2, date: '2026-08-23', time: '19:00', home: 'Alanyaspor', away: 'Beşiktaş' },
+            { match: 14, round: 2, date: '2026-08-23', time: '19:00', home: 'Rizespor', away: 'Samsunspor' },
+            { match: 15, round: 2, date: '2026-08-23', time: '19:00', home: 'Göztepe', away: 'Gençlerbirliği' },
+            { match: 16, round: 2, date: '2026-08-23', time: '19:00', home: 'Fenerbahçe', away: 'Konyaspor' },
+            { match: 17, round: 2, date: '2026-08-23', time: '19:00', home: 'Kocaelispor', away: 'Amed SFK' },
+            { match: 18, round: 2, date: '2026-08-23', time: '19:00', home: 'Erzurumspor FK', away: 'Galatasaray' },
             // === HAFTA 3 ===
-            { match: 19, round: 3, date: '2026-08-30', time: '00:00', home: 'Gaziantep FK', away: 'Rizespor' },
-            { match: 20, round: 3, date: '2026-08-30', time: '00:00', home: 'Eyüpspor', away: 'Alanyaspor' },
-            { match: 21, round: 3, date: '2026-08-30', time: '00:00', home: 'Başakşehir', away: 'Kasımpaşa' },
-            { match: 22, round: 3, date: '2026-08-30', time: '00:00', home: 'Amed SFK', away: 'Trabzonspor' },
-            { match: 23, round: 3, date: '2026-08-30', time: '00:00', home: 'Gençlerbirliği', away: 'Erzurumspor FK' },
-            { match: 24, round: 3, date: '2026-08-30', time: '00:00', home: 'Konyaspor', away: 'Kocaelispor' },
-            { match: 25, round: 3, date: '2026-08-30', time: '00:00', home: 'Galatasaray', away: 'Göztepe' },
-            { match: 26, round: 3, date: '2026-08-30', time: '00:00', home: 'Beşiktaş', away: 'Çorum FK' },
-            { match: 27, round: 3, date: '2026-08-30', time: '00:00', home: 'Samsunspor', away: 'Fenerbahçe' },
+            { match: 19, round: 3, date: '2026-08-30', time: '19:00', home: 'Gaziantep FK', away: 'Rizespor' },
+            { match: 20, round: 3, date: '2026-08-30', time: '19:00', home: 'Eyüpspor', away: 'Alanyaspor' },
+            { match: 21, round: 3, date: '2026-08-30', time: '19:00', home: 'Başakşehir', away: 'Kasımpaşa' },
+            { match: 22, round: 3, date: '2026-08-30', time: '19:00', home: 'Amed SFK', away: 'Trabzonspor' },
+            { match: 23, round: 3, date: '2026-08-30', time: '19:00', home: 'Gençlerbirliği', away: 'Erzurumspor FK' },
+            { match: 24, round: 3, date: '2026-08-30', time: '19:00', home: 'Konyaspor', away: 'Kocaelispor' },
+            { match: 25, round: 3, date: '2026-08-30', time: '19:00', home: 'Galatasaray', away: 'Göztepe' },
+            { match: 26, round: 3, date: '2026-08-30', time: '19:00', home: 'Beşiktaş', away: 'Çorum FK' },
+            { match: 27, round: 3, date: '2026-08-30', time: '19:00', home: 'Samsunspor', away: 'Fenerbahçe' },
             // === HAFTA 4 ===
-            { match: 28, round: 4, date: '2026-09-06', time: '00:00', home: 'Trabzonspor', away: 'Gençlerbirliği' },
-            { match: 29, round: 4, date: '2026-09-06', time: '00:00', home: 'Kasımpaşa', away: 'Amed SFK' },
-            { match: 30, round: 4, date: '2026-09-06', time: '00:00', home: 'Başakşehir', away: 'Galatasaray' },
-            { match: 31, round: 4, date: '2026-09-06', time: '00:00', home: 'Rizespor', away: 'Alanyaspor' },
-            { match: 32, round: 4, date: '2026-09-06', time: '00:00', home: 'Göztepe', away: 'Gaziantep FK' },
-            { match: 33, round: 4, date: '2026-09-06', time: '00:00', home: 'Çorum FK', away: 'Eyüpspor' },
-            { match: 34, round: 4, date: '2026-09-06', time: '00:00', home: 'Fenerbahçe', away: 'Beşiktaş' },
-            { match: 35, round: 4, date: '2026-09-06', time: '00:00', home: 'Kocaelispor', away: 'Samsunspor' },
-            { match: 36, round: 4, date: '2026-09-06', time: '00:00', home: 'Erzurumspor FK', away: 'Konyaspor' },
+            { match: 28, round: 4, date: '2026-09-06', time: '19:00', home: 'Trabzonspor', away: 'Gençlerbirliği' },
+            { match: 29, round: 4, date: '2026-09-06', time: '19:00', home: 'Kasımpaşa', away: 'Amed SFK' },
+            { match: 30, round: 4, date: '2026-09-06', time: '19:00', home: 'Başakşehir', away: 'Galatasaray' },
+            { match: 31, round: 4, date: '2026-09-06', time: '19:00', home: 'Rizespor', away: 'Alanyaspor' },
+            { match: 32, round: 4, date: '2026-09-06', time: '19:00', home: 'Göztepe', away: 'Gaziantep FK' },
+            { match: 33, round: 4, date: '2026-09-06', time: '19:00', home: 'Çorum FK', away: 'Eyüpspor' },
+            { match: 34, round: 4, date: '2026-09-06', time: '19:00', home: 'Fenerbahçe', away: 'Beşiktaş' },
+            { match: 35, round: 4, date: '2026-09-06', time: '19:00', home: 'Kocaelispor', away: 'Samsunspor' },
+            { match: 36, round: 4, date: '2026-09-06', time: '19:00', home: 'Erzurumspor FK', away: 'Konyaspor' },
             // === HAFTA 5 ===
-            { match: 37, round: 5, date: '2026-09-13', time: '00:00', home: 'Gaziantep FK', away: 'Fenerbahçe' },
-            { match: 38, round: 5, date: '2026-09-13', time: '00:00', home: 'Eyüpspor', away: 'Rizespor' },
-            { match: 39, round: 5, date: '2026-09-13', time: '00:00', home: 'Alanyaspor', away: 'Göztepe' },
-            { match: 40, round: 5, date: '2026-09-13', time: '00:00', home: 'Amed SFK', away: 'Başakşehir' },
-            { match: 41, round: 5, date: '2026-09-13', time: '00:00', home: 'Gençlerbirliği', away: 'Kasımpaşa' },
-            { match: 42, round: 5, date: '2026-09-13', time: '00:00', home: 'Konyaspor', away: 'Trabzonspor' },
-            { match: 43, round: 5, date: '2026-09-13', time: '00:00', home: 'Galatasaray', away: 'Kocaelispor' },
-            { match: 44, round: 5, date: '2026-09-13', time: '00:00', home: 'Beşiktaş', away: 'Erzurumspor FK' },
-            { match: 45, round: 5, date: '2026-09-13', time: '00:00', home: 'Samsunspor', away: 'Çorum FK' },
+            { match: 37, round: 5, date: '2026-09-13', time: '19:00', home: 'Gaziantep FK', away: 'Fenerbahçe' },
+            { match: 38, round: 5, date: '2026-09-13', time: '19:00', home: 'Eyüpspor', away: 'Rizespor' },
+            { match: 39, round: 5, date: '2026-09-13', time: '19:00', home: 'Alanyaspor', away: 'Göztepe' },
+            { match: 40, round: 5, date: '2026-09-13', time: '19:00', home: 'Amed SFK', away: 'Başakşehir' },
+            { match: 41, round: 5, date: '2026-09-13', time: '19:00', home: 'Gençlerbirliği', away: 'Kasımpaşa' },
+            { match: 42, round: 5, date: '2026-09-13', time: '19:00', home: 'Konyaspor', away: 'Trabzonspor' },
+            { match: 43, round: 5, date: '2026-09-13', time: '19:00', home: 'Galatasaray', away: 'Kocaelispor' },
+            { match: 44, round: 5, date: '2026-09-13', time: '19:00', home: 'Beşiktaş', away: 'Erzurumspor FK' },
+            { match: 45, round: 5, date: '2026-09-13', time: '19:00', home: 'Samsunspor', away: 'Çorum FK' },
             // === HAFTA 6 ===
-            { match: 46, round: 6, date: '2026-09-20', time: '00:00', home: 'Trabzonspor', away: 'Galatasaray' },
-            { match: 47, round: 6, date: '2026-09-20', time: '00:00', home: 'Kasımpaşa', away: 'Konyaspor' },
-            { match: 48, round: 6, date: '2026-09-20', time: '00:00', home: 'Başakşehir', away: 'Gençlerbirliği' },
-            { match: 49, round: 6, date: '2026-09-20', time: '00:00', home: 'Amed SFK', away: 'Beşiktaş' },
-            { match: 50, round: 6, date: '2026-09-20', time: '00:00', home: 'Göztepe', away: 'Rizespor' },
-            { match: 51, round: 6, date: '2026-09-20', time: '00:00', home: 'Çorum FK', away: 'Alanyaspor' },
-            { match: 52, round: 6, date: '2026-09-20', time: '00:00', home: 'Fenerbahçe', away: 'Eyüpspor' },
-            { match: 53, round: 6, date: '2026-09-20', time: '00:00', home: 'Kocaelispor', away: 'Gaziantep FK' },
-            { match: 54, round: 6, date: '2026-09-20', time: '00:00', home: 'Erzurumspor FK', away: 'Samsunspor' },
+            { match: 46, round: 6, date: '2026-09-20', time: '19:00', home: 'Trabzonspor', away: 'Galatasaray' },
+            { match: 47, round: 6, date: '2026-09-20', time: '19:00', home: 'Kasımpaşa', away: 'Konyaspor' },
+            { match: 48, round: 6, date: '2026-09-20', time: '19:00', home: 'Başakşehir', away: 'Gençlerbirliği' },
+            { match: 49, round: 6, date: '2026-09-20', time: '19:00', home: 'Amed SFK', away: 'Beşiktaş' },
+            { match: 50, round: 6, date: '2026-09-20', time: '19:00', home: 'Göztepe', away: 'Rizespor' },
+            { match: 51, round: 6, date: '2026-09-20', time: '19:00', home: 'Çorum FK', away: 'Alanyaspor' },
+            { match: 52, round: 6, date: '2026-09-20', time: '19:00', home: 'Fenerbahçe', away: 'Eyüpspor' },
+            { match: 53, round: 6, date: '2026-09-20', time: '19:00', home: 'Kocaelispor', away: 'Gaziantep FK' },
+            { match: 54, round: 6, date: '2026-09-20', time: '19:00', home: 'Erzurumspor FK', away: 'Samsunspor' },
             // === HAFTA 7 ===
-            { match: 55, round: 7, date: '2026-10-11', time: '00:00', home: 'Gaziantep FK', away: 'Çorum FK' },
-            { match: 56, round: 7, date: '2026-10-11', time: '00:00', home: 'Eyüpspor', away: 'Göztepe' },
-            { match: 57, round: 7, date: '2026-10-11', time: '00:00', home: 'Alanyaspor', away: 'Erzurumspor FK' },
-            { match: 58, round: 7, date: '2026-10-11', time: '00:00', home: 'Rizespor', away: 'Fenerbahçe' },
-            { match: 59, round: 7, date: '2026-10-11', time: '00:00', home: 'Gençlerbirliği', away: 'Amed SFK' },
-            { match: 60, round: 7, date: '2026-10-11', time: '00:00', home: 'Konyaspor', away: 'Başakşehir' },
-            { match: 61, round: 7, date: '2026-10-11', time: '00:00', home: 'Galatasaray', away: 'Kasımpaşa' },
-            { match: 62, round: 7, date: '2026-10-11', time: '00:00', home: 'Beşiktaş', away: 'Kocaelispor' },
-            { match: 63, round: 7, date: '2026-10-11', time: '00:00', home: 'Samsunspor', away: 'Trabzonspor' },
+            { match: 55, round: 7, date: '2026-10-11', time: '19:00', home: 'Gaziantep FK', away: 'Çorum FK' },
+            { match: 56, round: 7, date: '2026-10-11', time: '19:00', home: 'Eyüpspor', away: 'Göztepe' },
+            { match: 57, round: 7, date: '2026-10-11', time: '19:00', home: 'Alanyaspor', away: 'Erzurumspor FK' },
+            { match: 58, round: 7, date: '2026-10-11', time: '19:00', home: 'Rizespor', away: 'Fenerbahçe' },
+            { match: 59, round: 7, date: '2026-10-11', time: '19:00', home: 'Gençlerbirliği', away: 'Amed SFK' },
+            { match: 60, round: 7, date: '2026-10-11', time: '19:00', home: 'Konyaspor', away: 'Başakşehir' },
+            { match: 61, round: 7, date: '2026-10-11', time: '19:00', home: 'Galatasaray', away: 'Kasımpaşa' },
+            { match: 62, round: 7, date: '2026-10-11', time: '19:00', home: 'Beşiktaş', away: 'Kocaelispor' },
+            { match: 63, round: 7, date: '2026-10-11', time: '19:00', home: 'Samsunspor', away: 'Trabzonspor' },
             // === HAFTA 8 ===
-            { match: 64, round: 8, date: '2026-10-18', time: '00:00', home: 'Trabzonspor', away: 'Beşiktaş' },
-            { match: 65, round: 8, date: '2026-10-18', time: '00:00', home: 'Kasımpaşa', away: 'Samsunspor' },
-            { match: 66, round: 8, date: '2026-10-18', time: '00:00', home: 'Başakşehir', away: 'Gaziantep FK' },
-            { match: 67, round: 8, date: '2026-10-18', time: '00:00', home: 'Amed SFK', away: 'Konyaspor' },
-            { match: 68, round: 8, date: '2026-10-18', time: '00:00', home: 'Gençlerbirliği', away: 'Galatasaray' },
-            { match: 69, round: 8, date: '2026-10-18', time: '00:00', home: 'Çorum FK', away: 'Rizespor' },
-            { match: 70, round: 8, date: '2026-10-18', time: '00:00', home: 'Fenerbahçe', away: 'Alanyaspor' },
-            { match: 71, round: 8, date: '2026-10-18', time: '00:00', home: 'Kocaelispor', away: 'Göztepe' },
-            { match: 72, round: 8, date: '2026-10-18', time: '00:00', home: 'Erzurumspor FK', away: 'Eyüpspor' },
+            { match: 64, round: 8, date: '2026-10-18', time: '19:00', home: 'Trabzonspor', away: 'Beşiktaş' },
+            { match: 65, round: 8, date: '2026-10-18', time: '19:00', home: 'Kasımpaşa', away: 'Samsunspor' },
+            { match: 66, round: 8, date: '2026-10-18', time: '19:00', home: 'Başakşehir', away: 'Gaziantep FK' },
+            { match: 67, round: 8, date: '2026-10-18', time: '19:00', home: 'Amed SFK', away: 'Konyaspor' },
+            { match: 68, round: 8, date: '2026-10-18', time: '19:00', home: 'Gençlerbirliği', away: 'Galatasaray' },
+            { match: 69, round: 8, date: '2026-10-18', time: '19:00', home: 'Çorum FK', away: 'Rizespor' },
+            { match: 70, round: 8, date: '2026-10-18', time: '19:00', home: 'Fenerbahçe', away: 'Alanyaspor' },
+            { match: 71, round: 8, date: '2026-10-18', time: '19:00', home: 'Kocaelispor', away: 'Göztepe' },
+            { match: 72, round: 8, date: '2026-10-18', time: '19:00', home: 'Erzurumspor FK', away: 'Eyüpspor' },
             // === HAFTA 9 ===
-            { match: 73, round: 9, date: '2026-10-25', time: '00:00', home: 'Gaziantep FK', away: 'Erzurumspor FK' },
-            { match: 74, round: 9, date: '2026-10-25', time: '00:00', home: 'Eyüpspor', away: 'Kasımpaşa' },
-            { match: 75, round: 9, date: '2026-10-25', time: '00:00', home: 'Alanyaspor', away: 'Kocaelispor' },
-            { match: 76, round: 9, date: '2026-10-25', time: '00:00', home: 'Rizespor', away: 'Trabzonspor' },
-            { match: 77, round: 9, date: '2026-10-25', time: '00:00', home: 'Göztepe', away: 'Çorum FK' },
-            { match: 78, round: 9, date: '2026-10-25', time: '00:00', home: 'Konyaspor', away: 'Gençlerbirliği' },
-            { match: 79, round: 9, date: '2026-10-25', time: '00:00', home: 'Galatasaray', away: 'Fenerbahçe' },
-            { match: 80, round: 9, date: '2026-10-25', time: '00:00', home: 'Beşiktaş', away: 'Başakşehir' },
-            { match: 81, round: 9, date: '2026-10-25', time: '00:00', home: 'Samsunspor', away: 'Amed SFK' },
+            { match: 73, round: 9, date: '2026-10-25', time: '19:00', home: 'Gaziantep FK', away: 'Erzurumspor FK' },
+            { match: 74, round: 9, date: '2026-10-25', time: '19:00', home: 'Eyüpspor', away: 'Kasımpaşa' },
+            { match: 75, round: 9, date: '2026-10-25', time: '19:00', home: 'Alanyaspor', away: 'Kocaelispor' },
+            { match: 76, round: 9, date: '2026-10-25', time: '19:00', home: 'Rizespor', away: 'Trabzonspor' },
+            { match: 77, round: 9, date: '2026-10-25', time: '19:00', home: 'Göztepe', away: 'Çorum FK' },
+            { match: 78, round: 9, date: '2026-10-25', time: '19:00', home: 'Konyaspor', away: 'Gençlerbirliği' },
+            { match: 79, round: 9, date: '2026-10-25', time: '19:00', home: 'Galatasaray', away: 'Fenerbahçe' },
+            { match: 80, round: 9, date: '2026-10-25', time: '19:00', home: 'Beşiktaş', away: 'Başakşehir' },
+            { match: 81, round: 9, date: '2026-10-25', time: '19:00', home: 'Samsunspor', away: 'Amed SFK' },
             // === HAFTA 10 ===
-            { match: 82, round: 10, date: '2026-11-01', time: '00:00', home: 'Trabzonspor', away: 'Gaziantep FK' },
-            { match: 83, round: 10, date: '2026-11-01', time: '00:00', home: 'Kasımpaşa', away: 'Beşiktaş' },
-            { match: 84, round: 10, date: '2026-11-01', time: '00:00', home: 'Başakşehir', away: 'Samsunspor' },
-            { match: 85, round: 10, date: '2026-11-01', time: '00:00', home: 'Amed SFK', away: 'Eyüpspor' },
-            { match: 86, round: 10, date: '2026-11-01', time: '00:00', home: 'Gençlerbirliği', away: 'Alanyaspor' },
-            { match: 87, round: 10, date: '2026-11-01', time: '00:00', home: 'Konyaspor', away: 'Galatasaray' },
-            { match: 88, round: 10, date: '2026-11-01', time: '00:00', home: 'Fenerbahçe', away: 'Göztepe' },
-            { match: 89, round: 10, date: '2026-11-01', time: '00:00', home: 'Kocaelispor', away: 'Rizespor' },
-            { match: 90, round: 10, date: '2026-11-01', time: '00:00', home: 'Erzurumspor FK', away: 'Çorum FK' },
+            { match: 82, round: 10, date: '2026-11-01', time: '19:00', home: 'Trabzonspor', away: 'Gaziantep FK' },
+            { match: 83, round: 10, date: '2026-11-01', time: '19:00', home: 'Kasımpaşa', away: 'Beşiktaş' },
+            { match: 84, round: 10, date: '2026-11-01', time: '19:00', home: 'Başakşehir', away: 'Samsunspor' },
+            { match: 85, round: 10, date: '2026-11-01', time: '19:00', home: 'Amed SFK', away: 'Eyüpspor' },
+            { match: 86, round: 10, date: '2026-11-01', time: '19:00', home: 'Gençlerbirliği', away: 'Alanyaspor' },
+            { match: 87, round: 10, date: '2026-11-01', time: '19:00', home: 'Konyaspor', away: 'Galatasaray' },
+            { match: 88, round: 10, date: '2026-11-01', time: '19:00', home: 'Fenerbahçe', away: 'Göztepe' },
+            { match: 89, round: 10, date: '2026-11-01', time: '19:00', home: 'Kocaelispor', away: 'Rizespor' },
+            { match: 90, round: 10, date: '2026-11-01', time: '19:00', home: 'Erzurumspor FK', away: 'Çorum FK' },
             // === HAFTA 11 ===
-            { match: 91, round: 11, date: '2026-11-08', time: '00:00', home: 'Gaziantep FK', away: 'Kasımpaşa' },
-            { match: 92, round: 11, date: '2026-11-08', time: '00:00', home: 'Eyüpspor', away: 'Kocaelispor' },
-            { match: 93, round: 11, date: '2026-11-08', time: '00:00', home: 'Alanyaspor', away: 'Trabzonspor' },
-            { match: 94, round: 11, date: '2026-11-08', time: '00:00', home: 'Rizespor', away: 'Erzurumspor FK' },
-            { match: 95, round: 11, date: '2026-11-08', time: '00:00', home: 'Göztepe', away: 'Başakşehir' },
-            { match: 96, round: 11, date: '2026-11-08', time: '00:00', home: 'Çorum FK', away: 'Fenerbahçe' },
-            { match: 97, round: 11, date: '2026-11-08', time: '00:00', home: 'Galatasaray', away: 'Amed SFK' },
-            { match: 98, round: 11, date: '2026-11-08', time: '00:00', home: 'Beşiktaş', away: 'Gençlerbirliği' },
-            { match: 99, round: 11, date: '2026-11-08', time: '00:00', home: 'Samsunspor', away: 'Konyaspor' },
+            { match: 91, round: 11, date: '2026-11-08', time: '19:00', home: 'Gaziantep FK', away: 'Kasımpaşa' },
+            { match: 92, round: 11, date: '2026-11-08', time: '19:00', home: 'Eyüpspor', away: 'Kocaelispor' },
+            { match: 93, round: 11, date: '2026-11-08', time: '19:00', home: 'Alanyaspor', away: 'Trabzonspor' },
+            { match: 94, round: 11, date: '2026-11-08', time: '19:00', home: 'Rizespor', away: 'Erzurumspor FK' },
+            { match: 95, round: 11, date: '2026-11-08', time: '19:00', home: 'Göztepe', away: 'Başakşehir' },
+            { match: 96, round: 11, date: '2026-11-08', time: '19:00', home: 'Çorum FK', away: 'Fenerbahçe' },
+            { match: 97, round: 11, date: '2026-11-08', time: '19:00', home: 'Galatasaray', away: 'Amed SFK' },
+            { match: 98, round: 11, date: '2026-11-08', time: '19:00', home: 'Beşiktaş', away: 'Gençlerbirliği' },
+            { match: 99, round: 11, date: '2026-11-08', time: '19:00', home: 'Samsunspor', away: 'Konyaspor' },
             // === HAFTA 12 ===
-            { match: 100, round: 12, date: '2026-11-22', time: '00:00', home: 'Trabzonspor', away: 'Eyüpspor' },
-            { match: 101, round: 12, date: '2026-11-22', time: '00:00', home: 'Kasımpaşa', away: 'Alanyaspor' },
-            { match: 102, round: 12, date: '2026-11-22', time: '00:00', home: 'Başakşehir', away: 'Çorum FK' },
-            { match: 103, round: 12, date: '2026-11-22', time: '00:00', home: 'Amed SFK', away: 'Rizespor' },
-            { match: 104, round: 12, date: '2026-11-22', time: '00:00', home: 'Gençlerbirliği', away: 'Gaziantep FK' },
-            { match: 105, round: 12, date: '2026-11-22', time: '00:00', home: 'Konyaspor', away: 'Beşiktaş' },
-            { match: 106, round: 12, date: '2026-11-22', time: '00:00', home: 'Galatasaray', away: 'Samsunspor' },
-            { match: 107, round: 12, date: '2026-11-22', time: '00:00', home: 'Kocaelispor', away: 'Fenerbahçe' },
-            { match: 108, round: 12, date: '2026-11-22', time: '00:00', home: 'Erzurumspor FK', away: 'Göztepe' },
+            { match: 100, round: 12, date: '2026-11-22', time: '19:00', home: 'Trabzonspor', away: 'Eyüpspor' },
+            { match: 101, round: 12, date: '2026-11-22', time: '19:00', home: 'Kasımpaşa', away: 'Alanyaspor' },
+            { match: 102, round: 12, date: '2026-11-22', time: '19:00', home: 'Başakşehir', away: 'Çorum FK' },
+            { match: 103, round: 12, date: '2026-11-22', time: '19:00', home: 'Amed SFK', away: 'Rizespor' },
+            { match: 104, round: 12, date: '2026-11-22', time: '19:00', home: 'Gençlerbirliği', away: 'Gaziantep FK' },
+            { match: 105, round: 12, date: '2026-11-22', time: '19:00', home: 'Konyaspor', away: 'Beşiktaş' },
+            { match: 106, round: 12, date: '2026-11-22', time: '19:00', home: 'Galatasaray', away: 'Samsunspor' },
+            { match: 107, round: 12, date: '2026-11-22', time: '19:00', home: 'Kocaelispor', away: 'Fenerbahçe' },
+            { match: 108, round: 12, date: '2026-11-22', time: '19:00', home: 'Erzurumspor FK', away: 'Göztepe' },
             // === HAFTA 13 ===
-            { match: 109, round: 13, date: '2026-11-29', time: '00:00', home: 'Gaziantep FK', away: 'Amed SFK' },
-            { match: 110, round: 13, date: '2026-11-29', time: '00:00', home: 'Eyüpspor', away: 'Başakşehir' },
-            { match: 111, round: 13, date: '2026-11-29', time: '00:00', home: 'Alanyaspor', away: 'Konyaspor' },
-            { match: 112, round: 13, date: '2026-11-29', time: '00:00', home: 'Rizespor', away: 'Kasımpaşa' },
-            { match: 113, round: 13, date: '2026-11-29', time: '00:00', home: 'Göztepe', away: 'Trabzonspor' },
-            { match: 114, round: 13, date: '2026-11-29', time: '00:00', home: 'Çorum FK', away: 'Kocaelispor' },
-            { match: 115, round: 13, date: '2026-11-29', time: '00:00', home: 'Fenerbahçe', away: 'Erzurumspor FK' },
-            { match: 116, round: 13, date: '2026-11-29', time: '00:00', home: 'Beşiktaş', away: 'Galatasaray' },
-            { match: 117, round: 13, date: '2026-11-29', time: '00:00', home: 'Samsunspor', away: 'Gençlerbirliği' },
+            { match: 109, round: 13, date: '2026-11-29', time: '19:00', home: 'Gaziantep FK', away: 'Amed SFK' },
+            { match: 110, round: 13, date: '2026-11-29', time: '19:00', home: 'Eyüpspor', away: 'Başakşehir' },
+            { match: 111, round: 13, date: '2026-11-29', time: '19:00', home: 'Alanyaspor', away: 'Konyaspor' },
+            { match: 112, round: 13, date: '2026-11-29', time: '19:00', home: 'Rizespor', away: 'Kasımpaşa' },
+            { match: 113, round: 13, date: '2026-11-29', time: '19:00', home: 'Göztepe', away: 'Trabzonspor' },
+            { match: 114, round: 13, date: '2026-11-29', time: '19:00', home: 'Çorum FK', away: 'Kocaelispor' },
+            { match: 115, round: 13, date: '2026-11-29', time: '19:00', home: 'Fenerbahçe', away: 'Erzurumspor FK' },
+            { match: 116, round: 13, date: '2026-11-29', time: '19:00', home: 'Beşiktaş', away: 'Galatasaray' },
+            { match: 117, round: 13, date: '2026-11-29', time: '19:00', home: 'Samsunspor', away: 'Gençlerbirliği' },
             // === HAFTA 14 ===
-            { match: 118, round: 14, date: '2026-12-06', time: '00:00', home: 'Trabzonspor', away: 'Çorum FK' },
-            { match: 119, round: 14, date: '2026-12-06', time: '00:00', home: 'Kasımpaşa', away: 'Göztepe' },
-            { match: 120, round: 14, date: '2026-12-06', time: '00:00', home: 'Başakşehir', away: 'Fenerbahçe' },
-            { match: 121, round: 14, date: '2026-12-06', time: '00:00', home: 'Amed SFK', away: 'Alanyaspor' },
-            { match: 122, round: 14, date: '2026-12-06', time: '00:00', home: 'Gençlerbirliği', away: 'Eyüpspor' },
-            { match: 123, round: 14, date: '2026-12-06', time: '00:00', home: 'Konyaspor', away: 'Gaziantep FK' },
-            { match: 124, round: 14, date: '2026-12-06', time: '00:00', home: 'Galatasaray', away: 'Rizespor' },
-            { match: 125, round: 14, date: '2026-12-06', time: '00:00', home: 'Beşiktaş', away: 'Samsunspor' },
-            { match: 126, round: 14, date: '2026-12-06', time: '00:00', home: 'Erzurumspor FK', away: 'Kocaelispor' },
+            { match: 118, round: 14, date: '2026-12-06', time: '19:00', home: 'Trabzonspor', away: 'Çorum FK' },
+            { match: 119, round: 14, date: '2026-12-06', time: '19:00', home: 'Kasımpaşa', away: 'Göztepe' },
+            { match: 120, round: 14, date: '2026-12-06', time: '19:00', home: 'Başakşehir', away: 'Fenerbahçe' },
+            { match: 121, round: 14, date: '2026-12-06', time: '19:00', home: 'Amed SFK', away: 'Alanyaspor' },
+            { match: 122, round: 14, date: '2026-12-06', time: '19:00', home: 'Gençlerbirliği', away: 'Eyüpspor' },
+            { match: 123, round: 14, date: '2026-12-06', time: '19:00', home: 'Konyaspor', away: 'Gaziantep FK' },
+            { match: 124, round: 14, date: '2026-12-06', time: '19:00', home: 'Galatasaray', away: 'Rizespor' },
+            { match: 125, round: 14, date: '2026-12-06', time: '19:00', home: 'Beşiktaş', away: 'Samsunspor' },
+            { match: 126, round: 14, date: '2026-12-06', time: '19:00', home: 'Erzurumspor FK', away: 'Kocaelispor' },
             // === HAFTA 15 ===
-            { match: 127, round: 15, date: '2026-12-13', time: '00:00', home: 'Gaziantep FK', away: 'Beşiktaş' },
-            { match: 128, round: 15, date: '2026-12-13', time: '00:00', home: 'Eyüpspor', away: 'Galatasaray' },
-            { match: 129, round: 15, date: '2026-12-13', time: '00:00', home: 'Alanyaspor', away: 'Samsunspor' },
-            { match: 130, round: 15, date: '2026-12-13', time: '00:00', home: 'Rizespor', away: 'Başakşehir' },
-            { match: 131, round: 15, date: '2026-12-13', time: '00:00', home: 'Göztepe', away: 'Konyaspor' },
-            { match: 132, round: 15, date: '2026-12-13', time: '00:00', home: 'Çorum FK', away: 'Amed SFK' },
-            { match: 133, round: 15, date: '2026-12-13', time: '00:00', home: 'Fenerbahçe', away: 'Trabzonspor' },
-            { match: 134, round: 15, date: '2026-12-13', time: '00:00', home: 'Kocaelispor', away: 'Gençlerbirliği' },
-            { match: 135, round: 15, date: '2026-12-13', time: '00:00', home: 'Erzurumspor FK', away: 'Kasımpaşa' },
+            { match: 127, round: 15, date: '2026-12-13', time: '19:00', home: 'Gaziantep FK', away: 'Beşiktaş' },
+            { match: 128, round: 15, date: '2026-12-13', time: '19:00', home: 'Eyüpspor', away: 'Galatasaray' },
+            { match: 129, round: 15, date: '2026-12-13', time: '19:00', home: 'Alanyaspor', away: 'Samsunspor' },
+            { match: 130, round: 15, date: '2026-12-13', time: '19:00', home: 'Rizespor', away: 'Başakşehir' },
+            { match: 131, round: 15, date: '2026-12-13', time: '19:00', home: 'Göztepe', away: 'Konyaspor' },
+            { match: 132, round: 15, date: '2026-12-13', time: '19:00', home: 'Çorum FK', away: 'Amed SFK' },
+            { match: 133, round: 15, date: '2026-12-13', time: '19:00', home: 'Fenerbahçe', away: 'Trabzonspor' },
+            { match: 134, round: 15, date: '2026-12-13', time: '19:00', home: 'Kocaelispor', away: 'Gençlerbirliği' },
+            { match: 135, round: 15, date: '2026-12-13', time: '19:00', home: 'Erzurumspor FK', away: 'Kasımpaşa' },
             // === HAFTA 16 ===
-            { match: 136, round: 16, date: '2026-12-20', time: '00:00', home: 'Trabzonspor', away: 'Kocaelispor' },
-            { match: 137, round: 16, date: '2026-12-20', time: '00:00', home: 'Kasımpaşa', away: 'Fenerbahçe' },
-            { match: 138, round: 16, date: '2026-12-20', time: '00:00', home: 'Başakşehir', away: 'Erzurumspor FK' },
-            { match: 139, round: 16, date: '2026-12-20', time: '00:00', home: 'Amed SFK', away: 'Göztepe' },
-            { match: 140, round: 16, date: '2026-12-20', time: '00:00', home: 'Gençlerbirliği', away: 'Çorum FK' },
-            { match: 141, round: 16, date: '2026-12-20', time: '00:00', home: 'Konyaspor', away: 'Eyüpspor' },
-            { match: 142, round: 16, date: '2026-12-20', time: '00:00', home: 'Galatasaray', away: 'Alanyaspor' },
-            { match: 143, round: 16, date: '2026-12-20', time: '00:00', home: 'Beşiktaş', away: 'Rizespor' },
-            { match: 144, round: 16, date: '2026-12-20', time: '00:00', home: 'Samsunspor', away: 'Gaziantep FK' },
+            { match: 136, round: 16, date: '2026-12-20', time: '19:00', home: 'Trabzonspor', away: 'Kocaelispor' },
+            { match: 137, round: 16, date: '2026-12-20', time: '19:00', home: 'Kasımpaşa', away: 'Fenerbahçe' },
+            { match: 138, round: 16, date: '2026-12-20', time: '19:00', home: 'Başakşehir', away: 'Erzurumspor FK' },
+            { match: 139, round: 16, date: '2026-12-20', time: '19:00', home: 'Amed SFK', away: 'Göztepe' },
+            { match: 140, round: 16, date: '2026-12-20', time: '19:00', home: 'Gençlerbirliği', away: 'Çorum FK' },
+            { match: 141, round: 16, date: '2026-12-20', time: '19:00', home: 'Konyaspor', away: 'Eyüpspor' },
+            { match: 142, round: 16, date: '2026-12-20', time: '19:00', home: 'Galatasaray', away: 'Alanyaspor' },
+            { match: 143, round: 16, date: '2026-12-20', time: '19:00', home: 'Beşiktaş', away: 'Rizespor' },
+            { match: 144, round: 16, date: '2026-12-20', time: '19:00', home: 'Samsunspor', away: 'Gaziantep FK' },
             // === HAFTA 17 ===
-            { match: 145, round: 17, date: '2027-01-17', time: '00:00', home: 'Gaziantep FK', away: 'Galatasaray' },
-            { match: 146, round: 17, date: '2027-01-17', time: '00:00', home: 'Eyüpspor', away: 'Samsunspor' },
-            { match: 147, round: 17, date: '2027-01-17', time: '00:00', home: 'Alanyaspor', away: 'Başakşehir' },
-            { match: 148, round: 17, date: '2027-01-17', time: '00:00', home: 'Rizespor', away: 'Gençlerbirliği' },
-            { match: 149, round: 17, date: '2027-01-17', time: '00:00', home: 'Göztepe', away: 'Beşiktaş' },
-            { match: 150, round: 17, date: '2027-01-17', time: '00:00', home: 'Çorum FK', away: 'Konyaspor' },
-            { match: 151, round: 17, date: '2027-01-17', time: '00:00', home: 'Fenerbahçe', away: 'Amed SFK' },
-            { match: 152, round: 17, date: '2027-01-17', time: '00:00', home: 'Kocaelispor', away: 'Kasımpaşa' },
-            { match: 153, round: 17, date: '2027-01-17', time: '00:00', home: 'Erzurumspor FK', away: 'Trabzonspor' },
+            { match: 145, round: 17, date: '2027-01-17', time: '19:00', home: 'Gaziantep FK', away: 'Galatasaray' },
+            { match: 146, round: 17, date: '2027-01-17', time: '19:00', home: 'Eyüpspor', away: 'Samsunspor' },
+            { match: 147, round: 17, date: '2027-01-17', time: '19:00', home: 'Alanyaspor', away: 'Başakşehir' },
+            { match: 148, round: 17, date: '2027-01-17', time: '19:00', home: 'Rizespor', away: 'Gençlerbirliği' },
+            { match: 149, round: 17, date: '2027-01-17', time: '19:00', home: 'Göztepe', away: 'Beşiktaş' },
+            { match: 150, round: 17, date: '2027-01-17', time: '19:00', home: 'Çorum FK', away: 'Konyaspor' },
+            { match: 151, round: 17, date: '2027-01-17', time: '19:00', home: 'Fenerbahçe', away: 'Amed SFK' },
+            { match: 152, round: 17, date: '2027-01-17', time: '19:00', home: 'Kocaelispor', away: 'Kasımpaşa' },
+            { match: 153, round: 17, date: '2027-01-17', time: '19:00', home: 'Erzurumspor FK', away: 'Trabzonspor' },
             // === HAFTA 18 ===
-            { match: 154, round: 18, date: '2027-01-24', time: '00:00', home: 'Alanyaspor', away: 'Gaziantep FK' },
-            { match: 155, round: 18, date: '2027-01-24', time: '00:00', home: 'Trabzonspor', away: 'Kasımpaşa' },
-            { match: 156, round: 18, date: '2027-01-24', time: '00:00', home: 'Kocaelispor', away: 'Başakşehir' },
-            { match: 157, round: 18, date: '2027-01-24', time: '00:00', home: 'Erzurumspor FK', away: 'Amed SFK' },
-            { match: 158, round: 18, date: '2027-01-24', time: '00:00', home: 'Fenerbahçe', away: 'Gençlerbirliği' },
-            { match: 159, round: 18, date: '2027-01-24', time: '00:00', home: 'Rizespor', away: 'Konyaspor' },
-            { match: 160, round: 18, date: '2027-01-24', time: '00:00', home: 'Çorum FK', away: 'Galatasaray' },
-            { match: 161, round: 18, date: '2027-01-24', time: '00:00', home: 'Eyüpspor', away: 'Beşiktaş' },
-            { match: 162, round: 18, date: '2027-01-24', time: '00:00', home: 'Göztepe', away: 'Samsunspor' },
+            { match: 154, round: 18, date: '2027-01-24', time: '19:00', home: 'Alanyaspor', away: 'Gaziantep FK' },
+            { match: 155, round: 18, date: '2027-01-24', time: '19:00', home: 'Trabzonspor', away: 'Kasımpaşa' },
+            { match: 156, round: 18, date: '2027-01-24', time: '19:00', home: 'Kocaelispor', away: 'Başakşehir' },
+            { match: 157, round: 18, date: '2027-01-24', time: '19:00', home: 'Erzurumspor FK', away: 'Amed SFK' },
+            { match: 158, round: 18, date: '2027-01-24', time: '19:00', home: 'Fenerbahçe', away: 'Gençlerbirliği' },
+            { match: 159, round: 18, date: '2027-01-24', time: '19:00', home: 'Rizespor', away: 'Konyaspor' },
+            { match: 160, round: 18, date: '2027-01-24', time: '19:00', home: 'Çorum FK', away: 'Galatasaray' },
+            { match: 161, round: 18, date: '2027-01-24', time: '19:00', home: 'Eyüpspor', away: 'Beşiktaş' },
+            { match: 162, round: 18, date: '2027-01-24', time: '19:00', home: 'Göztepe', away: 'Samsunspor' },
             // === HAFTA 19 ===
-            { match: 163, round: 19, date: '2027-01-31', time: '00:00', home: 'Başakşehir', away: 'Trabzonspor' },
-            { match: 164, round: 19, date: '2027-01-31', time: '00:00', home: 'Gaziantep FK', away: 'Eyüpspor' },
-            { match: 165, round: 19, date: '2027-01-31', time: '00:00', home: 'Beşiktaş', away: 'Alanyaspor' },
-            { match: 166, round: 19, date: '2027-01-31', time: '00:00', home: 'Samsunspor', away: 'Rizespor' },
-            { match: 167, round: 19, date: '2027-01-31', time: '00:00', home: 'Gençlerbirliği', away: 'Göztepe' },
-            { match: 168, round: 19, date: '2027-01-31', time: '00:00', home: 'Kasımpaşa', away: 'Çorum FK' },
-            { match: 169, round: 19, date: '2027-01-31', time: '00:00', home: 'Konyaspor', away: 'Fenerbahçe' },
-            { match: 170, round: 19, date: '2027-01-31', time: '00:00', home: 'Amed SFK', away: 'Kocaelispor' },
-            { match: 171, round: 19, date: '2027-01-31', time: '00:00', home: 'Galatasaray', away: 'Erzurumspor FK' },
+            { match: 163, round: 19, date: '2027-01-31', time: '19:00', home: 'Başakşehir', away: 'Trabzonspor' },
+            { match: 164, round: 19, date: '2027-01-31', time: '19:00', home: 'Gaziantep FK', away: 'Eyüpspor' },
+            { match: 165, round: 19, date: '2027-01-31', time: '19:00', home: 'Beşiktaş', away: 'Alanyaspor' },
+            { match: 166, round: 19, date: '2027-01-31', time: '19:00', home: 'Samsunspor', away: 'Rizespor' },
+            { match: 167, round: 19, date: '2027-01-31', time: '19:00', home: 'Gençlerbirliği', away: 'Göztepe' },
+            { match: 168, round: 19, date: '2027-01-31', time: '19:00', home: 'Kasımpaşa', away: 'Çorum FK' },
+            { match: 169, round: 19, date: '2027-01-31', time: '19:00', home: 'Konyaspor', away: 'Fenerbahçe' },
+            { match: 170, round: 19, date: '2027-01-31', time: '19:00', home: 'Amed SFK', away: 'Kocaelispor' },
+            { match: 171, round: 19, date: '2027-01-31', time: '19:00', home: 'Galatasaray', away: 'Erzurumspor FK' },
             // === HAFTA 20 ===
-            { match: 172, round: 20, date: '2027-02-07', time: '00:00', home: 'Rizespor', away: 'Gaziantep FK' },
-            { match: 173, round: 20, date: '2027-02-07', time: '00:00', home: 'Alanyaspor', away: 'Eyüpspor' },
-            { match: 174, round: 20, date: '2027-02-07', time: '00:00', home: 'Kasımpaşa', away: 'Başakşehir' },
-            { match: 175, round: 20, date: '2027-02-07', time: '00:00', home: 'Trabzonspor', away: 'Amed SFK' },
-            { match: 176, round: 20, date: '2027-02-07', time: '00:00', home: 'Erzurumspor FK', away: 'Gençlerbirliği' },
-            { match: 177, round: 20, date: '2027-02-07', time: '00:00', home: 'Kocaelispor', away: 'Konyaspor' },
-            { match: 178, round: 20, date: '2027-02-07', time: '00:00', home: 'Göztepe', away: 'Galatasaray' },
-            { match: 179, round: 20, date: '2027-02-07', time: '00:00', home: 'Çorum FK', away: 'Beşiktaş' },
-            { match: 180, round: 20, date: '2027-02-07', time: '00:00', home: 'Fenerbahçe', away: 'Samsunspor' },
+            { match: 172, round: 20, date: '2027-02-07', time: '19:00', home: 'Rizespor', away: 'Gaziantep FK' },
+            { match: 173, round: 20, date: '2027-02-07', time: '19:00', home: 'Alanyaspor', away: 'Eyüpspor' },
+            { match: 174, round: 20, date: '2027-02-07', time: '19:00', home: 'Kasımpaşa', away: 'Başakşehir' },
+            { match: 175, round: 20, date: '2027-02-07', time: '19:00', home: 'Trabzonspor', away: 'Amed SFK' },
+            { match: 176, round: 20, date: '2027-02-07', time: '19:00', home: 'Erzurumspor FK', away: 'Gençlerbirliği' },
+            { match: 177, round: 20, date: '2027-02-07', time: '19:00', home: 'Kocaelispor', away: 'Konyaspor' },
+            { match: 178, round: 20, date: '2027-02-07', time: '19:00', home: 'Göztepe', away: 'Galatasaray' },
+            { match: 179, round: 20, date: '2027-02-07', time: '19:00', home: 'Çorum FK', away: 'Beşiktaş' },
+            { match: 180, round: 20, date: '2027-02-07', time: '19:00', home: 'Fenerbahçe', away: 'Samsunspor' },
             // === HAFTA 21 ===
-            { match: 181, round: 21, date: '2027-02-14', time: '00:00', home: 'Gençlerbirliği', away: 'Trabzonspor' },
-            { match: 182, round: 21, date: '2027-02-14', time: '00:00', home: 'Amed SFK', away: 'Kasımpaşa' },
-            { match: 183, round: 21, date: '2027-02-14', time: '00:00', home: 'Galatasaray', away: 'Başakşehir' },
-            { match: 184, round: 21, date: '2027-02-14', time: '00:00', home: 'Alanyaspor', away: 'Rizespor' },
-            { match: 185, round: 21, date: '2027-02-14', time: '00:00', home: 'Gaziantep FK', away: 'Göztepe' },
-            { match: 186, round: 21, date: '2027-02-14', time: '00:00', home: 'Eyüpspor', away: 'Çorum FK' },
-            { match: 187, round: 21, date: '2027-02-14', time: '00:00', home: 'Beşiktaş', away: 'Fenerbahçe' },
-            { match: 188, round: 21, date: '2027-02-14', time: '00:00', home: 'Samsunspor', away: 'Kocaelispor' },
-            { match: 189, round: 21, date: '2027-02-14', time: '00:00', home: 'Konyaspor', away: 'Erzurumspor FK' },
+            { match: 181, round: 21, date: '2027-02-14', time: '19:00', home: 'Gençlerbirliği', away: 'Trabzonspor' },
+            { match: 182, round: 21, date: '2027-02-14', time: '19:00', home: 'Amed SFK', away: 'Kasımpaşa' },
+            { match: 183, round: 21, date: '2027-02-14', time: '19:00', home: 'Galatasaray', away: 'Başakşehir' },
+            { match: 184, round: 21, date: '2027-02-14', time: '19:00', home: 'Alanyaspor', away: 'Rizespor' },
+            { match: 185, round: 21, date: '2027-02-14', time: '19:00', home: 'Gaziantep FK', away: 'Göztepe' },
+            { match: 186, round: 21, date: '2027-02-14', time: '19:00', home: 'Eyüpspor', away: 'Çorum FK' },
+            { match: 187, round: 21, date: '2027-02-14', time: '19:00', home: 'Beşiktaş', away: 'Fenerbahçe' },
+            { match: 188, round: 21, date: '2027-02-14', time: '19:00', home: 'Samsunspor', away: 'Kocaelispor' },
+            { match: 189, round: 21, date: '2027-02-14', time: '19:00', home: 'Konyaspor', away: 'Erzurumspor FK' },
             // === HAFTA 22 ===
-            { match: 190, round: 22, date: '2027-02-21', time: '00:00', home: 'Fenerbahçe', away: 'Gaziantep FK' },
-            { match: 191, round: 22, date: '2027-02-21', time: '00:00', home: 'Rizespor', away: 'Eyüpspor' },
-            { match: 192, round: 22, date: '2027-02-21', time: '00:00', home: 'Göztepe', away: 'Alanyaspor' },
-            { match: 193, round: 22, date: '2027-02-21', time: '00:00', home: 'Başakşehir', away: 'Amed SFK' },
-            { match: 194, round: 22, date: '2027-02-21', time: '00:00', home: 'Kasımpaşa', away: 'Gençlerbirliği' },
-            { match: 195, round: 22, date: '2027-02-21', time: '00:00', home: 'Trabzonspor', away: 'Konyaspor' },
-            { match: 196, round: 22, date: '2027-02-21', time: '00:00', home: 'Kocaelispor', away: 'Galatasaray' },
-            { match: 197, round: 22, date: '2027-02-21', time: '00:00', home: 'Erzurumspor FK', away: 'Beşiktaş' },
-            { match: 198, round: 22, date: '2027-02-21', time: '00:00', home: 'Çorum FK', away: 'Samsunspor' },
+            { match: 190, round: 22, date: '2027-02-21', time: '19:00', home: 'Fenerbahçe', away: 'Gaziantep FK' },
+            { match: 191, round: 22, date: '2027-02-21', time: '19:00', home: 'Rizespor', away: 'Eyüpspor' },
+            { match: 192, round: 22, date: '2027-02-21', time: '19:00', home: 'Göztepe', away: 'Alanyaspor' },
+            { match: 193, round: 22, date: '2027-02-21', time: '19:00', home: 'Başakşehir', away: 'Amed SFK' },
+            { match: 194, round: 22, date: '2027-02-21', time: '19:00', home: 'Kasımpaşa', away: 'Gençlerbirliği' },
+            { match: 195, round: 22, date: '2027-02-21', time: '19:00', home: 'Trabzonspor', away: 'Konyaspor' },
+            { match: 196, round: 22, date: '2027-02-21', time: '19:00', home: 'Kocaelispor', away: 'Galatasaray' },
+            { match: 197, round: 22, date: '2027-02-21', time: '19:00', home: 'Erzurumspor FK', away: 'Beşiktaş' },
+            { match: 198, round: 22, date: '2027-02-21', time: '19:00', home: 'Çorum FK', away: 'Samsunspor' },
             // === HAFTA 23 ===
-            { match: 199, round: 23, date: '2027-02-28', time: '00:00', home: 'Galatasaray', away: 'Trabzonspor' },
-            { match: 200, round: 23, date: '2027-02-28', time: '00:00', home: 'Konyaspor', away: 'Kasımpaşa' },
-            { match: 201, round: 23, date: '2027-02-28', time: '00:00', home: 'Gençlerbirliği', away: 'Başakşehir' },
-            { match: 202, round: 23, date: '2027-02-28', time: '00:00', home: 'Beşiktaş', away: 'Amed SFK' },
-            { match: 203, round: 23, date: '2027-02-28', time: '00:00', home: 'Rizespor', away: 'Göztepe' },
-            { match: 204, round: 23, date: '2027-02-28', time: '00:00', home: 'Alanyaspor', away: 'Çorum FK' },
-            { match: 205, round: 23, date: '2027-02-28', time: '00:00', home: 'Eyüpspor', away: 'Fenerbahçe' },
-            { match: 206, round: 23, date: '2027-02-28', time: '00:00', home: 'Gaziantep FK', away: 'Kocaelispor' },
-            { match: 207, round: 23, date: '2027-02-28', time: '00:00', home: 'Samsunspor', away: 'Erzurumspor FK' },
+            { match: 199, round: 23, date: '2027-02-28', time: '19:00', home: 'Galatasaray', away: 'Trabzonspor' },
+            { match: 200, round: 23, date: '2027-02-28', time: '19:00', home: 'Konyaspor', away: 'Kasımpaşa' },
+            { match: 201, round: 23, date: '2027-02-28', time: '19:00', home: 'Gençlerbirliği', away: 'Başakşehir' },
+            { match: 202, round: 23, date: '2027-02-28', time: '19:00', home: 'Beşiktaş', away: 'Amed SFK' },
+            { match: 203, round: 23, date: '2027-02-28', time: '19:00', home: 'Rizespor', away: 'Göztepe' },
+            { match: 204, round: 23, date: '2027-02-28', time: '19:00', home: 'Alanyaspor', away: 'Çorum FK' },
+            { match: 205, round: 23, date: '2027-02-28', time: '19:00', home: 'Eyüpspor', away: 'Fenerbahçe' },
+            { match: 206, round: 23, date: '2027-02-28', time: '19:00', home: 'Gaziantep FK', away: 'Kocaelispor' },
+            { match: 207, round: 23, date: '2027-02-28', time: '19:00', home: 'Samsunspor', away: 'Erzurumspor FK' },
             // === HAFTA 24 ===
-            { match: 208, round: 24, date: '2027-03-07', time: '00:00', home: 'Çorum FK', away: 'Gaziantep FK' },
-            { match: 209, round: 24, date: '2027-03-07', time: '00:00', home: 'Göztepe', away: 'Eyüpspor' },
-            { match: 210, round: 24, date: '2027-03-07', time: '00:00', home: 'Erzurumspor FK', away: 'Alanyaspor' },
-            { match: 211, round: 24, date: '2027-03-07', time: '00:00', home: 'Fenerbahçe', away: 'Rizespor' },
-            { match: 212, round: 24, date: '2027-03-07', time: '00:00', home: 'Amed SFK', away: 'Gençlerbirliği' },
-            { match: 213, round: 24, date: '2027-03-07', time: '00:00', home: 'Başakşehir', away: 'Konyaspor' },
-            { match: 214, round: 24, date: '2027-03-07', time: '00:00', home: 'Kasımpaşa', away: 'Galatasaray' },
-            { match: 215, round: 24, date: '2027-03-07', time: '00:00', home: 'Kocaelispor', away: 'Beşiktaş' },
-            { match: 216, round: 24, date: '2027-03-07', time: '00:00', home: 'Trabzonspor', away: 'Samsunspor' },
+            { match: 208, round: 24, date: '2027-03-07', time: '19:00', home: 'Çorum FK', away: 'Gaziantep FK' },
+            { match: 209, round: 24, date: '2027-03-07', time: '19:00', home: 'Göztepe', away: 'Eyüpspor' },
+            { match: 210, round: 24, date: '2027-03-07', time: '19:00', home: 'Erzurumspor FK', away: 'Alanyaspor' },
+            { match: 211, round: 24, date: '2027-03-07', time: '19:00', home: 'Fenerbahçe', away: 'Rizespor' },
+            { match: 212, round: 24, date: '2027-03-07', time: '19:00', home: 'Amed SFK', away: 'Gençlerbirliği' },
+            { match: 213, round: 24, date: '2027-03-07', time: '19:00', home: 'Başakşehir', away: 'Konyaspor' },
+            { match: 214, round: 24, date: '2027-03-07', time: '19:00', home: 'Kasımpaşa', away: 'Galatasaray' },
+            { match: 215, round: 24, date: '2027-03-07', time: '19:00', home: 'Kocaelispor', away: 'Beşiktaş' },
+            { match: 216, round: 24, date: '2027-03-07', time: '19:00', home: 'Trabzonspor', away: 'Samsunspor' },
             // === HAFTA 25 ===
-            { match: 217, round: 25, date: '2027-03-14', time: '00:00', home: 'Beşiktaş', away: 'Trabzonspor' },
-            { match: 218, round: 25, date: '2027-03-14', time: '00:00', home: 'Samsunspor', away: 'Kasımpaşa' },
-            { match: 219, round: 25, date: '2027-03-14', time: '00:00', home: 'Gaziantep FK', away: 'Başakşehir' },
-            { match: 220, round: 25, date: '2027-03-14', time: '00:00', home: 'Konyaspor', away: 'Amed SFK' },
-            { match: 221, round: 25, date: '2027-03-14', time: '00:00', home: 'Galatasaray', away: 'Gençlerbirliği' },
-            { match: 222, round: 25, date: '2027-03-14', time: '00:00', home: 'Rizespor', away: 'Çorum FK' },
-            { match: 223, round: 25, date: '2027-03-14', time: '00:00', home: 'Alanyaspor', away: 'Fenerbahçe' },
-            { match: 224, round: 25, date: '2027-03-14', time: '00:00', home: 'Göztepe', away: 'Kocaelispor' },
-            { match: 225, round: 25, date: '2027-03-14', time: '00:00', home: 'Eyüpspor', away: 'Erzurumspor FK' },
+            { match: 217, round: 25, date: '2027-03-14', time: '19:00', home: 'Beşiktaş', away: 'Trabzonspor' },
+            { match: 218, round: 25, date: '2027-03-14', time: '19:00', home: 'Samsunspor', away: 'Kasımpaşa' },
+            { match: 219, round: 25, date: '2027-03-14', time: '19:00', home: 'Gaziantep FK', away: 'Başakşehir' },
+            { match: 220, round: 25, date: '2027-03-14', time: '19:00', home: 'Konyaspor', away: 'Amed SFK' },
+            { match: 221, round: 25, date: '2027-03-14', time: '19:00', home: 'Galatasaray', away: 'Gençlerbirliği' },
+            { match: 222, round: 25, date: '2027-03-14', time: '19:00', home: 'Rizespor', away: 'Çorum FK' },
+            { match: 223, round: 25, date: '2027-03-14', time: '19:00', home: 'Alanyaspor', away: 'Fenerbahçe' },
+            { match: 224, round: 25, date: '2027-03-14', time: '19:00', home: 'Göztepe', away: 'Kocaelispor' },
+            { match: 225, round: 25, date: '2027-03-14', time: '19:00', home: 'Eyüpspor', away: 'Erzurumspor FK' },
             // === HAFTA 26 ===
-            { match: 226, round: 26, date: '2027-03-21', time: '00:00', home: 'Erzurumspor FK', away: 'Gaziantep FK' },
-            { match: 227, round: 26, date: '2027-03-21', time: '00:00', home: 'Kasımpaşa', away: 'Eyüpspor' },
-            { match: 228, round: 26, date: '2027-03-21', time: '00:00', home: 'Kocaelispor', away: 'Alanyaspor' },
-            { match: 229, round: 26, date: '2027-03-21', time: '00:00', home: 'Trabzonspor', away: 'Rizespor' },
-            { match: 230, round: 26, date: '2027-03-21', time: '00:00', home: 'Çorum FK', away: 'Göztepe' },
-            { match: 231, round: 26, date: '2027-03-21', time: '00:00', home: 'Gençlerbirliği', away: 'Konyaspor' },
-            { match: 232, round: 26, date: '2027-03-21', time: '00:00', home: 'Fenerbahçe', away: 'Galatasaray' },
-            { match: 233, round: 26, date: '2027-03-21', time: '00:00', home: 'Başakşehir', away: 'Beşiktaş' },
-            { match: 234, round: 26, date: '2027-03-21', time: '00:00', home: 'Amed SFK', away: 'Samsunspor' },
+            { match: 226, round: 26, date: '2027-03-21', time: '19:00', home: 'Erzurumspor FK', away: 'Gaziantep FK' },
+            { match: 227, round: 26, date: '2027-03-21', time: '19:00', home: 'Kasımpaşa', away: 'Eyüpspor' },
+            { match: 228, round: 26, date: '2027-03-21', time: '19:00', home: 'Kocaelispor', away: 'Alanyaspor' },
+            { match: 229, round: 26, date: '2027-03-21', time: '19:00', home: 'Trabzonspor', away: 'Rizespor' },
+            { match: 230, round: 26, date: '2027-03-21', time: '19:00', home: 'Çorum FK', away: 'Göztepe' },
+            { match: 231, round: 26, date: '2027-03-21', time: '19:00', home: 'Gençlerbirliği', away: 'Konyaspor' },
+            { match: 232, round: 26, date: '2027-03-21', time: '19:00', home: 'Fenerbahçe', away: 'Galatasaray' },
+            { match: 233, round: 26, date: '2027-03-21', time: '19:00', home: 'Başakşehir', away: 'Beşiktaş' },
+            { match: 234, round: 26, date: '2027-03-21', time: '19:00', home: 'Amed SFK', away: 'Samsunspor' },
             // === HAFTA 27 ===
-            { match: 235, round: 27, date: '2027-04-04', time: '00:00', home: 'Gaziantep FK', away: 'Trabzonspor' },
-            { match: 236, round: 27, date: '2027-04-04', time: '00:00', home: 'Beşiktaş', away: 'Kasımpaşa' },
-            { match: 237, round: 27, date: '2027-04-04', time: '00:00', home: 'Samsunspor', away: 'Başakşehir' },
-            { match: 238, round: 27, date: '2027-04-04', time: '00:00', home: 'Eyüpspor', away: 'Amed SFK' },
-            { match: 239, round: 27, date: '2027-04-04', time: '00:00', home: 'Alanyaspor', away: 'Gençlerbirliği' },
-            { match: 240, round: 27, date: '2027-04-04', time: '00:00', home: 'Galatasaray', away: 'Konyaspor' },
-            { match: 241, round: 27, date: '2027-04-04', time: '00:00', home: 'Göztepe', away: 'Fenerbahçe' },
-            { match: 242, round: 27, date: '2027-04-04', time: '00:00', home: 'Rizespor', away: 'Kocaelispor' },
-            { match: 243, round: 27, date: '2027-04-04', time: '00:00', home: 'Çorum FK', away: 'Erzurumspor FK' },
+            { match: 235, round: 27, date: '2027-04-04', time: '19:00', home: 'Gaziantep FK', away: 'Trabzonspor' },
+            { match: 236, round: 27, date: '2027-04-04', time: '19:00', home: 'Beşiktaş', away: 'Kasımpaşa' },
+            { match: 237, round: 27, date: '2027-04-04', time: '19:00', home: 'Samsunspor', away: 'Başakşehir' },
+            { match: 238, round: 27, date: '2027-04-04', time: '19:00', home: 'Eyüpspor', away: 'Amed SFK' },
+            { match: 239, round: 27, date: '2027-04-04', time: '19:00', home: 'Alanyaspor', away: 'Gençlerbirliği' },
+            { match: 240, round: 27, date: '2027-04-04', time: '19:00', home: 'Galatasaray', away: 'Konyaspor' },
+            { match: 241, round: 27, date: '2027-04-04', time: '19:00', home: 'Göztepe', away: 'Fenerbahçe' },
+            { match: 242, round: 27, date: '2027-04-04', time: '19:00', home: 'Rizespor', away: 'Kocaelispor' },
+            { match: 243, round: 27, date: '2027-04-04', time: '19:00', home: 'Çorum FK', away: 'Erzurumspor FK' },
             // === HAFTA 28 ===
-            { match: 244, round: 28, date: '2027-04-11', time: '00:00', home: 'Kasımpaşa', away: 'Gaziantep FK' },
-            { match: 245, round: 28, date: '2027-04-11', time: '00:00', home: 'Kocaelispor', away: 'Eyüpspor' },
-            { match: 246, round: 28, date: '2027-04-11', time: '00:00', home: 'Trabzonspor', away: 'Alanyaspor' },
-            { match: 247, round: 28, date: '2027-04-11', time: '00:00', home: 'Erzurumspor FK', away: 'Rizespor' },
-            { match: 248, round: 28, date: '2027-04-11', time: '00:00', home: 'Başakşehir', away: 'Göztepe' },
-            { match: 249, round: 28, date: '2027-04-11', time: '00:00', home: 'Fenerbahçe', away: 'Çorum FK' },
-            { match: 250, round: 28, date: '2027-04-11', time: '00:00', home: 'Amed SFK', away: 'Galatasaray' },
-            { match: 251, round: 28, date: '2027-04-11', time: '00:00', home: 'Gençlerbirliği', away: 'Beşiktaş' },
-            { match: 252, round: 28, date: '2027-04-11', time: '00:00', home: 'Konyaspor', away: 'Samsunspor' },
+            { match: 244, round: 28, date: '2027-04-11', time: '19:00', home: 'Kasımpaşa', away: 'Gaziantep FK' },
+            { match: 245, round: 28, date: '2027-04-11', time: '19:00', home: 'Kocaelispor', away: 'Eyüpspor' },
+            { match: 246, round: 28, date: '2027-04-11', time: '19:00', home: 'Trabzonspor', away: 'Alanyaspor' },
+            { match: 247, round: 28, date: '2027-04-11', time: '19:00', home: 'Erzurumspor FK', away: 'Rizespor' },
+            { match: 248, round: 28, date: '2027-04-11', time: '19:00', home: 'Başakşehir', away: 'Göztepe' },
+            { match: 249, round: 28, date: '2027-04-11', time: '19:00', home: 'Fenerbahçe', away: 'Çorum FK' },
+            { match: 250, round: 28, date: '2027-04-11', time: '19:00', home: 'Amed SFK', away: 'Galatasaray' },
+            { match: 251, round: 28, date: '2027-04-11', time: '19:00', home: 'Gençlerbirliği', away: 'Beşiktaş' },
+            { match: 252, round: 28, date: '2027-04-11', time: '19:00', home: 'Konyaspor', away: 'Samsunspor' },
             // === HAFTA 29 ===
-            { match: 253, round: 29, date: '2027-04-18', time: '00:00', home: 'Eyüpspor', away: 'Trabzonspor' },
-            { match: 254, round: 29, date: '2027-04-18', time: '00:00', home: 'Alanyaspor', away: 'Kasımpaşa' },
-            { match: 255, round: 29, date: '2027-04-18', time: '00:00', home: 'Çorum FK', away: 'Başakşehir' },
-            { match: 256, round: 29, date: '2027-04-18', time: '00:00', home: 'Rizespor', away: 'Amed SFK' },
-            { match: 257, round: 29, date: '2027-04-18', time: '00:00', home: 'Gaziantep FK', away: 'Gençlerbirliği' },
-            { match: 258, round: 29, date: '2027-04-18', time: '00:00', home: 'Beşiktaş', away: 'Konyaspor' },
-            { match: 259, round: 29, date: '2027-04-18', time: '00:00', home: 'Samsunspor', away: 'Galatasaray' },
-            { match: 260, round: 29, date: '2027-04-18', time: '00:00', home: 'Fenerbahçe', away: 'Kocaelispor' },
-            { match: 261, round: 29, date: '2027-04-18', time: '00:00', home: 'Göztepe', away: 'Erzurumspor FK' },
+            { match: 253, round: 29, date: '2027-04-18', time: '19:00', home: 'Eyüpspor', away: 'Trabzonspor' },
+            { match: 254, round: 29, date: '2027-04-18', time: '19:00', home: 'Alanyaspor', away: 'Kasımpaşa' },
+            { match: 255, round: 29, date: '2027-04-18', time: '19:00', home: 'Çorum FK', away: 'Başakşehir' },
+            { match: 256, round: 29, date: '2027-04-18', time: '19:00', home: 'Rizespor', away: 'Amed SFK' },
+            { match: 257, round: 29, date: '2027-04-18', time: '19:00', home: 'Gaziantep FK', away: 'Gençlerbirliği' },
+            { match: 258, round: 29, date: '2027-04-18', time: '19:00', home: 'Beşiktaş', away: 'Konyaspor' },
+            { match: 259, round: 29, date: '2027-04-18', time: '19:00', home: 'Samsunspor', away: 'Galatasaray' },
+            { match: 260, round: 29, date: '2027-04-18', time: '19:00', home: 'Fenerbahçe', away: 'Kocaelispor' },
+            { match: 261, round: 29, date: '2027-04-18', time: '19:00', home: 'Göztepe', away: 'Erzurumspor FK' },
             // === HAFTA 30 ===
-            { match: 262, round: 30, date: '2027-04-25', time: '00:00', home: 'Amed SFK', away: 'Gaziantep FK' },
-            { match: 263, round: 30, date: '2027-04-25', time: '00:00', home: 'Başakşehir', away: 'Eyüpspor' },
-            { match: 264, round: 30, date: '2027-04-25', time: '00:00', home: 'Konyaspor', away: 'Alanyaspor' },
-            { match: 265, round: 30, date: '2027-04-25', time: '00:00', home: 'Kasımpaşa', away: 'Rizespor' },
-            { match: 266, round: 30, date: '2027-04-25', time: '00:00', home: 'Trabzonspor', away: 'Göztepe' },
-            { match: 267, round: 30, date: '2027-04-25', time: '00:00', home: 'Kocaelispor', away: 'Çorum FK' },
-            { match: 268, round: 30, date: '2027-04-25', time: '00:00', home: 'Erzurumspor FK', away: 'Fenerbahçe' },
-            { match: 269, round: 30, date: '2027-04-25', time: '00:00', home: 'Galatasaray', away: 'Beşiktaş' },
-            { match: 270, round: 30, date: '2027-04-25', time: '00:00', home: 'Gençlerbirliği', away: 'Samsunspor' },
+            { match: 262, round: 30, date: '2027-04-25', time: '19:00', home: 'Amed SFK', away: 'Gaziantep FK' },
+            { match: 263, round: 30, date: '2027-04-25', time: '19:00', home: 'Başakşehir', away: 'Eyüpspor' },
+            { match: 264, round: 30, date: '2027-04-25', time: '19:00', home: 'Konyaspor', away: 'Alanyaspor' },
+            { match: 265, round: 30, date: '2027-04-25', time: '19:00', home: 'Kasımpaşa', away: 'Rizespor' },
+            { match: 266, round: 30, date: '2027-04-25', time: '19:00', home: 'Trabzonspor', away: 'Göztepe' },
+            { match: 267, round: 30, date: '2027-04-25', time: '19:00', home: 'Kocaelispor', away: 'Çorum FK' },
+            { match: 268, round: 30, date: '2027-04-25', time: '19:00', home: 'Erzurumspor FK', away: 'Fenerbahçe' },
+            { match: 269, round: 30, date: '2027-04-25', time: '19:00', home: 'Galatasaray', away: 'Beşiktaş' },
+            { match: 270, round: 30, date: '2027-04-25', time: '19:00', home: 'Gençlerbirliği', away: 'Samsunspor' },
             // === HAFTA 31 ===
-            { match: 271, round: 31, date: '2027-05-02', time: '00:00', home: 'Çorum FK', away: 'Trabzonspor' },
-            { match: 272, round: 31, date: '2027-05-02', time: '00:00', home: 'Göztepe', away: 'Kasımpaşa' },
-            { match: 273, round: 31, date: '2027-05-02', time: '00:00', home: 'Fenerbahçe', away: 'Başakşehir' },
-            { match: 274, round: 31, date: '2027-05-02', time: '00:00', home: 'Alanyaspor', away: 'Amed SFK' },
-            { match: 275, round: 31, date: '2027-05-02', time: '00:00', home: 'Eyüpspor', away: 'Gençlerbirliği' },
-            { match: 276, round: 31, date: '2027-05-02', time: '00:00', home: 'Gaziantep FK', away: 'Konyaspor' },
-            { match: 277, round: 31, date: '2027-05-02', time: '00:00', home: 'Rizespor', away: 'Galatasaray' },
-            { match: 278, round: 31, date: '2027-05-02', time: '00:00', home: 'Samsunspor', away: 'Beşiktaş' },
-            { match: 279, round: 31, date: '2027-05-02', time: '00:00', home: 'Kocaelispor', away: 'Erzurumspor FK' },
+            { match: 271, round: 31, date: '2027-05-02', time: '19:00', home: 'Çorum FK', away: 'Trabzonspor' },
+            { match: 272, round: 31, date: '2027-05-02', time: '19:00', home: 'Göztepe', away: 'Kasımpaşa' },
+            { match: 273, round: 31, date: '2027-05-02', time: '19:00', home: 'Fenerbahçe', away: 'Başakşehir' },
+            { match: 274, round: 31, date: '2027-05-02', time: '19:00', home: 'Alanyaspor', away: 'Amed SFK' },
+            { match: 275, round: 31, date: '2027-05-02', time: '19:00', home: 'Eyüpspor', away: 'Gençlerbirliği' },
+            { match: 276, round: 31, date: '2027-05-02', time: '19:00', home: 'Gaziantep FK', away: 'Konyaspor' },
+            { match: 277, round: 31, date: '2027-05-02', time: '19:00', home: 'Rizespor', away: 'Galatasaray' },
+            { match: 278, round: 31, date: '2027-05-02', time: '19:00', home: 'Samsunspor', away: 'Beşiktaş' },
+            { match: 279, round: 31, date: '2027-05-02', time: '19:00', home: 'Kocaelispor', away: 'Erzurumspor FK' },
             // === HAFTA 32 ===
-            { match: 280, round: 32, date: '2027-05-09', time: '00:00', home: 'Beşiktaş', away: 'Gaziantep FK' },
-            { match: 281, round: 32, date: '2027-05-09', time: '00:00', home: 'Galatasaray', away: 'Eyüpspor' },
-            { match: 282, round: 32, date: '2027-05-09', time: '00:00', home: 'Samsunspor', away: 'Alanyaspor' },
-            { match: 283, round: 32, date: '2027-05-09', time: '00:00', home: 'Başakşehir', away: 'Rizespor' },
-            { match: 284, round: 32, date: '2027-05-09', time: '00:00', home: 'Konyaspor', away: 'Göztepe' },
-            { match: 285, round: 32, date: '2027-05-09', time: '00:00', home: 'Amed SFK', away: 'Çorum FK' },
-            { match: 286, round: 32, date: '2027-05-09', time: '00:00', home: 'Trabzonspor', away: 'Fenerbahçe' },
-            { match: 287, round: 32, date: '2027-05-09', time: '00:00', home: 'Gençlerbirliği', away: 'Kocaelispor' },
-            { match: 288, round: 32, date: '2027-05-09', time: '00:00', home: 'Kasımpaşa', away: 'Erzurumspor FK' },
+            { match: 280, round: 32, date: '2027-05-09', time: '19:00', home: 'Beşiktaş', away: 'Gaziantep FK' },
+            { match: 281, round: 32, date: '2027-05-09', time: '19:00', home: 'Galatasaray', away: 'Eyüpspor' },
+            { match: 282, round: 32, date: '2027-05-09', time: '19:00', home: 'Samsunspor', away: 'Alanyaspor' },
+            { match: 283, round: 32, date: '2027-05-09', time: '19:00', home: 'Başakşehir', away: 'Rizespor' },
+            { match: 284, round: 32, date: '2027-05-09', time: '19:00', home: 'Konyaspor', away: 'Göztepe' },
+            { match: 285, round: 32, date: '2027-05-09', time: '19:00', home: 'Amed SFK', away: 'Çorum FK' },
+            { match: 286, round: 32, date: '2027-05-09', time: '19:00', home: 'Trabzonspor', away: 'Fenerbahçe' },
+            { match: 287, round: 32, date: '2027-05-09', time: '19:00', home: 'Gençlerbirliği', away: 'Kocaelispor' },
+            { match: 288, round: 32, date: '2027-05-09', time: '19:00', home: 'Kasımpaşa', away: 'Erzurumspor FK' },
             // === HAFTA 33 ===
-            { match: 289, round: 33, date: '2027-05-16', time: '00:00', home: 'Kocaelispor', away: 'Trabzonspor' },
-            { match: 290, round: 33, date: '2027-05-16', time: '00:00', home: 'Fenerbahçe', away: 'Kasımpaşa' },
-            { match: 291, round: 33, date: '2027-05-16', time: '00:00', home: 'Erzurumspor FK', away: 'Başakşehir' },
-            { match: 292, round: 33, date: '2027-05-16', time: '00:00', home: 'Göztepe', away: 'Amed SFK' },
-            { match: 293, round: 33, date: '2027-05-16', time: '00:00', home: 'Çorum FK', away: 'Gençlerbirliği' },
-            { match: 294, round: 33, date: '2027-05-16', time: '00:00', home: 'Eyüpspor', away: 'Konyaspor' },
-            { match: 295, round: 33, date: '2027-05-16', time: '00:00', home: 'Alanyaspor', away: 'Galatasaray' },
-            { match: 296, round: 33, date: '2027-05-16', time: '00:00', home: 'Rizespor', away: 'Beşiktaş' },
-            { match: 297, round: 33, date: '2027-05-16', time: '00:00', home: 'Gaziantep FK', away: 'Samsunspor' },
+            { match: 289, round: 33, date: '2027-05-16', time: '19:00', home: 'Kocaelispor', away: 'Trabzonspor' },
+            { match: 290, round: 33, date: '2027-05-16', time: '19:00', home: 'Fenerbahçe', away: 'Kasımpaşa' },
+            { match: 291, round: 33, date: '2027-05-16', time: '19:00', home: 'Erzurumspor FK', away: 'Başakşehir' },
+            { match: 292, round: 33, date: '2027-05-16', time: '19:00', home: 'Göztepe', away: 'Amed SFK' },
+            { match: 293, round: 33, date: '2027-05-16', time: '19:00', home: 'Çorum FK', away: 'Gençlerbirliği' },
+            { match: 294, round: 33, date: '2027-05-16', time: '19:00', home: 'Eyüpspor', away: 'Konyaspor' },
+            { match: 295, round: 33, date: '2027-05-16', time: '19:00', home: 'Alanyaspor', away: 'Galatasaray' },
+            { match: 296, round: 33, date: '2027-05-16', time: '19:00', home: 'Rizespor', away: 'Beşiktaş' },
+            { match: 297, round: 33, date: '2027-05-16', time: '19:00', home: 'Gaziantep FK', away: 'Samsunspor' },
             // === HAFTA 34 ===
-            { match: 298, round: 34, date: '2027-05-23', time: '00:00', home: 'Galatasaray', away: 'Gaziantep FK' },
-            { match: 299, round: 34, date: '2027-05-23', time: '00:00', home: 'Samsunspor', away: 'Eyüpspor' },
-            { match: 300, round: 34, date: '2027-05-23', time: '00:00', home: 'Başakşehir', away: 'Alanyaspor' },
-            { match: 301, round: 34, date: '2027-05-23', time: '00:00', home: 'Gençlerbirliği', away: 'Rizespor' },
-            { match: 302, round: 34, date: '2027-05-23', time: '00:00', home: 'Beşiktaş', away: 'Göztepe' },
-            { match: 303, round: 34, date: '2027-05-23', time: '00:00', home: 'Konyaspor', away: 'Çorum FK' },
-            { match: 304, round: 34, date: '2027-05-23', time: '00:00', home: 'Amed SFK', away: 'Fenerbahçe' },
-            { match: 305, round: 34, date: '2027-05-23', time: '00:00', home: 'Kasımpaşa', away: 'Kocaelispor' },
-            { match: 306, round: 34, date: '2027-05-23', time: '00:00', home: 'Trabzonspor', away: 'Erzurumspor FK' }
+            { match: 298, round: 34, date: '2027-05-23', time: '19:00', home: 'Galatasaray', away: 'Gaziantep FK' },
+            { match: 299, round: 34, date: '2027-05-23', time: '19:00', home: 'Samsunspor', away: 'Eyüpspor' },
+            { match: 300, round: 34, date: '2027-05-23', time: '19:00', home: 'Başakşehir', away: 'Alanyaspor' },
+            { match: 301, round: 34, date: '2027-05-23', time: '19:00', home: 'Gençlerbirliği', away: 'Rizespor' },
+            { match: 302, round: 34, date: '2027-05-23', time: '19:00', home: 'Beşiktaş', away: 'Göztepe' },
+            { match: 303, round: 34, date: '2027-05-23', time: '19:00', home: 'Konyaspor', away: 'Çorum FK' },
+            { match: 304, round: 34, date: '2027-05-23', time: '19:00', home: 'Amed SFK', away: 'Fenerbahçe' },
+            { match: 305, round: 34, date: '2027-05-23', time: '19:00', home: 'Kasımpaşa', away: 'Kocaelispor' },
+            { match: 306, round: 34, date: '2027-05-23', time: '19:00', home: 'Trabzonspor', away: 'Erzurumspor FK' }
         ];
 
         // ============================================================
@@ -2104,9 +2192,12 @@
 
         function getFixtures() {
             const saved = localStorage.getItem('sl_fixtures_v9');
-            if (saved) fixtures = JSON.parse(saved);
-            else { fixtures = buildFixtures();
-                saveFixtures(); }
+            if (saved) {
+                fixtures = JSON.parse(saved);
+            } else {
+                fixtures = buildFixtures();
+                saveFixtures();
+            }
             return fixtures;
         }
 
@@ -2124,7 +2215,7 @@
                         home: homeTeam.id,
                         away: awayTeam.id,
                         date: item.date,
-                        time: item.time || '00:00',
+                        time: item.time || '19:00',
                         status: 'upcoming',
                         actual: null,
                         isDerby: (item.home === 'Galatasaray' && item.away === 'Fenerbahçe') ||
@@ -2202,14 +2293,14 @@
         }
 
         function formatDate(dateStr) {
-            const d = new Date(dateStr);
+            const d = new Date(dateStr + 'T00:00:00');
             return d.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', weekday: 'long' });
         }
 
         function getMatchDateTime(dateStr, timeStr) {
             const [year, month, day] = dateStr.split('-').map(Number);
             const [hour, minute] = timeStr.split(':').map(Number);
-            return new Date(year, month - 1, day, hour, minute);
+            return new Date(year, month - 1, day, hour || 19, minute || 0);
         }
 
         function isMatchLocked(matchDateTime) {
@@ -2298,7 +2389,6 @@
             currentUser = null;
             isAdmin = false;
             document.getElementById('loginScreen').style.display = 'flex';
-            document.getElementById('appContainer').style.display = 'none';
             document.getElementById('adminContainer').style.display = 'none';
             document.getElementById('sidebar').classList.remove('open');
             document.getElementById('sidebarOverlay').classList.remove('open');
@@ -2310,7 +2400,6 @@
 
         function enterApp() {
             document.getElementById('loginScreen').style.display = 'none';
-            document.getElementById('appContainer').style.display = 'block';
             document.getElementById('adminContainer').style.display = 'none';
             getFixtures();
             updateUserUI();
@@ -2328,7 +2417,6 @@
 
         function enterAdmin() {
             document.getElementById('loginScreen').style.display = 'none';
-            document.getElementById('appContainer').style.display = 'none';
             document.getElementById('adminContainer').style.display = 'block';
             getFixtures();
             loadAdminDashboard();
@@ -2483,12 +2571,27 @@
         function populateWeekSelector() {
             const select = document.getElementById('weekSelect');
             select.innerHTML = '';
-            Object.keys(fixtures).sort((a, b) => a - b).forEach(week => {
-                const opt = document.createElement('option');
-                opt.value = week;
-                opt.textContent = week + '. Hafta';
-                select.appendChild(opt);
-            });
+            const weeks = Object.keys(fixtures).sort((a, b) => a - b);
+            if (weeks.length === 0) {
+                // Fixtures boşsa yeniden oluştur
+                fixtures = buildFixtures();
+                saveFixtures();
+                const weeks2 = Object.keys(fixtures).sort((a, b) => a - b);
+                weeks2.forEach(week => {
+                    const opt = document.createElement('option');
+                    opt.value = week;
+                    opt.textContent = week + '. Hafta';
+                    select.appendChild(opt);
+                });
+            } else {
+                weeks.forEach(week => {
+                    const opt = document.createElement('option');
+                    opt.value = week;
+                    opt.textContent = week + '. Hafta';
+                    select.appendChild(opt);
+                });
+            }
+            // Admin select'i de doldur
             const adminSelect = document.getElementById('adminWeekSelect');
             if (adminSelect) {
                 adminSelect.innerHTML = '';
@@ -2502,23 +2605,39 @@
         }
 
         function renderFixtures() {
+            if (!currentUser) {
+                document.getElementById('fixturesGrid').innerHTML =
+                    '<div class="empty-state"><i class="fas fa-user-lock"></i><h3>Lütfen giriş yapın</h3></div>';
+                return;
+            }
+
             const select = document.getElementById('weekSelect');
-            if (!select.value) {
+            if (!select || !select.value) {
                 const firstWeek = Object.keys(fixtures).sort((a, b) => a - b)[0];
                 if (firstWeek) select.value = firstWeek;
+                else {
+                    document.getElementById('fixturesGrid').innerHTML =
+                        '<div class="empty-state"><i class="fas fa-calendar-times"></i><h3>Fikstür bulunamadı</h3></div>';
+                    return;
+                }
             }
+
             currentWeek = parseInt(select.value);
             const grid = document.getElementById('fixturesGrid');
             grid.innerHTML = '';
+
             const weekMatches = fixtures[currentWeek] || [];
             if (weekMatches.length === 0) {
                 grid.innerHTML = '<div class="empty-state"><i class="fas fa-calendar-times"></i><h3>Bu hafta için maç bulunmuyor</h3></div>';
                 return;
             }
+
             weekMatches.forEach(match => {
                 const home = teams[match.home];
                 const away = teams[match.away];
-                const prediction = currentUser.predictions[match.id];
+                if (!home || !away) return;
+
+                const prediction = currentUser.predictions ? currentUser.predictions[match.id] : null;
                 const matchDateTime = getMatchDateTime(match.date, match.time);
                 const isLocked = isMatchLocked(matchDateTime);
                 const hasPrediction = !!prediction;
@@ -2534,12 +2653,11 @@
                     scoreHtml =
                         `<div class="match-score">${match.actual.home} - ${match.actual.away}</div>`;
                 } else {
-                    scoreHtml =
-                        `
+                    scoreHtml = `
                         <div class="match-prediction-inputs">
-                            <input type="number" min="0" max="15" id="home-${match.id}" value="${hasPrediction ? prediction.home : ''}" placeholder="0" ${hasPrediction ? 'disabled' : ''}>
+                            <input type="number" min="0" max="15" id="home-${match.id}" value="${hasPrediction ? prediction.home : ''}" placeholder="0" ${hasPrediction || isLocked ? 'disabled' : ''}>
                             <span class="dash">-</span>
-                            <input type="number" min="0" max="15" id="away-${match.id}" value="${hasPrediction ? prediction.away : ''}" placeholder="0" ${hasPrediction ? 'disabled' : ''}>
+                            <input type="number" min="0" max="15" id="away-${match.id}" value="${hasPrediction ? prediction.away : ''}" placeholder="0" ${hasPrediction || isLocked ? 'disabled' : ''}>
                         </div>
                         ${!isLocked && !hasPrediction ? `<button class="btn-save" onclick="savePrediction(${match.id})">💾 Tahmini Kaydet</button>` : ''}
                         ${hasPrediction ? `<div class="match-prediction-saved">✅ Tahminin: ${prediction.home} - ${prediction.away}</div>` : ''}
@@ -2548,8 +2666,7 @@
                     `;
                 }
 
-                card.innerHTML =
-                    `
+                card.innerHTML = `
                     <div class="match-header">
                         <span>📅 ${formatDate(match.date)} • ${match.time}</span>
                         <span class="match-badge ${badgeClass} ${match.isDerby ? 'derby-badge' : ''}">${match.isDerby ? '🔥 DERBİ' : badgeText}</span>
@@ -2579,12 +2696,15 @@
         }
 
         function savePrediction(matchId) {
+            if (!currentUser) { showToast('Lütfen giriş yapın!', true); return; }
+
             const homeScore = parseInt(document.getElementById(`home-${matchId}`).value);
             const awayScore = parseInt(document.getElementById(`away-${matchId}`).value);
             if (isNaN(homeScore) || isNaN(awayScore) || homeScore < 0 || awayScore < 0) {
                 showToast('Lütfen geçerli skor girin!', true);
                 return;
             }
+
             let match = null,
                 matchWeek = null;
             for (const week in fixtures) {
@@ -2593,16 +2713,19 @@
                     matchWeek = week; break; }
             }
             if (!match) { showToast('Maç bulunamadı!', true); return; }
+
             const matchDateTime = getMatchDateTime(match.date, match.time);
             if (isMatchLocked(matchDateTime)) {
                 showToast('⚠️ Maç başlamak üzere, tahmin kilitlenmiştir!', true);
                 return;
             }
+
             const users = getUsers();
             if (users[currentUser.username].predictions[matchId]) {
                 showToast('⚠️ Bu maça zaten tahmin yaptın, değiştiremezsin!', true);
                 return;
             }
+
             users[currentUser.username].predictions[matchId] = {
                 home: homeScore,
                 away: awayScore,
@@ -3194,17 +3317,18 @@
             if (status === 'finished' && homeScore !== '' && awayScore !== '') {
                 match.actual = { home: parseInt(homeScore), away: parseInt(awayScore) };
                 match.status = 'finished';
+                saveFixtures();
+                recalculateAllPoints();
                 showToast('✅ Maç sonucu kaydedildi!');
             } else if (status === 'upcoming') {
                 match.actual = null;
                 match.status = 'upcoming';
+                saveFixtures();
                 showToast('✅ Maç yaklaşan olarak işaretlendi.');
             } else {
                 showToast('Lütfen geçerli skor girin!', true);
                 return;
             }
-            saveFixtures();
-            recalculateAllPoints();
             renderAdminMatches();
         }
 
