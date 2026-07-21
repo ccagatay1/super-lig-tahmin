@@ -4,7 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Süper Lig Tahmin 2026-2027</title>
-    <!-- Inter Font & Font Awesome -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet" />
@@ -139,7 +138,6 @@
             margin-top: -2px;
         }
 
-        /* user card */
         .sidebar-user {
             display: flex;
             align-items: center;
@@ -189,7 +187,6 @@
             font-weight: 700;
         }
 
-        /* nav */
         .sidebar-nav {
             display: flex;
             flex-direction: column;
@@ -233,16 +230,6 @@
             flex-shrink: 0;
         }
 
-        .sidebar-nav .nav-item .nav-badge {
-            margin-left: auto;
-            background: var(--accent);
-            color: #fff;
-            font-size: 11px;
-            padding: 2px 10px;
-            border-radius: 20px;
-            font-weight: 600;
-        }
-
         .sidebar-footer {
             border-top: 1px solid var(--border);
             padding-top: 16px;
@@ -258,7 +245,6 @@
             color: var(--danger);
         }
 
-        /* sidebar toggle (mobile) */
         .sidebar-toggle {
             display: none;
             position: fixed;
@@ -295,7 +281,6 @@
             transition: background 0.3s;
         }
 
-        /* top bar */
         .top-bar {
             display: flex;
             justify-content: space-between;
@@ -360,7 +345,7 @@
         }
 
         /* ============================================================
-                   PAGES (show/hide)
+                   PAGES
                    ============================================================ */
         .page {
             display: none;
@@ -383,7 +368,7 @@
         }
 
         /* ============================================================
-                   CARDS, GRIDS, KPI
+                   KPI CARDS
                    ============================================================ */
         .kpi-grid {
             display: grid;
@@ -444,7 +429,6 @@
             color: var(--text-muted);
         }
 
-        /* streak */
         .streak-card {
             background: var(--card);
             border-radius: var(--radius);
@@ -898,7 +882,6 @@
             margin-top: 4px;
         }
 
-        /* badges grid */
         .badge-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
@@ -1181,6 +1164,23 @@
             }
         }
 
+        .empty-state {
+            padding: 60px 20px;
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.4;
+        }
+
+        .empty-state h3 {
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
         /* ============================================================
                    RESPONSIVE
                    ============================================================ */
@@ -1293,52 +1293,6 @@
             .match-team .team-name {
                 font-size: 12px;
             }
-        }
-
-        /* ============================================================
-                   UTILITY
-                   ============================================================ */
-        .text-center {
-            text-align: center;
-        }
-        .mt-16 {
-            margin-top: 16px;
-        }
-        .mb-16 {
-            margin-bottom: 16px;
-        }
-        .flex {
-            display: flex;
-        }
-        .flex-center {
-            align-items: center;
-            justify-content: center;
-        }
-        .gap-8 {
-            gap: 8px;
-        }
-        .gap-12 {
-            gap: 12px;
-        }
-        .w-full {
-            width: 100%;
-        }
-
-        .empty-state {
-            padding: 60px 20px;
-            text-align: center;
-            color: var(--text-muted);
-        }
-
-        .empty-state i {
-            font-size: 48px;
-            margin-bottom: 16px;
-            opacity: 0.4;
-        }
-
-        .empty-state h3 {
-            font-weight: 600;
-            color: var(--text-secondary);
         }
     </style>
 </head>
@@ -1592,7 +1546,7 @@
         </section>
 
         <!-- ============================================================
-        ADMIN PANEL (hidden by default, shown on admin login)
+        ADMIN PANEL
         ============================================================ -->
         <div id="adminContainer" style="display:none;margin-top:40px;border-top:2px solid var(--border);padding-top:32px;">
             <h2 style="font-weight:800;color:var(--danger);margin-bottom:24px;">🔐 Admin Panel</h2>
@@ -1677,7 +1631,7 @@
     <div class="toast-container" id="toastContainer"></div>
 
     <!-- ============================================================
-    LOGIN SCREEN (hidden when logged in)
+    LOGIN SCREEN
     ============================================================ -->
     <div class="login-screen" id="loginScreen" style="display:flex;position:fixed;inset:0;z-index:9999;background:var(--bg);align-items:center;justify-content:center;padding:20px;">
         <div class="login-box" style="background:var(--card);border-radius:24px;padding:48px 40px;max-width:420px;width:100%;border:1px solid var(--border);box-shadow:var(--shadow-lg);">
@@ -1719,9 +1673,8 @@
     ============================================================ -->
     <script>
         // ============================================================
-        // MEVCUT JAVASCRIPT MANTIĞI (KORUNMUŞTUR)
-        // Tüm veri yapıları, fonksiyonlar ve iş kuralları aynen kalır.
-        // Sadece UI/UX iyileştirmeleri yapılmıştır.
+        // TÜM MEVCUT MANTIK KORUNMUŞTUR
+        // SADECE UI/UX İYİLEŞTİRMELERİ YAPILMIŞTIR
         // ============================================================
 
         // ========== API KEY & CONFIG ==========
@@ -1754,10 +1707,7 @@
             { id: 20, name: 'Amed SFK', short: 'AME', color: '#8d0801', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Amed_SFK_logo.svg/120px-Amed_SFK_logo.svg.png' }
         ];
 
-        // ========== FİKSTÜR VERİSİ (306 maç) ==========
-        // Mevcut fixtureData array'i aynen kullanılacak.
-        // Kod kısalığı için burada sadece ilk 2 hafta örnek olarak gösterilmiştir.
-        // Gerçek uygulamada tüm 306 maç burada olmalıdır.
+        // ========== FİKSTÜR VERİSİ ==========
         const fixtureData = [
             // Hafta 1
             { match: 7, round: 1, date: '2026-08-14', time: '21:30', home: 'Galatasaray', away: 'Çorum FK' },
@@ -2200,7 +2150,13 @@
         }
 
         function renderFixtures() {
-            currentWeek = parseInt(document.getElementById('weekSelect').value);
+            const select = document.getElementById('weekSelect');
+            if (!select.value) {
+                // İlk haftayı seç
+                const firstWeek = Object.keys(fixtures).sort((a, b) => a - b)[0];
+                if (firstWeek) select.value = firstWeek;
+            }
+            currentWeek = parseInt(select.value);
             const grid = document.getElementById('fixturesGrid');
             grid.innerHTML = '';
             const weekMatches = fixtures[currentWeek] || [];
@@ -2980,9 +2936,6 @@
             stopLiveScorePolling();
             if (clockInterval) clearInterval(clockInterval);
         });
-
-        // Admin export/import (kullanıcı arayüzünden)
-        // bu fonksiyonlar zaten tanımlı, admin panelinde kullanılabilir.
     </script>
 
 </body>
